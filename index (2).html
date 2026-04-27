@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CeluFénix — Equipos · Repuestos · Accesorios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="overlay" data-overlay></div>
+
+  <!-- MODAL NEWSLETTER -->
+  <div class="modal" data-modal>
+    <div class="modal-close-overlay" data-modal-overlay></div>
+    <div class="modal-content">
+      <button class="modal-close-btn" data-modal-close>
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+      <div class="newsletter-badge">🔥 OFERTA EXCLUSIVA</div>
+      <div class="newsletter">
+        <h3 class="newsletter-title">Suscríbete y obtén<br><span>10% OFF</span> en tu primera compra</h3>
+        <p class="newsletter-desc">Recibe alertas de nuevos equipos, repuestos y promociones de <b>CeluFénix</b> antes que nadie.</p>
+        <form action="#">
+          <input type="email" name="email" class="email-field" placeholder="tu@correo.com" required>
+          <button type="submit" class="btn-newsletter">SUSCRIBIRME AHORA</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICACIÓN -->
+  <div class="notification-toast" data-toast>
+    <button class="toast-close-btn" data-toast-close>
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+    <div class="toast-icon">📱</div>
+    <div class="toast-detail">
+      <p class="toast-message">Alguien acaba de comprar</p>
+      <p class="toast-title">iPhone 15 Pro Max 256GB</p>
+      <p class="toast-meta"><time datetime="PT2M">hace 2 minutos</time> · Bogotá, CO</p>
+    </div>
+  </div>
+
+  <!-- HEADER TOP -->
+  <header>
+    <div class="header-top">
+      <div class="container">
+        <ul class="header-social-container">
+          <li><a href="#" class="social-link"><ion-icon name="logo-whatsapp"></ion-icon></a></li>
+          <li><a href="#" class="social-link"><ion-icon name="logo-instagram"></ion-icon></a></li>
+          <li><a href="#" class="social-link"><ion-icon name="logo-facebook"></ion-icon></a></li>
+          <li><a href="#" class="social-link"><ion-icon name="logo-tiktok"></ion-icon></a></li>
+        </ul>
+        <div class="header-alert-news">
+          <p>🚀 <b>Envío rápido</b> · Garantía certificada · Repuestos originales</p>
+        </div>
+        <div class="header-top-actions">
+          <a href="tel:+573001234567" class="top-contact-link">
+            <ion-icon name="call-outline"></ion-icon> +57 300 123 4567
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- HEADER MAIN -->
+    <div class="header-main">
+      <div class="container">
+        <a href="#" class="header-logo">
+          <div class="logo-mark">🦅</div>
+          <div class="logo-text">
+            <span class="logo-name">CELU<em>FÉNIX</em></span>
+            <span class="logo-tagline">Tech · Repuestos · Accesorios</span>
+          </div>
+        </a>
+
+        <div class="header-search-container">
+          <div class="search-pills">
+            <button class="search-pill active" data-filter="all">Todo</button>
+            <button class="search-pill" data-filter="equipos">Equipos</button>
+            <button class="search-pill" data-filter="repuestos">Repuestos</button>
+            <button class="search-pill" data-filter="accesorios">Accesorios</button>
+          </div>
+          <div class="search-box">
+            <input type="search" name="search" class="search-field" placeholder="Busca por modelo, marca o referencia...">
+            <button class="search-btn"><ion-icon name="search-outline"></ion-icon></button>
+          </div>
+        </div>
+
+        <div class="header-user-actions">
+          <button class="action-btn" title="Mi cuenta">
+            <ion-icon name="person-outline"></ion-icon>
+          </button>
+          <button class="action-btn" title="Favoritos">
+            <ion-icon name="heart-outline"></ion-icon>
+            <span class="count">0</span>
+          </button>
+          <button class="action-btn" title="Carrito">
+            <ion-icon name="bag-handle-outline"></ion-icon>
+            <span class="count">0</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAV DESKTOP -->
+    <nav class="desktop-navigation-menu">
+      <div class="container">
+        <ul class="desktop-menu-category-list">
+
+          <li class="menu-category">
+            <a href="#" class="menu-title">Inicio</a>
+          </li>
+
+          <li class="menu-category">
+            <a href="#" class="menu-title">Smartphones</a>
+            <div class="dropdown-panel">
+              <ul class="dropdown-panel-list">
+                <li class="menu-title"><a href="#">Por Marca</a></li>
+                <li class="panel-list-item"><a href="#">Apple iPhone</a></li>
+                <li class="panel-list-item"><a href="#">Samsung Galaxy</a></li>
+                <li class="panel-list-item"><a href="#">Xiaomi</a></li>
+                <li class="panel-list-item"><a href="#">Motorola</a></li>
+                <li class="panel-list-item"><a href="#">Huawei</a></li>
+                <li class="panel-list-item"><a href="#">OPPO / OnePlus</a></li>
+              </ul>
+              <ul class="dropdown-panel-list">
+                <li class="menu-title"><a href="#">Por Rango</a></li>
+                <li class="panel-list-item"><a href="#">Gama Alta +$3.000.000</a></li>
+                <li class="panel-list-item"><a href="#">Gama Media $1M–$3M</a></li>
+                <li class="panel-list-item"><a href="#">Gama Básica -$1.000.000</a></li>
+                <li class="panel-list-item"><a href="#">Usados Certificados</a></li>
+                <li class="panel-list-item"><a href="#">Reacondicionados</a></li>
+              </ul>
+              <ul class="dropdown-panel-list">
+                <li class="menu-title"><a href="#">Destacados</a></li>
+                <li class="panel-list-item"><a href="#">iPhone 16 Series</a></li>
+                <li class="panel-list-item"><a href="#">Samsung S25 Ultra</a></li>
+                <li class="panel-list-item"><a href="#">Xiaomi 14 Pro</a></li>
+                <li class="panel-list-item"><a href="#">Motorola Edge 50</a></li>
+                <li class="panel-list-item"><a href="#">Redmi Note 14</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="menu-category">
+            <a href="#" class="menu-title">Repuestos</a>
+            <ul class="dropdown-list">
+              <li class="dropdown-item"><a href="#">Pantallas & LCD</a></li>
+              <li class="dropdown-item"><a href="#">Baterías Originales</a></li>
+              <li class="dropdown-item"><a href="#">Cámaras & Módulos</a></li>
+              <li class="dropdown-item"><a href="#">Conectores & Puertos</a></li>
+              <li class="dropdown-item"><a href="#">Tapas Traseras</a></li>
+              <li class="dropdown-item"><a href="#">Botones & Flex</a></li>
+            </ul>
+          </li>
+
+          <li class="menu-category">
+            <a href="#" class="menu-title">Accesorios</a>
+            <ul class="dropdown-list">
+              <li class="dropdown-item"><a href="#">Cargadores & Cables</a></li>
+              <li class="dropdown-item"><a href="#">Audífonos & TWS</a></li>
+              <li class="dropdown-item"><a href="#">Fundas & Protectores</a></li>
+              <li class="dropdown-item"><a href="#">Power Banks</a></li>
+              <li class="dropdown-item"><a href="#">Soportes & Mounts</a></li>
+              <li class="dropdown-item"><a href="#">Smartwatches</a></li>
+            </ul>
+          </li>
+
+          <li class="menu-category">
+            <a href="#" class="menu-title">Máquinas</a>
+            <ul class="dropdown-list">
+              <li class="dropdown-item"><a href="#">Separadoras de Pantalla</a></li>
+              <li class="dropdown-item"><a href="#">Estaciones de Soldadura</a></li>
+              <li class="dropdown-item"><a href="#">Laminadoras OCA</a></li>
+              <li class="dropdown-item"><a href="#">Herramientas de Reparación</a></li>
+            </ul>
+          </li>
+
+          <li class="menu-category">
+            <a href="#" class="menu-title">Ofertas 🔥</a>
+          </li>
+
+        </ul>
+      </div>
+    </nav>
+
+    <!-- QUICK BRANDS BAR -->
+    <div class="brands-quick-bar">
+      <div class="container">
+        <span class="brands-label">Ir directo:</span>
+        <div class="brands-scroll has-scrollbar">
+          <a href="#" class="brand-chip"><span class="brand-icon">🍎</span> Apple</a>
+          <a href="#" class="brand-chip"><span class="brand-icon">🌌</span> Samsung</a>
+          <a href="#" class="brand-chip"><span class="brand-icon">⚡</span> Xiaomi</a>
+          <a href="#" class="brand-chip"><span class="brand-icon">🏎️</span> Motorola</a>
+          <a href="#" class="brand-chip"><span class="brand-icon">🌐</span> Huawei</a>
+          <a href="#" class="brand-chip"><span class="brand-icon">💥</span> OPPO</a>
+          <a href="#" class="brand-chip"><span class="brand-icon">🔧</span> Repuestos</a>
+          <a href="#" class="brand-chip hot"><span class="brand-icon">🔥</span> Ofertas</a>
+          <a href="#" class="brand-chip"><span class="brand-icon">🎧</span> Audífonos</a>
+          <a href="#" class="brand-chip"><span class="brand-icon">🔋</span> Power Banks</a>
+          <a href="#" class="brand-chip"><span class="brand-icon">⌚</span> Smartwatches</a>
+          <a href="#" class="brand-chip"><span class="brand-icon">🛡️</span> Fundas</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE BOTTOM NAV -->
+    <div class="mobile-bottom-navigation">
+      <button class="action-btn" data-mobile-menu-open-btn title="Menú">
+        <ion-icon name="menu-outline"></ion-icon>
+        <span>Menú</span>
+      </button>
+      <button class="action-btn" title="Carrito">
+        <ion-icon name="bag-handle-outline"></ion-icon>
+        <span class="count">0</span>
+        <span>Carrito</span>
+      </button>
+      <a href="#" class="action-btn home-btn" title="Inicio">
+        <div class="logo-mark-sm">🦅</div>
+        <span>Inicio</span>
+      </a>
+      <button class="action-btn" title="Favoritos">
+        <ion-icon name="heart-outline"></ion-icon>
+        <span>Guardados</span>
+      </button>
+      <button class="action-btn" data-mobile-menu-open-btn title="Categorías">
+        <ion-icon name="grid-outline"></ion-icon>
+        <span>Categorías</span>
+      </button>
+    </div>
+
+    <!-- MOBILE MENU -->
+    <nav class="mobile-navigation-menu has-scrollbar" data-mobile-menu>
+      <div class="menu-top">
+        <div class="mobile-logo">
+          <span>🦅</span> <strong>CELUFÉNIX</strong>
+        </div>
+        <button class="menu-close-btn" data-mobile-menu-close-btn>
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <!-- MARCAS RÁPIDAS MOBILE -->
+      <div class="mobile-brands-section">
+        <p class="mobile-section-label">Marcas rápidas</p>
+        <div class="mobile-brands-grid">
+          <a href="#" class="mobile-brand-btn">🍎 Apple</a>
+          <a href="#" class="mobile-brand-btn">🌌 Samsung</a>
+          <a href="#" class="mobile-brand-btn">⚡ Xiaomi</a>
+          <a href="#" class="mobile-brand-btn">🏎️ Motorola</a>
+          <a href="#" class="mobile-brand-btn">🌐 Huawei</a>
+          <a href="#" class="mobile-brand-btn hot">🔥 Ofertas</a>
+        </div>
+      </div>
+
+      <ul class="mobile-menu-category-list">
+        <li class="menu-category"><a href="#" class="menu-title">🏠 Inicio</a></li>
+
+        <li class="menu-category">
+          <button class="accordion-menu" data-accordion-btn>
+            <p class="menu-title">📱 Smartphones</p>
+            <div><ion-icon name="add-outline" class="add-icon"></ion-icon><ion-icon name="remove-outline" class="remove-icon"></ion-icon></div>
+          </button>
+          <ul class="submenu-category-list" data-accordion>
+            <li class="submenu-category"><a href="#" class="submenu-title">Apple iPhone</a></li>
+            <li class="submenu-category"><a href="#" class="submenu-title">Samsung Galaxy</a></li>
+            <li class="submenu-category"><a href="#" class="submenu-title">Xiaomi / Redmi</a></li>
+            <li class="submenu-category"><a href="#" class="submenu-title">Motorola</a></li>
+            <li class="submenu-category"><a href="#" class="submenu-title">Huawei</a></li>
+            <li class="submenu-category"><a href="#" class="submenu-title">Usados Certificados</a></li>
+          </ul>
+        </li>
+
+        <li class="menu-category">
+          <button class="accordion-menu" data-accordion-btn>
+            <p class="menu-title">🔧 Repuestos</p>
+            <div><ion-icon name="add-outline" class="add-icon"></ion-icon><ion-icon name="remove-outline" class="remove-icon"></ion-icon></div>
+          </button>
+          <ul class="submenu-category-list" data-accordion>
+            <li class="submenu-category"><a href="#" class="submenu-title">Pantallas & LCD</a></li>
+            <li class="submenu-category"><a href="#" class="submenu-title">Baterías</a></li>
+            <li class="submenu-category"><a href="#" class="submenu-title">Cámaras & Módulos</a></li>
+            <li class="submenu-category"><a href="#" class="submenu-title">Conectores</a></li>
+            <li class="submenu-category"><a href="#" class="submenu-title">Tapas Traseras</a></li>
+          </ul>
+        </li>
+
+        <li class="menu-category">
+          <button class="accordion-menu" data-accordion-btn>
+            <p class="menu-title">🎧 Accesorios</p>
+            <div><ion-icon name="add-outline" class="add-icon"></ion-icon><ion-icon name="remove-outline" class="remove-icon"></ion-icon></div>
+          </button>
+          <ul class="submenu-category-list" data-accordion>
+            <li class="submenu-category"><a href="#" class="submenu-title">Cargadores & Cables</a></li>
+            <li class="submenu-category"><a href="#" class="submenu-title">Audífonos & TWS</a></li>
+            <li class="submenu-category"><a href="#" class="submenu-title">Fundas & Protectores</a></li>
+            <li class="submenu-category"><a href="#" class="submenu-title">Power Banks</a></li>
+            <li class="submenu-category"><a href="#" class="submenu-title">Smartwatches</a></li>
+          </ul>
+        </li>
+
+        <li class="menu-category">
+          <button class="accordion-menu" data-accordion-btn>
+            <p class="menu-title">⚙️ Máquinas</p>
+            <div><ion-icon name="add-outline" class="add-icon"></ion-icon><ion-icon name="remove-outline" class="remove-icon"></ion-icon></div>
+          </button>
+          <ul class="submenu-category-list" data-accordion>
+            <li class="submenu-category"><a href="#" class="submenu-title">Separadoras de Pantalla</a></li>
+            <li class="submenu-category"><a href="#" class="submenu-title">Estaciones de Soldadura</a></li>
+            <li class="submenu-category"><a href="#" class="submenu-title">Laminadoras OCA</a></li>
+            <li class="submenu-category"><a href="#" class="submenu-title">Herramientas</a></li>
+          </ul>
+        </li>
+
+        <li class="menu-category"><a href="#" class="menu-title hot-link">🔥 Ofertas Especiales</a></li>
+      </ul>
+
+      <div class="menu-bottom">
+        <ul class="menu-social-container">
+          <li><a href="#" class="social-link"><ion-icon name="logo-whatsapp"></ion-icon></a></li>
+          <li><a href="#" class="social-link"><ion-icon name="logo-instagram"></ion-icon></a></li>
+          <li><a href="#" class="social-link"><ion-icon name="logo-facebook"></ion-icon></a></li>
+          <li><a href="#" class="social-link"><ion-icon name="logo-tiktok"></ion-icon></a></li>
+        </ul>
+        <a href="tel:+573001234567" class="mobile-contact-btn">
+          <ion-icon name="call-outline"></ion-icon> Llámanos ahora
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- HERO BANNER -->
+    <div class="banner">
+      <div class="container">
+        <div class="slider-container has-scrollbar">
+
+          <div class="slider-item hero-1">
+            <div class="banner-content">
+              <p class="banner-subtitle">🔥 Nuevo lanzamiento</p>
+              <h2 class="banner-title">iPhone 16 Pro Max<br><span>Titanio Natural</span></h2>
+              <p class="banner-text">Desde <strong>$5.890.000</strong> COP</p>
+              <div class="banner-actions">
+                <a href="#" class="banner-btn primary">Ver ahora</a>
+                <a href="#" class="banner-btn secondary">Comparar</a>
+              </div>
+            </div>
+            <div class="banner-device">
+              <div class="phone-mockup">
+                <div class="phone-screen">
+                  <div class="phone-notch"></div>
+                  <div class="phone-ui">
+                    <div class="ui-time">9:41</div>
+                    <div class="ui-bar"></div>
+                    <div class="ui-bar short"></div>
+                    <div class="ui-icons">
+                      <div class="ui-icon"></div>
+                      <div class="ui-icon"></div>
+                      <div class="ui-icon"></div>
+                      <div class="ui-icon"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="slider-item hero-2">
+            <div class="banner-content">
+              <p class="banner-subtitle">⚡ Gama Alta Android</p>
+              <h2 class="banner-title">Samsung Galaxy<br><span>S25 Ultra</span></h2>
+              <p class="banner-text">Desde <strong>$4.990.000</strong> COP</p>
+              <div class="banner-actions">
+                <a href="#" class="banner-btn primary">Ver ahora</a>
+                <a href="#" class="banner-btn secondary">Comparar</a>
+              </div>
+            </div>
+            <div class="banner-device">
+              <div class="phone-mockup android">
+                <div class="phone-screen">
+                  <div class="phone-punch"></div>
+                  <div class="phone-ui">
+                    <div class="ui-time">9:41</div>
+                    <div class="ui-bar"></div>
+                    <div class="ui-bar short"></div>
+                    <div class="ui-icons">
+                      <div class="ui-icon"></div>
+                      <div class="ui-icon"></div>
+                      <div class="ui-icon"></div>
+                      <div class="ui-icon"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="slider-item hero-3">
+            <div class="banner-content">
+              <p class="banner-subtitle">🔧 Repuestos Originales</p>
+              <h2 class="banner-title">Pantallas &amp;<br><span>Baterías</span></h2>
+              <p class="banner-text">Garantía de <strong>6 meses</strong> en todos los repuestos</p>
+              <div class="banner-actions">
+                <a href="#" class="banner-btn primary">Ver Repuestos</a>
+                <a href="#" class="banner-btn secondary">Cotizar</a>
+              </div>
+            </div>
+            <div class="banner-device tools">
+              <div class="tools-display">
+                <div class="tool-icon">🔧</div>
+                <div class="tool-icon">⚙️</div>
+                <div class="tool-icon">🔋</div>
+                <div class="tool-icon">📱</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK CATEGORY CHIPS -->
+    <div class="category">
+      <div class="container">
+        <div class="category-item-container has-scrollbar">
+
+          <div class="category-item">
+            <div class="category-img-box cat-phone">📱</div>
+            <div class="category-content-box">
+              <div class="category-content-flex">
+                <h3 class="category-item-title">Smartphones</h3>
+                <p class="category-item-amount">(147)</p>
+              </div>
+              <a href="#" class="category-btn">Ver todo</a>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <div class="category-img-box cat-screen">🖥️</div>
+            <div class="category-content-box">
+              <div class="category-content-flex">
+                <h3 class="category-item-title">Pantallas</h3>
+                <p class="category-item-amount">(89)</p>
+              </div>
+              <a href="#" class="category-btn">Ver todo</a>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <div class="category-img-box cat-battery">🔋</div>
+            <div class="category-content-box">
+              <div class="category-content-flex">
+                <h3 class="category-item-title">Baterías</h3>
+                <p class="category-item-amount">(64)</p>
+              </div>
+              <a href="#" class="category-btn">Ver todo</a>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <div class="category-img-box cat-audio">🎧</div>
+            <div class="category-content-box">
+              <div class="category-content-flex">
+                <h3 class="category-item-title">Audífonos</h3>
+                <p class="category-item-amount">(42)</p>
+              </div>
+              <a href="#" class="category-btn">Ver todo</a>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <div class="category-img-box cat-charger">⚡</div>
+            <div class="category-content-box">
+              <div class="category-content-flex">
+                <h3 class="category-item-title">Cargadores</h3>
+                <p class="category-item-amount">(78)</p>
+              </div>
+              <a href="#" class="category-btn">Ver todo</a>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <div class="category-img-box cat-case">🛡️</div>
+            <div class="category-content-box">
+              <div class="category-content-flex">
+                <h3 class="category-item-title">Fundas</h3>
+                <p class="category-item-amount">(120)</p>
+              </div>
+              <a href="#" class="category-btn">Ver todo</a>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <div class="category-img-box cat-watch">⌚</div>
+            <div class="category-content-box">
+              <div class="category-content-flex">
+                <h3 class="category-item-title">Smartwatches</h3>
+                <p class="category-item-amount">(29)</p>
+              </div>
+              <a href="#" class="category-btn">Ver todo</a>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <div class="category-img-box cat-machine">⚙️</div>
+            <div class="category-content-box">
+              <div class="category-content-flex">
+                <h3 class="category-item-title">Máquinas</h3>
+                <p class="category-item-amount">(18)</p>
+              </div>
+              <a href="#" class="category-btn">Ver todo</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCT SECTION -->
+    <div class="product-container">
+      <div class="container">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar has-scrollbar" data-mobile-menu>
+          <div class="sidebar-category">
+            <div class="sidebar-top">
+              <h2 class="sidebar-title">Categorías</h2>
+              <button class="sidebar-close-btn" data-mobile-menu-close-btn>
+                <ion-icon name="close-outline"></ion-icon>
+              </button>
+            </div>
+
+            <ul class="sidebar-menu-category-list">
+
+              <li class="sidebar-menu-category">
+                <button class="sidebar-accordion-menu" data-accordion-btn>
+                  <div class="menu-title-flex">
+                    <span class="menu-title-icon">📱</span>
+                    <p class="menu-title">Apple iPhone</p>
+                  </div>
+                  <div><ion-icon name="add-outline" class="add-icon"></ion-icon><ion-icon name="remove-outline" class="remove-icon"></ion-icon></div>
+                </button>
+                <ul class="sidebar-submenu-category-list" data-accordion>
+                  <li class="sidebar-submenu-category">
+                    <a href="#" class="sidebar-submenu-title">
+                      <p class="product-name">iPhone 16 Pro Max</p>
+                      <data value="12" class="stock" title="Stock">12</data>
+                    </a>
+                  </li>
+                  <li class="sidebar-submenu-category">
+                    <a href="#" class="sidebar-submenu-title">
+                      <p class="product-name">iPhone 16 / Plus</p>
+                      <data value="24" class="stock" title="Stock">24</data>
+                    </a>
+                  </li>
+                  <li class="sidebar-submenu-category">
+                    <a href="#" class="sidebar-submenu-title">
+                      <p class="product-name">iPhone 15 Series</p>
+                      <data value="18" class="stock" title="Stock">18</data>
+                    </a>
+                  </li>
+                  <li class="sidebar-submenu-category">
+                    <a href="#" class="sidebar-submenu-title">
+                      <p class="product-name">iPhone 14 Series</p>
+                      <data value="31" class="stock" title="Stock">31</data>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="sidebar-menu-category">
+                <button class="sidebar-accordion-menu" data-accordion-btn>
+                  <div class="menu-title-flex">
+                    <span class="menu-title-icon">🌌</span>
+                    <p class="menu-title">Samsung Galaxy</p>
+                  </div>
+                  <div><ion-icon name="add-outline" class="add-icon"></ion-icon><ion-icon name="remove-outline" class="remove-icon"></ion-icon></div>
+                </button>
+                <ul class="sidebar-submenu-category-list" data-accordion>
+                  <li class="sidebar-submenu-category">
+                    <a href="#" class="sidebar-submenu-title">
+                      <p class="product-name">Galaxy S25 Series</p>
+                      <data value="15" class="stock">15</data>
+                    </a>
+                  </li>
+                  <li class="sidebar-submenu-category">
+                    <a href="#" class="sidebar-submenu-title">
+                      <p class="product-name">Galaxy A Series</p>
+                      <data value="45" class="stock">45</data>
+                    </a>
+                  </li>
+                  <li class="sidebar-submenu-category">
+                    <a href="#" class="sidebar-submenu-title">
+                      <p class="product-name">Galaxy Z Fold/Flip</p>
+                      <data value="8" class="stock">8</data>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="sidebar-menu-category">
+                <button class="sidebar-accordion-menu" data-accordion-btn>
+                  <div class="menu-title-flex">
+                    <span class="menu-title-icon">⚡</span>
+                    <p class="menu-title">Xiaomi / Redmi</p>
+                  </div>
+                  <div><ion-icon name="add-outline" class="add-icon"></ion-icon><ion-icon name="remove-outline" class="remove-icon"></ion-icon></div>
+                </button>
+                <ul class="sidebar-submenu-category-list" data-accordion>
+                  <li class="sidebar-submenu-category">
+                    <a href="#" class="sidebar-submenu-title">
+                      <p class="product-name">Xiaomi 14 Series</p>
+                      <data value="22" class="stock">22</data>
+                    </a>
+                  </li>
+                  <li class="sidebar-submenu-category">
+                    <a href="#" class="sidebar-submenu-title">
+                      <p class="product-name">Redmi Note 14</p>
+                      <data value="38" class="stock">38</data>
+                    </a>
+                  </li>
+                  <li class="sidebar-submenu-category">
+                    <a href="#" class="sidebar-submenu-title">
+                      <p class="product-name">POCO Series</p>
+                      <data value="19" class="stock">19</data>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="sidebar-menu-category">
+                <button class="sidebar-accordion-menu" data-accordion-btn>
+                  <div class="menu-title-flex">
+                    <span class="menu-title-icon">🔧</span>
+                    <p class="menu-title">Repuestos</p>
+                  </div>
+                  <div><ion-icon name="add-outline" class="add-icon"></ion-icon><ion-icon name="remove-outline" class="remove-icon"></ion-icon></div>
+                </button>
+                <ul class="sidebar-submenu-category-list" data-accordion>
+                  <li class="sidebar-submenu-category">
+                    <a href="#" class="sidebar-submenu-title">
+                      <p class="product-name">Pantallas LCD/OLED</p>
+                      <data value="89" class="stock">89</data>
+                    </a>
+                  </li>
+                  <li class="sidebar-submenu-category">
+                    <a href="#" class="sidebar-submenu-title">
+                      <p class="product-name">Baterías</p>
+                      <data value="64" class="stock">64</data>
+                    </a>
+                  </li>
+                  <li class="sidebar-submenu-category">
+                    <a href="#" class="sidebar-submenu-title">
+                      <p class="product-name">Módulos de Cámara</p>
+                      <data value="41" class="stock">41</data>
+                    </a>
+                  </li>
+                  <li class="sidebar-submenu-category">
+                    <a href="#" class="sidebar-submenu-title">
+                      <p class="product-name">Conectores USB</p>
+                      <data value="75" class="stock">75</data>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="sidebar-menu-category">
+                <button class="sidebar-accordion-menu" data-accordion-btn>
+                  <div class="menu-title-flex">
+                    <span class="menu-title-icon">⚙️</span>
+                    <p class="menu-title">Máquinas</p>
+                  </div>
+                  <div><ion-icon name="add-outline" class="add-icon"></ion-icon><ion-icon name="remove-outline" class="remove-icon"></ion-icon></div>
+                </button>
+                <ul class="sidebar-submenu-category-list" data-accordion>
+                  <li class="sidebar-submenu-category">
+                    <a href="#" class="sidebar-submenu-title">
+                      <p class="product-name">Separadoras de Pantalla</p>
+                      <data value="7" class="stock">7</data>
+                    </a>
+                  </li>
+                  <li class="sidebar-submenu-category">
+                    <a href="#" class="sidebar-submenu-title">
+                      <p class="product-name">Estaciones Soldadura</p>
+                      <data value="5" class="stock">5</data>
+                    </a>
+                  </li>
+                  <li class="sidebar-submenu-category">
+                    <a href="#" class="sidebar-submenu-title">
+                      <p class="product-name">Laminadoras OCA</p>
+                      <data value="4" class="stock">4</data>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+            </ul>
+          </div>
+
+          <!-- BEST SELLERS SIDEBAR -->
+          <div class="product-showcase">
+            <h3 class="showcase-heading">más vendidos</h3>
+            <div class="showcase-wrapper">
+              <div class="showcase-container">
+
+                <div class="showcase">
+                  <a href="#" class="showcase-img-box">
+                    <div class="showcase-emoji">📱</div>
+                  </a>
+                  <div class="showcase-content">
+                    <a href="#"><h4 class="showcase-title">Redmi Note 14 Pro 5G</h4></a>
+                    <div class="showcase-rating">
+                      <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon>
+                    </div>
+                    <div class="price-box">
+                      <del>$1.890.000</del>
+                      <p class="price">$1.590.000</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="showcase">
+                  <a href="#" class="showcase-img-box">
+                    <div class="showcase-emoji">🔋</div>
+                  </a>
+                  <div class="showcase-content">
+                    <a href="#"><h4 class="showcase-title">Batería iPhone 15 Original</h4></a>
+                    <div class="showcase-rating">
+                      <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                      <ion-icon name="star-half-outline"></ion-icon>
+                    </div>
+                    <div class="price-box">
+                      <del>$95.000</del>
+                      <p class="price">$75.000</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="showcase">
+                  <a href="#" class="showcase-img-box">
+                    <div class="showcase-emoji">🎧</div>
+                  </a>
+                  <div class="showcase-content">
+                    <a href="#"><h4 class="showcase-title">AirPods Pro 2da Gen</h4></a>
+                    <div class="showcase-rating">
+                      <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon>
+                    </div>
+                    <div class="price-box">
+                      <del>$950.000</del>
+                      <p class="price">$820.000</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="showcase">
+                  <a href="#" class="showcase-img-box">
+                    <div class="showcase-emoji">⚡</div>
+                  </a>
+                  <div class="showcase-content">
+                    <a href="#"><h4 class="showcase-title">Cargador Anker 67W GaN</h4></a>
+                    <div class="showcase-rating">
+                      <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                      <ion-icon name="star"></ion-icon>
+                    </div>
+                    <div class="price-box">
+                      <del>$120.000</del>
+                      <p class="price">$89.000</p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- PRODUCT GRID -->
+        <div class="product-box">
+
+          <!-- NUEVOS INGRESOS -->
+          <div class="product-minimal">
+            <div class="product-showcase">
+              <h2 class="title">Nuevos Ingresos</h2>
+              <div class="showcase-wrapper has-scrollbar">
+                <div class="showcase-container">
+
+                  <div class="showcase">
+                    <a href="#" class="showcase-img-box"><div class="showcase-emoji lg">📱</div></a>
+                    <div class="showcase-content">
+                      <a href="#"><h4 class="showcase-title">iPhone 16 Pro Max 256GB Titanio</h4></a>
+                      <a href="#" class="showcase-category">Apple</a>
+                      <div class="price-box"><p class="price">$5.890.000</p><del>$6.200.000</del></div>
+                    </div>
+                  </div>
+
+                  <div class="showcase">
+                    <a href="#" class="showcase-img-box"><div class="showcase-emoji lg">🌌</div></a>
+                    <div class="showcase-content">
+                      <a href="#"><h4 class="showcase-title">Samsung Galaxy S25 Ultra 512GB</h4></a>
+                      <a href="#" class="showcase-category">Samsung</a>
+                      <div class="price-box"><p class="price">$4.990.000</p><del>$5.400.000</del></div>
+                    </div>
+                  </div>
+
+                  <div class="showcase">
+                    <a href="#" class="showcase-img-box"><div class="showcase-emoji lg">⚡</div></a>
+                    <div class="showcase-content">
+                      <a href="#"><h4 class="showcase-title">Xiaomi 14 Pro 5G 256GB</h4></a>
+                      <a href="#" class="showcase-category">Xiaomi</a>
+                      <div class="price-box"><p class="price">$3.490.000</p><del>$3.900.000</del></div>
+                    </div>
+                  </div>
+
+                  <div class="showcase">
+                    <a href="#" class="showcase-img-box"><div class="showcase-emoji lg">🏎️</div></a>
+                    <div class="showcase-content">
+                      <a href="#"><h4 class="showcase-title">Motorola Edge 50 Pro 5G</h4></a>
+                      <a href="#" class="showcase-category">Motorola</a>
+                      <div class="price-box"><p class="price">$2.190.000</p><del>$2.500.000</del></div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- REPUESTOS DESTACADOS -->
+            <div class="product-showcase">
+              <h2 class="title">Repuestos Destacados</h2>
+              <div class="showcase-wrapper has-scrollbar">
+                <div class="showcase-container">
+
+                  <div class="showcase">
+                    <a href="#" class="showcase-img-box"><div class="showcase-emoji lg">🖥️</div></a>
+                    <div class="showcase-content">
+                      <a href="#"><h4 class="showcase-title">Pantalla OLED iPhone 14 Pro Original</h4></a>
+                      <a href="#" class="showcase-category">Repuestos</a>
+                      <div class="price-box"><p class="price">$420.000</p><del>$520.000</del></div>
+                    </div>
+                  </div>
+
+                  <div class="showcase">
+                    <a href="#" class="showcase-img-box"><div class="showcase-emoji lg">🔋</div></a>
+                    <div class="showcase-content">
+                      <a href="#"><h4 class="showcase-title">Batería Samsung S23 Ultra 5000mAh</h4></a>
+                      <a href="#" class="showcase-category">Repuestos</a>
+                      <div class="price-box"><p class="price">$85.000</p><del>$110.000</del></div>
+                    </div>
+                  </div>
+
+                  <div class="showcase">
+                    <a href="#" class="showcase-img-box"><div class="showcase-emoji lg">📷</div></a>
+                    <div class="showcase-content">
+                      <a href="#"><h4 class="showcase-title">Módulo Cámara Trasera Xiaomi 13</h4></a>
+                      <a href="#" class="showcase-category">Repuestos</a>
+                      <div class="price-box"><p class="price">$145.000</p><del>$190.000</del></div>
+                    </div>
+                  </div>
+
+                  <div class="showcase">
+                    <a href="#" class="showcase-img-box"><div class="showcase-emoji lg">🔌</div></a>
+                    <div class="showcase-content">
+                      <a href="#"><h4 class="showcase-title">Conector USB-C Samsung A54 Original</h4></a>
+                      <a href="#" class="showcase-category">Repuestos</a>
+                      <div class="price-box"><p class="price">$28.000</p><del>$40.000</del></div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PRODUCTOS PRINCIPALES GRID -->
+          <div class="product-main">
+            <h2 class="title">Equipos Destacados</h2>
+            <div class="product-grid">
+
+              <!-- Product Card -->
+              <div class="product-card">
+                <div class="card-badge new">NUEVO</div>
+                <div class="card-img-box">
+                  <div class="card-emoji">📱</div>
+                </div>
+                <div class="card-actions">
+                  <button class="card-action-btn" title="Favorito"><ion-icon name="heart-outline"></ion-icon></button>
+                  <button class="card-action-btn" title="Vista rápida"><ion-icon name="eye-outline"></ion-icon></button>
+                  <button class="card-action-btn" title="Comparar"><ion-icon name="git-compare-outline"></ion-icon></button>
+                </div>
+                <div class="card-content">
+                  <a href="#" class="card-category">Apple</a>
+                  <a href="#"><h3 class="card-title">iPhone 16 Pro 128GB Titanio Negro</h3></a>
+                  <div class="card-rating">
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <span>(42)</span>
+                  </div>
+                  <div class="card-price-box">
+                    <p class="card-price">$5.290.000</p>
+                    <del>$5.700.000</del>
+                  </div>
+                  <button class="add-cart-btn">
+                    <ion-icon name="bag-add-outline"></ion-icon> Agregar
+                  </button>
+                </div>
+              </div>
+
+              <div class="product-card">
+                <div class="card-badge offer">-15%</div>
+                <div class="card-img-box">
+                  <div class="card-emoji">🌌</div>
+                </div>
+                <div class="card-actions">
+                  <button class="card-action-btn" title="Favorito"><ion-icon name="heart-outline"></ion-icon></button>
+                  <button class="card-action-btn" title="Vista rápida"><ion-icon name="eye-outline"></ion-icon></button>
+                  <button class="card-action-btn" title="Comparar"><ion-icon name="git-compare-outline"></ion-icon></button>
+                </div>
+                <div class="card-content">
+                  <a href="#" class="card-category">Samsung</a>
+                  <a href="#"><h3 class="card-title">Galaxy S25 512GB Phantom Black</h3></a>
+                  <div class="card-rating">
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                    <ion-icon name="star-half-outline"></ion-icon>
+                    <span>(28)</span>
+                  </div>
+                  <div class="card-price-box">
+                    <p class="card-price">$3.890.000</p>
+                    <del>$4.590.000</del>
+                  </div>
+                  <button class="add-cart-btn">
+                    <ion-icon name="bag-add-outline"></ion-icon> Agregar
+                  </button>
+                </div>
+              </div>
+
+              <div class="product-card">
+                <div class="card-badge hot">🔥 HOT</div>
+                <div class="card-img-box">
+                  <div class="card-emoji">⚡</div>
+                </div>
+                <div class="card-actions">
+                  <button class="card-action-btn" title="Favorito"><ion-icon name="heart-outline"></ion-icon></button>
+                  <button class="card-action-btn" title="Vista rápida"><ion-icon name="eye-outline"></ion-icon></button>
+                  <button class="card-action-btn" title="Comparar"><ion-icon name="git-compare-outline"></ion-icon></button>
+                </div>
+                <div class="card-content">
+                  <a href="#" class="card-category">Xiaomi</a>
+                  <a href="#"><h3 class="card-title">Redmi Note 14 Pro 5G 256GB</h3></a>
+                  <div class="card-rating">
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <span>(67)</span>
+                  </div>
+                  <div class="card-price-box">
+                    <p class="card-price">$1.590.000</p>
+                    <del>$1.890.000</del>
+                  </div>
+                  <button class="add-cart-btn">
+                    <ion-icon name="bag-add-outline"></ion-icon> Agregar
+                  </button>
+                </div>
+              </div>
+
+              <div class="product-card">
+                <div class="card-img-box">
+                  <div class="card-emoji">🏎️</div>
+                </div>
+                <div class="card-actions">
+                  <button class="card-action-btn" title="Favorito"><ion-icon name="heart-outline"></ion-icon></button>
+                  <button class="card-action-btn" title="Vista rápida"><ion-icon name="eye-outline"></ion-icon></button>
+                  <button class="card-action-btn" title="Comparar"><ion-icon name="git-compare-outline"></ion-icon></button>
+                </div>
+                <div class="card-content">
+                  <a href="#" class="card-category">Motorola</a>
+                  <a href="#"><h3 class="card-title">Moto G85 5G 256GB Azul Zafiro</h3></a>
+                  <div class="card-rating">
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>(19)</span>
+                  </div>
+                  <div class="card-price-box">
+                    <p class="card-price">$1.190.000</p>
+                    <del>$1.390.000</del>
+                  </div>
+                  <button class="add-cart-btn">
+                    <ion-icon name="bag-add-outline"></ion-icon> Agregar
+                  </button>
+                </div>
+              </div>
+
+              <div class="product-card">
+                <div class="card-badge new">NUEVO</div>
+                <div class="card-img-box">
+                  <div class="card-emoji">🌐</div>
+                </div>
+                <div class="card-actions">
+                  <button class="card-action-btn" title="Favorito"><ion-icon name="heart-outline"></ion-icon></button>
+                  <button class="card-action-btn" title="Vista rápida"><ion-icon name="eye-outline"></ion-icon></button>
+                  <button class="card-action-btn" title="Comparar"><ion-icon name="git-compare-outline"></ion-icon></button>
+                </div>
+                <div class="card-content">
+                  <a href="#" class="card-category">Huawei</a>
+                  <a href="#"><h3 class="card-title">Pura 70 Pro 512GB Negro</h3></a>
+                  <div class="card-rating">
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                    <ion-icon name="star-half-outline"></ion-icon>
+                    <span>(11)</span>
+                  </div>
+                  <div class="card-price-box">
+                    <p class="card-price">$2.890.000</p>
+                    <del>$3.200.000</del>
+                  </div>
+                  <button class="add-cart-btn">
+                    <ion-icon name="bag-add-outline"></ion-icon> Agregar
+                  </button>
+                </div>
+              </div>
+
+              <div class="product-card">
+                <div class="card-badge offer">-20%</div>
+                <div class="card-img-box">
+                  <div class="card-emoji">🎧</div>
+                </div>
+                <div class="card-actions">
+                  <button class="card-action-btn" title="Favorito"><ion-icon name="heart-outline"></ion-icon></button>
+                  <button class="card-action-btn" title="Vista rápida"><ion-icon name="eye-outline"></ion-icon></button>
+                  <button class="card-action-btn" title="Comparar"><ion-icon name="git-compare-outline"></ion-icon></button>
+                </div>
+                <div class="card-content">
+                  <a href="#" class="card-category">Samsung</a>
+                  <a href="#"><h3 class="card-title">Galaxy Buds3 Pro ANC Blanco</h3></a>
+                  <div class="card-rating">
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <span>(35)</span>
+                  </div>
+                  <div class="card-price-box">
+                    <p class="card-price">$479.000</p>
+                    <del>$599.000</del>
+                  </div>
+                  <button class="add-cart-btn">
+                    <ion-icon name="bag-add-outline"></ion-icon> Agregar
+                  </button>
+                </div>
+              </div>
+
+              <div class="product-card">
+                <div class="card-img-box">
+                  <div class="card-emoji">🖥️</div>
+                </div>
+                <div class="card-actions">
+                  <button class="card-action-btn" title="Favorito"><ion-icon name="heart-outline"></ion-icon></button>
+                  <button class="card-action-btn" title="Vista rápida"><ion-icon name="eye-outline"></ion-icon></button>
+                  <button class="card-action-btn" title="Comparar"><ion-icon name="git-compare-outline"></ion-icon></button>
+                </div>
+                <div class="card-content">
+                  <a href="#" class="card-category">Repuestos</a>
+                  <a href="#"><h3 class="card-title">Pantalla AMOLED Samsung A55 Original</h3></a>
+                  <div class="card-rating">
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <span>(22)</span>
+                  </div>
+                  <div class="card-price-box">
+                    <p class="card-price">$185.000</p>
+                    <del>$240.000</del>
+                  </div>
+                  <button class="add-cart-btn">
+                    <ion-icon name="bag-add-outline"></ion-icon> Agregar
+                  </button>
+                </div>
+              </div>
+
+              <div class="product-card">
+                <div class="card-badge hot">🔥 HOT</div>
+                <div class="card-img-box">
+                  <div class="card-emoji">⌚</div>
+                </div>
+                <div class="card-actions">
+                  <button class="card-action-btn" title="Favorito"><ion-icon name="heart-outline"></ion-icon></button>
+                  <button class="card-action-btn" title="Vista rápida"><ion-icon name="eye-outline"></ion-icon></button>
+                  <button class="card-action-btn" title="Comparar"><ion-icon name="git-compare-outline"></ion-icon></button>
+                </div>
+                <div class="card-content">
+                  <a href="#" class="card-category">Apple</a>
+                  <a href="#"><h3 class="card-title">Apple Watch Series 10 45mm GPS</h3></a>
+                  <div class="card-rating">
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                    <ion-icon name="star-half-outline"></ion-icon>
+                    <span>(14)</span>
+                  </div>
+                  <div class="card-price-box">
+                    <p class="card-price">$1.890.000</p>
+                    <del>$2.100.000</del>
+                  </div>
+                  <button class="add-cart-btn">
+                    <ion-icon name="bag-add-outline"></ion-icon> Agregar
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- PROMO BANNERS -->
+    <div class="promo-section">
+      <div class="container">
+        <div class="promo-grid">
+          <div class="promo-card promo-repair">
+            <div class="promo-content">
+              <p class="promo-sub">Servicio técnico especializado</p>
+              <h3 class="promo-title">Reparación<br>Express</h3>
+              <p class="promo-text">Pantallas · Baterías · Conectores</p>
+              <a href="#" class="promo-btn">Cotizar ahora</a>
+            </div>
+            <div class="promo-icon">🔧</div>
+          </div>
+          <div class="promo-card promo-certified">
+            <div class="promo-content">
+              <p class="promo-sub">Usados garantizados</p>
+              <h3 class="promo-title">Equipos<br>Certificados</h3>
+              <p class="promo-text">Revisados · Desbloqueados · Con garantía</p>
+              <a href="#" class="promo-btn">Ver equipos</a>
+            </div>
+            <div class="promo-icon">✅</div>
+          </div>
+          <div class="promo-card promo-machines">
+            <div class="promo-content">
+              <p class="promo-sub">Para técnicos profesionales</p>
+              <h3 class="promo-title">Máquinas<br>Industriales</h3>
+              <p class="promo-text">Separadoras · Laminadoras · Soldadura</p>
+              <a href="#" class="promo-btn">Ver máquinas</a>
+            </div>
+            <div class="promo-icon">⚙️</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MARCAS SECTION -->
+    <div class="brands-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Marcas que manejamos</h2>
+          <p class="section-subtitle">Distribuidores autorizados y repuestos originales</p>
+        </div>
+        <div class="brands-logos">
+          <div class="brand-logo-item">
+            <div class="brand-logo-icon">🍎</div>
+            <span>Apple</span>
+          </div>
+          <div class="brand-logo-item">
+            <div class="brand-logo-icon">🌌</div>
+            <span>Samsung</span>
+          </div>
+          <div class="brand-logo-item">
+            <div class="brand-logo-icon">⚡</div>
+            <span>Xiaomi</span>
+          </div>
+          <div class="brand-logo-item">
+            <div class="brand-logo-icon">🏎️</div>
+            <span>Motorola</span>
+          </div>
+          <div class="brand-logo-item">
+            <div class="brand-logo-icon">🌐</div>
+            <span>Huawei</span>
+          </div>
+          <div class="brand-logo-item">
+            <div class="brand-logo-icon">💥</div>
+            <span>OPPO</span>
+          </div>
+          <div class="brand-logo-item">
+            <div class="brand-logo-icon">🎵</div>
+            <span>OnePlus</span>
+          </div>
+          <div class="brand-logo-item">
+            <div class="brand-logo-icon">🔶</div>
+            <span>realme</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRUST BARS -->
+    <div class="trust-section">
+      <div class="container">
+        <div class="trust-grid">
+          <div class="trust-item">
+            <div class="trust-icon">🚀</div>
+            <div class="trust-text">
+              <strong>Envío Rápido</strong>
+              <span>A todo el país</span>
+            </div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">🛡️</div>
+            <div class="trust-text">
+              <strong>Garantía Real</strong>
+              <span>6 meses en repuestos</span>
+            </div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">✅</div>
+            <div class="trust-text">
+              <strong>Productos Originales</strong>
+              <span>100% verificados</span>
+            </div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">💬</div>
+            <div class="trust-text">
+              <strong>Soporte Experto</strong>
+              <span>Lun–Sáb 8am–8pm</span>
+            </div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">💳</div>
+            <div class="trust-text">
+              <strong>Pago Seguro</strong>
+              <span>PSE · Efecty · Tarjetas</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+
+    <div class="footer-category">
+      <div class="container">
+
+        <div class="footer-category-box">
+          <h3 class="category-box-title">Smartphones :</h3>
+          <a href="#" class="footer-category-link">iPhone 16 Pro Max</a>
+          <a href="#" class="footer-category-link">iPhone 15 Series</a>
+          <a href="#" class="footer-category-link">Samsung S25 Ultra</a>
+          <a href="#" class="footer-category-link">Galaxy A55</a>
+          <a href="#" class="footer-category-link">Xiaomi 14 Pro</a>
+          <a href="#" class="footer-category-link">Redmi Note 14</a>
+          <a href="#" class="footer-category-link">Motorola Edge 50</a>
+          <a href="#" class="footer-category-link">Moto G85</a>
+        </div>
+
+        <div class="footer-category-box">
+          <h3 class="category-box-title">Repuestos :</h3>
+          <a href="#" class="footer-category-link">Pantallas iPhone</a>
+          <a href="#" class="footer-category-link">Pantallas Samsung</a>
+          <a href="#" class="footer-category-link">Pantallas Xiaomi</a>
+          <a href="#" class="footer-category-link">Baterías Originales</a>
+          <a href="#" class="footer-category-link">Módulos de Cámara</a>
+          <a href="#" class="footer-category-link">Conectores USB</a>
+          <a href="#" class="footer-category-link">Tapas Traseras</a>
+          <a href="#" class="footer-category-link">Flex y Botones</a>
+        </div>
+
+        <div class="footer-category-box">
+          <h3 class="category-box-title">Accesorios :</h3>
+          <a href="#" class="footer-category-link">AirPods / Buds</a>
+          <a href="#" class="footer-category-link">Cargadores GaN</a>
+          <a href="#" class="footer-category-link">Cables USB-C</a>
+          <a href="#" class="footer-category-link">Fundas Militares</a>
+          <a href="#" class="footer-category-link">Vidrios Templados</a>
+          <a href="#" class="footer-category-link">Power Banks</a>
+          <a href="#" class="footer-category-link">Smartwatches</a>
+          <a href="#" class="footer-category-link">Soportes Auto</a>
+        </div>
+
+        <div class="footer-category-box">
+          <h3 class="category-box-title">Máquinas :</h3>
+          <a href="#" class="footer-category-link">Separadora Pantalla</a>
+          <a href="#" class="footer-category-link">Laminadora OCA</a>
+          <a href="#" class="footer-category-link">Estación Soldadura</a>
+          <a href="#" class="footer-category-link">Pistola Calor</a>
+          <a href="#" class="footer-category-link">Kit Herramientas</a>
+          <a href="#" class="footer-category-link">Microscopio Digital</a>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-nav">
+      <div class="container">
+
+        <ul class="footer-nav-list">
+          <li class="footer-nav-item"><h2 class="nav-title">Categorías</h2></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Smartphones</a></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Repuestos</a></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Accesorios</a></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Máquinas</a></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Usados Certificados</a></li>
+        </ul>
+
+        <ul class="footer-nav-list">
+          <li class="footer-nav-item"><h2 class="nav-title">Productos</h2></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Ofertas activas</a></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Nuevos ingresos</a></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Más vendidos</a></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Contacto</a></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Cotizar</a></li>
+        </ul>
+
+        <ul class="footer-nav-list">
+          <li class="footer-nav-item"><h2 class="nav-title">CeluFénix</h2></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Quiénes somos</a></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Garantías</a></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Políticas de envío</a></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Términos y condiciones</a></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Pago seguro</a></li>
+        </ul>
+
+        <ul class="footer-nav-list">
+          <li class="footer-nav-item"><h2 class="nav-title">Servicios</h2></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Reparación Express</a></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Diagnóstico gratuito</a></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Venta mayorista</a></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Garantía técnica</a></li>
+          <li class="footer-nav-item"><a href="#" class="footer-nav-link">Capacitaciones</a></li>
+        </ul>
+
+        <ul class="footer-nav-list">
+          <li class="footer-nav-item"><h2 class="nav-title">Contacto</h2></li>
+          <li class="footer-nav-item flex">
+            <div class="icon-box"><ion-icon name="location-outline"></ion-icon></div>
+            <address class="content">Calle 72 #15-42, Bogotá, Colombia</address>
+          </li>
+          <li class="footer-nav-item flex">
+            <div class="icon-box"><ion-icon name="call-outline"></ion-icon></div>
+            <a href="tel:+573001234567" class="footer-nav-link">+57 300 123 4567</a>
+          </li>
+          <li class="footer-nav-item flex">
+            <div class="icon-box"><ion-icon name="logo-whatsapp"></ion-icon></div>
+            <a href="https://wa.me/573001234567" class="footer-nav-link">WhatsApp directo</a>
+          </li>
+          <li class="footer-nav-item flex">
+            <div class="icon-box"><ion-icon name="mail-outline"></ion-icon></div>
+            <a href="mailto:ventas@celufenix.co" class="footer-nav-link">ventas@celufenix.co</a>
+          </li>
+        </ul>
+
+        <ul class="footer-nav-list">
+          <li class="footer-nav-item"><h2 class="nav-title">Síguenos</h2></li>
+          <li>
+            <ul class="social-link">
+              <li class="footer-nav-item"><a href="#" class="footer-nav-link"><ion-icon name="logo-whatsapp"></ion-icon></a></li>
+              <li class="footer-nav-item"><a href="#" class="footer-nav-link"><ion-icon name="logo-instagram"></ion-icon></a></li>
+              <li class="footer-nav-item"><a href="#" class="footer-nav-link"><ion-icon name="logo-facebook"></ion-icon></a></li>
+              <li class="footer-nav-item"><a href="#" class="footer-nav-link"><ion-icon name="logo-tiktok"></ion-icon></a></li>
+            </ul>
+          </li>
+          <li class="footer-nav-item" style="margin-top:16px;">
+            <a href="https://wa.me/573001234567" class="whatsapp-footer-btn">
+              <ion-icon name="logo-whatsapp"></ion-icon> Escríbenos por WhatsApp
+            </a>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="payment-methods">
+          <span class="payment-label">Medios de pago:</span>
+          <div class="payment-icons">
+            <span class="pay-icon">💳 PSE</span>
+            <span class="pay-icon">🏦 Nequi</span>
+            <span class="pay-icon">💵 Efecty</span>
+            <span class="pay-icon">🔵 Daviplata</span>
+            <span class="pay-icon">💳 Visa/MC</span>
+          </div>
+        </div>
+        <p class="copyright">
+          &copy; 2025 <a href="#">CeluFénix</a> — Todos los derechos reservados.
+        </p>
+      </div>
+    </div>
+
+  </footer>
+
+  <script src="script.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+</body>
+</html>
