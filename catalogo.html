@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CeluFénix — Catálogo de Productos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ══ THEME TOKENS ══ */
+:root{--y:#adad03;--yd:#adad03;--tr:.22s cubic-bezier(.4,0,.2,1);}
+[data-theme="dark"]{
+  --bg:#08080f;--bg2:#0d0d18;--bg3:#121220;--card:#161626;--card2:#1c1c30;--surf:#22223a;
+  --bdr:rgba(244,245,0,.1);--bdr2:rgba(255,255,255,.07);--txt:#e8e8f4;--muted:#6868a0;
+  --white:#fff;--sh:0 4px 24px rgba(0,0,0,.55);--sh2:0 12px 48px rgba(0,0,0,.7);
+  --header-bg:rgba(8,8,15,.96);--footer-bg:#0d0d18;--input-bg:#22223a;--input-bdr:rgba(255,255,255,.07);
+  --modal-bg:#0d0d18;
+}
+[data-theme="light"]{
+  --bg:#f5f5f7;--bg2:#ffffff;--bg3:#ebebf0;--card:#ffffff;--card2:#f0f0f5;--surf:#e8e8f0;
+  --bdr:rgba(244,245,0,.5);--bdr2:rgba(0,0,0,.08);--txt:#1a1a2e;--muted:#5555aa;--white:#1a1a2e;
+  --sh:0 4px 16px rgba(0,0,0,.1);--sh2:0 8px 32px rgba(0,0,0,.15);
+  --header-bg:rgba(255,255,255,.97);--footer-bg:#1a1a2e;--input-bg:#f0f0f5;--input-bdr:rgba(0,0,0,.1);
+  --modal-bg:#ffffff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+a{text-decoration:none;color:inherit}ul{list-style:none}
+img{max-width:100%;display:block;object-fit:cover}
+button{cursor:pointer;border:none;background:none;font-family:inherit}
+::-webkit-scrollbar{width:5px;height:3px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--y);border-radius:3px}
+
+/* ══ UTILS ══ */
+.wrap{max-width:1340px;margin:0 auto;padding:0 20px}
+
+/* ══ THEME TOGGLE ══ */
+.theme-btn{width:44px;height:44px;border-radius:10px;background:var(--surf);border:1px solid var(--bdr2);display:flex;align-items:center;justify-content:center;font-size:18px;transition:var(--tr);flex-shrink:0;}
+.theme-btn:hover{background:var(--y);border-color:var(--y)}
+.theme-btn:hover .ico-moon,.theme-btn:hover .ico-sun{color:#000}
+.ico-moon,.ico-sun{color:var(--txt);transition:color var(--tr)}
+[data-theme="dark"] .ico-sun{display:block}[data-theme="dark"] .ico-moon{display:none}
+[data-theme="light"] .ico-sun{display:none}[data-theme="light"] .ico-moon{display:block}
+
+/* ══ OVERLAY ══ */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px)}
+.overlay.on{opacity:1;pointer-events:all}
+
+/* ══ TOAST ══ */
+.toast{position:fixed;bottom:24px;left:20px;z-index:8000;background:var(--card);border:1px solid var(--bdr);border-left:3px solid #10b981;border-radius:14px;padding:13px 16px;display:flex;align-items:center;gap:12px;max-width:295px;box-shadow:var(--sh2);transform:translateX(-130%);transition:transform .45s cubic-bezier(.34,1.56,.64,1);}
+.toast.on{transform:translateX(0)}
+.toast-thumb{width:44px;height:44px;border-radius:8px;overflow:hidden;flex-shrink:0}
+.toast-thumb img{width:100%;height:100%;object-fit:cover}
+.toast-info p{font-size:11px;color:var(--muted)}
+.toast-info strong{display:block;font-size:12px;font-weight:700;color:var(--white);margin:1px 0}
+.toast-info span{font-size:11px;color:#10b981}
+.toast-x{margin-left:auto;color:var(--muted);font-size:14px;flex-shrink:0;transition:color var(--tr)}
+.toast-x:hover{color:var(--white)}
+
+/* ══ SIDE PANELS ══ */
+.side-panel{position:fixed;top:0;right:-460px;width:420px;max-width:100vw;height:100dvh;background:var(--bg2);border-left:1px solid var(--bdr);z-index:9100;display:flex;flex-direction:column;transition:right .38s cubic-bezier(.4,0,.2,1);box-shadow:-10px 0 50px rgba(0,0,0,.5);}
+.side-panel.on{right:0}
+.panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--bdr);flex-shrink:0}
+.panel-hdr h2{font-size:16px;font-weight:800}
+.panel-hdr-r{display:flex;align-items:center;gap:9px}
+.cpill{background:var(--y);color:#000;font-size:11px;font-weight:800;padding:2px 9px;border-radius:20px;min-width:22px;text-align:center;font-family:'DM Mono',monospace}
+.px{width:30px;height:30px;background:var(--surf);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:15px;transition:var(--tr)}
+.px:hover{background:var(--y);color:#000}
+.panel-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.panel-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);text-align:center;padding:40px 16px}
+.panel-empty h3{font-size:15px;font-weight:700;color:var(--txt)}
+.panel-empty p{font-size:13px}
+.ci{display:flex;gap:11px;background:var(--card);border-radius:12px;padding:12px;border:1px solid var(--bdr2)}
+.ci-img{width:64px;height:64px;border-radius:9px;overflow:hidden;flex-shrink:0;background:var(--surf)}
+.ci-img img{width:100%;height:100%;object-fit:cover}
+.ci-info{flex:1;min-width:0}
+.ci-cat{font-size:9px;color:var(--y);font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:'DM Mono',monospace}
+.ci-name{font-size:12px;font-weight:700;color:var(--white);margin:3px 0 8px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ci-bot{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ci-price{font-size:14px;font-weight:800;color:var(--y)}
+.qrow{display:flex;align-items:center;gap:5px}
+.qb{width:26px;height:26px;border-radius:6px;background:var(--surf);color:var(--txt);font-size:14px;display:flex;align-items:center;justify-content:center;transition:var(--tr);font-weight:700}
+.qb:hover{background:var(--y);color:#000}
+.qn{font-size:14px;font-weight:700;min-width:16px;text-align:center}
+.qi{color:var(--muted);font-size:14px;margin-left:2px;transition:color var(--tr);line-height:1}
+.qi:hover{color:#f43f5e}
+.panel-ftr{padding:14px 18px;border-top:1px solid var(--bdr);flex-shrink:0;background:var(--bg2)}
+.sub-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+.sub-row span{font-size:13px;color:var(--muted)}
+.sub-row strong{font-size:22px;font-weight:900;color:var(--y)}
+.chk-btn{width:100%;padding:13px;background:var(--y);color:#000;border-radius:10px;font-size:15px;font-weight:800;transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:8px}
+.chk-btn:hover{background:var(--yd);transform:translateY(-1px)}
+.cont-shop{width:100%;padding:9px;text-align:center;font-size:12px;color:var(--muted);margin-top:7px;transition:color var(--tr)}
+.cont-shop:hover{color:var(--txt)}
+
+/* ══ HEADER ══ */
+.htop{background:var(--bg3);padding:8px 0;border-bottom:1px solid var(--bdr2)}
+.htop .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.hticker{font-size:12px;color:var(--muted)}
+.hticker strong{color:var(--y)}
+.hmain{background:var(--header-bg);padding:12px 0;position:sticky;top:0;z-index:700;border-bottom:1px solid var(--bdr);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);transition:background .3s;}
+.hmain .wrap{display:flex;align-items:center;gap:16px}
+.logo-area{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo-box{width:44px;height:44px;border-radius:11px;border:2px solid var(--y);background:var(--bg3);display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 0 12px rgba(244,245,0,.2);flex-shrink:0}
+.logo-box img{width:100%;height:100%;object-fit:contain;padding:3px}
+.logo-box .lfb{font-size:18px;font-weight:900;color:var(--y)}
+.logo-txt .ln{font-size:17px;font-weight:900;color:var(--white);line-height:1}
+.logo-txt .ln em{color:var(--y);font-style:normal}
+.logo-txt .lt{font-size:10px;color:var(--muted);letter-spacing:.8px;font-family:'DM Mono',monospace}
+.srch-area{flex:1;max-width:740px}
+.srch-box{display:flex;background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:10px;overflow:hidden;transition:border-color var(--tr)}
+.srch-box:focus-within{border-color:var(--y);box-shadow:0 0 0 3px rgba(244,245,0,.08)}
+.srch-inp{flex:1;background:none;border:none;padding:10px 14px;color:var(--txt);font-size:13px;font-family:'Outfit',sans-serif}
+.srch-inp::placeholder{color:var(--muted)}
+.srch-inp:focus{outline:none}
+.srch-btn{padding:0 16px;background:var(--y);color:#000;font-size:15px;display:flex;align-items:center;transition:background var(--tr);font-weight:700}
+.srch-btn:hover{background:var(--yd)}
+.h-acts{display:flex;gap:5px;flex-shrink:0;align-items:center}
+.h-act{position:relative;width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:var(--tr);background:var(--surf);border:1px solid transparent;flex-shrink:0}
+.h-act:hover{color:var(--y);border-color:var(--bdr)}
+.hbdg{position:absolute;top:4px;right:4px;background:var(--y);color:#000;font-size:9px;font-weight:900;width:15px;height:15px;border-radius:50%;display:none;align-items:center;justify-content:center;font-family:'DM Mono',monospace}
+.hbdg.on{display:flex}
+
+/* ══ MOBILE HEADER ══ */
+.mob-header{display:none;background:var(--header-bg);padding:12px 16px;position:sticky;top:0;z-index:700;border-bottom:1px solid var(--bdr);backdrop-filter:blur(24px);}
+.mob-header-inner{display:flex;align-items:center;gap:12px}
+.mob-header .logo-area{flex:0 0 auto}
+.mob-header-center{flex:1;min-width:0}
+.mob-header-center .site-name{font-size:16px;font-weight:900;line-height:1;color:var(--white)}
+.mob-header-center .site-name em{color:var(--y);font-style:normal}
+.mob-header-acts{display:flex;gap:6px;align-items:center;flex-shrink:0}
+.mh-act{position:relative;width:40px;height:40px;border-radius:9px;background:var(--surf);display:flex;align-items:center;justify-content:center;color:var(--muted);transition:var(--tr);border:1px solid var(--bdr2)}
+.mh-act:hover{color:var(--y);border-color:var(--bdr)}
+.mh-bdg{position:absolute;top:3px;right:3px;background:var(--y);color:#000;font-size:8px;font-weight:900;width:14px;height:14px;border-radius:50%;display:none;align-items:center;justify-content:center;font-family:'DM Mono',monospace}
+.mh-bdg.on{display:flex}
+
+/* ══ BOTTOM NAV ══ */
+.bnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:600;background:var(--header-bg);border-top:1px solid var(--bdr);padding:5px 0 env(safe-area-inset-bottom);backdrop-filter:blur(24px)}
+.bnav-inner{display:flex}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;color:var(--muted);font-size:10px;font-weight:600;transition:color var(--tr);position:relative}
+.bnav-btn svg{width:22px;height:22px}
+.bnav-btn.on,.bnav-btn:hover{color:var(--y)}
+.nb-bdg{position:absolute;top:4px;right:calc(50% - 20px);background:var(--y);color:#000;font-size:9px;font-weight:900;width:14px;height:14px;border-radius:50%;display:none;align-items:center;justify-content:center;font-family:'DM Mono',monospace}
+.nb-bdg.on{display:flex}
+
+/* ══ SEARCH SUGGESTIONS ══ */
+.srch-suggestions{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--bg2);border:1px solid var(--bdr);border-radius:12px;box-shadow:var(--sh2);z-index:800;display:none;max-height:340px;overflow-y:auto;}
+.srch-wrap{position:relative;flex:1;max-width:740px}
+.srch-suggestions.on{display:block}
+.sug-item{display:flex;align-items:center;gap:11px;padding:10px 14px;cursor:pointer;transition:background var(--tr)}
+.sug-item:hover{background:var(--surf)}
+.sug-img{width:38px;height:38px;border-radius:8px;overflow:hidden;flex-shrink:0;background:var(--surf)}
+.sug-img img{width:100%;height:100%;object-fit:cover}
+.sug-info{}
+.sug-cat{font-size:9px;color:var(--y);font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:'DM Mono',monospace}
+.sug-name{font-size:12px;font-weight:600;color:var(--white)}
+.sug-price{font-size:12px;font-weight:800;color:var(--y);margin-left:auto;flex-shrink:0}
+.sug-section{padding:6px 14px;font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:2px;font-family:'DM Mono',monospace;border-bottom:1px solid var(--bdr2)}
+.sug-empty{padding:20px;text-align:center;color:var(--muted);font-size:13px}
+
+/* ══ MAIN CATALOG LAYOUT ══ */
+.catalog-wrap{display:grid;grid-template-columns:270px 1fr;gap:22px;padding:28px 0 40px;align-items:start}
+
+/* ══ SIDEBAR ══ */
+.sidebar{background:var(--card);border:1px solid var(--bdr2);border-radius:16px;overflow:hidden;position:sticky;top:80px}
+.sb-section{border-bottom:1px solid var(--bdr2)}
+.sb-section:last-child{border-bottom:none}
+.sb-head{font-size:10px;font-weight:700;color:var(--y);text-transform:uppercase;letter-spacing:2px;padding:14px 16px 8px;font-family:'DM Mono',monospace}
+.sb-body{padding:8px 10px 14px}
+/* Category pills */
+.cat-pills{display:flex;flex-direction:column;gap:2px}
+.cat-pill{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:9px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:var(--tr);border:1px solid transparent}
+.cat-pill:hover{background:var(--surf);color:var(--white)}
+.cat-pill.active{background:rgba(244,245,0,.12);border-color:var(--bdr);color:var(--y)}
+.cat-pill-l{display:flex;align-items:center;gap:8px}
+.cat-pill-ct{font-size:10px;background:var(--surf);color:var(--muted);padding:1px 7px;border-radius:10px;font-family:'DM Mono',monospace}
+.cat-pill.active .cat-pill-ct{background:rgba(244,245,0,.15);color:var(--y)}
+/* Subcategory pills */
+.subcat-pills{display:flex;flex-direction:column;gap:2px;padding:6px 10px 12px 20px;animation:slideDown .2s ease}
+@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.subcat-pill{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:8px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;transition:var(--tr)}
+.subcat-pill::before{content:'›';color:var(--y);font-size:13px;margin-right:4px;flex-shrink:0}
+.subcat-pill:hover{background:var(--surf);color:var(--white)}
+.subcat-pill.active{background:rgba(244,245,0,.1);color:var(--y)}
+.subcat-pill-ct{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace}
+/* Price filter */
+.price-range{display:flex;flex-direction:column;gap:8px}
+.price-inputs{display:flex;gap:6px;align-items:center}
+.price-inp{flex:1;background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:7px;padding:7px 9px;color:var(--txt);font-size:12px;font-family:'DM Mono',monospace;transition:border-color var(--tr)}
+.price-inp:focus{outline:none;border-color:var(--y)}
+.price-sep{font-size:11px;color:var(--muted);flex-shrink:0}
+.price-apply{width:100%;padding:8px;background:var(--y);color:#000;border-radius:7px;font-size:12px;font-weight:700;margin-top:4px;transition:var(--tr)}
+.price-apply:hover{background:var(--yd)}
+/* Star filter */
+.star-filters{display:flex;flex-direction:column;gap:3px}
+.star-flt{display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:7px;cursor:pointer;transition:var(--tr)}
+.star-flt:hover{background:var(--surf)}
+.star-flt input{accent-color:var(--y)}
+.star-flt .s{color:#f59e0b;font-size:12px}
+.star-flt span{font-size:12px;color:var(--muted)}
+/* Brand filter */
+.brand-checks{display:flex;flex-direction:column;gap:3px}
+.brand-chk{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;cursor:pointer;transition:var(--tr)}
+.brand-chk:hover{background:var(--surf)}
+.brand-chk input{accent-color:var(--y)}
+.brand-chk-lbl{font-size:12px;color:var(--txt);flex:1}
+.brand-chk-ct{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace}
+/* Guarantee filter */
+.guar-options{display:flex;flex-direction:column;gap:3px}
+.guar-opt{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;cursor:pointer;transition:var(--tr)}
+.guar-opt:hover{background:var(--surf)}
+.guar-opt input{accent-color:var(--y)}
+.guar-opt-lbl{font-size:12px;color:var(--txt)}
+/* Reset */
+.sb-reset{width:100%;padding:9px 14px;margin:6px 10px;width:calc(100% - 20px);border-radius:8px;font-size:12px;font-weight:700;color:var(--muted);border:1px solid var(--bdr2);transition:var(--tr);text-align:center}
+.sb-reset:hover{background:var(--surf);color:var(--white)}
+
+/* ══ CATALOG MAIN ══ */
+.catalog-main{}
+/* Breadcrumb */
+.breadcrumb{display:flex;align-items:center;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.bc-item{font-size:12px;color:var(--muted);cursor:pointer;transition:color var(--tr)}
+.bc-item:hover{color:var(--y)}
+.bc-item.active{color:var(--txt);font-weight:600}
+.bc-sep{font-size:12px;color:var(--muted)}
+/* Active filter tags */
+.active-filters{display:flex;align-items:center;gap:7px;margin-bottom:14px;flex-wrap:wrap}
+.af-lbl{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px}
+.af-tag{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(244,245,0,.12);border:1px solid var(--bdr);border-radius:20px;font-size:11px;font-weight:600;color:var(--y);cursor:pointer;transition:var(--tr)}
+.af-tag:hover{background:rgba(244,245,0,.2)}
+.af-tag .af-x{font-size:13px;line-height:1;opacity:.7}
+.af-clear{font-size:11px;color:var(--muted);padding:4px 10px;cursor:pointer;transition:color var(--tr);font-weight:600}
+.af-clear:hover{color:#f43f5e}
+/* Toolbar */
+.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:10px;flex-wrap:wrap;background:var(--card);border:1px solid var(--bdr2);border-radius:12px;padding:12px 16px}
+.tb-l{font-size:13px;color:var(--muted)}
+.tb-l strong{color:var(--white)}
+.tb-r{display:flex;align-items:center;gap:7px}
+.tb-sort{background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:7px;padding:7px 10px;color:var(--txt);font-size:12px;font-family:'Outfit',sans-serif;cursor:pointer;transition:border-color var(--tr)}
+.tb-sort:focus{outline:none;border-color:var(--y)}
+.view-btns{display:flex;gap:4px}
+.view-btn{width:32px;height:32px;border-radius:7px;background:var(--surf);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--muted);transition:var(--tr);border:1px solid transparent}
+.view-btn.on,.view-btn:hover{background:var(--y);color:#000;border-color:var(--y)}
+/* Product Grid */
+.pgrid{display:grid;gap:14px}
+.pgrid.grid3{grid-template-columns:repeat(3,1fr)}
+.pgrid.grid4{grid-template-columns:repeat(4,1fr)}
+.pgrid.list{grid-template-columns:1fr}
+.pcard{background:var(--card);border:1px solid var(--bdr2);border-radius:16px;overflow:hidden;transition:var(--tr);position:relative;cursor:pointer}
+.pcard:hover{border-color:rgba(244,245,0,.35);transform:translateY(-4px);box-shadow:0 14px 44px rgba(0,0,0,.4)}
+.pc-badge{position:absolute;top:9px;left:9px;z-index:3;font-size:9px;font-weight:800;padding:3px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.5px;font-family:'DM Mono',monospace}
+.pc-badge.new{background:#10b981;color:#fff}
+.pc-badge.sale{background:var(--y);color:#000}
+.pc-badge.hot{background:#f59e0b;color:#000}
+.pc-img{width:100%;aspect-ratio:4/3;overflow:hidden;position:relative}
+.pc-img img{width:100%;height:100%;object-fit:cover;transition:transform .45s ease}
+.pcard:hover .pc-img img{transform:scale(1.08)}
+.pc-acts{position:absolute;top:9px;right:9px;z-index:3;display:flex;flex-direction:column;gap:5px;opacity:0;transform:translateX(8px);transition:all var(--tr)}
+.pcard:hover .pc-acts{opacity:1;transform:translateX(0)}
+.pca{width:30px;height:30px;background:var(--bg2);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted);transition:var(--tr);border:1px solid var(--bdr2)}
+.pca:hover{background:var(--y);color:#000;border-color:var(--y)}
+.pc-body{padding:13px}
+.pc-cat{font-size:9px;color:var(--y);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;font-family:'DM Mono',monospace}
+.pc-name{font-size:13px;font-weight:700;color:var(--white);margin:4px 0 7px;line-height:1.35}
+.pc-ref{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:5px}
+.pc-stars-row{display:flex;align-items:center;gap:3px;margin-bottom:8px}
+.pc-stars-row .s{color:#f59e0b;font-size:11px}
+.pc-stars-row .sr{font-size:11px;color:var(--muted)}
+.pc-pr-row{display:flex;align-items:center;gap:7px}
+.pc-price{font-size:15px;font-weight:900;color:var(--y)}
+.pc-old{font-size:11px;color:var(--muted);text-decoration:line-through}
+.pc-add-wrap{margin-top:11px}
+.pc-add-btn{width:100%;padding:9px;background:var(--surf);color:var(--txt);border-radius:8px;font-size:13px;font-weight:700;transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--bdr2)}
+.pc-add-btn:hover{background:var(--y);color:#000;border-color:var(--y)}
+.pc-qty-ctrl{display:flex;align-items:center;justify-content:space-between;border-radius:8px;border:1px solid var(--y);overflow:hidden;background:rgba(244,245,0,.05)}
+.pc-qb{flex:0 0 38px;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:var(--y);transition:var(--tr)}
+.pc-qb:hover{background:var(--y);color:#000}
+.pc-qb.minus:hover{background:#f43f5e;color:#fff}
+.pc-qnum{flex:1;text-align:center;font-size:15px;font-weight:800;color:var(--y)}
+/* List view card */
+.pgrid.list .pcard{display:flex;flex-direction:row}
+.pgrid.list .pc-img{width:200px;min-width:200px;aspect-ratio:unset;height:180px}
+.pgrid.list .pc-body{flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.pgrid.list .pc-name{font-size:15px}
+.pgrid.list .pc-add-wrap{margin-top:auto;padding-top:12px}
+
+/* ══ EMPTY STATE ══ */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;text-align:center;color:var(--muted)}
+.empty-state .e-icon{font-size:54px;margin-bottom:16px;opacity:.4}
+.empty-state h3{font-size:18px;font-weight:700;color:var(--txt);margin-bottom:8px}
+.empty-state p{font-size:13px;max-width:300px;line-height:1.6}
+
+/* ══ PAGINATION ══ */
+.pagination{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:32px}
+.pg-btn{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--muted);background:var(--card);border:1px solid var(--bdr2);transition:var(--tr);cursor:pointer}
+.pg-btn:hover,.pg-btn.on{background:var(--y);color:#000;border-color:var(--y)}
+.pg-btn:disabled{opacity:.3;cursor:not-allowed}
+
+/* ══ PRODUCT POPUP ══ */
+.popup-bg{position:fixed;inset:0;z-index:9200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;background:rgba(0,0,0,.75);backdrop-filter:blur(8px)}
+.popup-bg.on{opacity:1;pointer-events:all}
+.popup-box{background:var(--modal-bg);border:1px solid var(--bdr);border-radius:22px;width:100%;max-width:820px;max-height:90vh;overflow-y:auto;position:relative;transform:translateY(20px) scale(.97);transition:transform .3s cubic-bezier(.34,1.56,.64,1);box-shadow:var(--sh2)}
+.popup-bg.on .popup-box{transform:translateY(0) scale(1)}
+.pp-close{position:absolute;top:14px;right:14px;width:34px;height:34px;background:var(--surf);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;transition:var(--tr);z-index:2;cursor:pointer}
+.pp-close:hover{background:var(--y);color:#000}
+.pp-inner{display:grid;grid-template-columns:1fr 1fr;gap:0}
+/* Image gallery side */
+.pp-gallery{padding:24px;background:var(--bg3);border-radius:22px 0 0 22px;display:flex;flex-direction:column;gap:12px}
+.pp-main-img{width:100%;aspect-ratio:1;border-radius:14px;overflow:hidden;position:relative}
+.pp-main-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;display:block}
+.pp-main-img:hover img{transform:scale(1.12)}
+.pp-zoom-hint{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;padding:3px 8px;border-radius:20px;backdrop-filter:blur(4px)}
+.pp-thumbs{display:flex;gap:8px;justify-content:center}
+.pp-thumb{width:60px;height:60px;border-radius:10px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:var(--tr);flex-shrink:0}
+.pp-thumb:hover,.pp-thumb.active{border-color:var(--y)}
+.pp-thumb img{width:100%;height:100%;object-fit:cover}
+/* Info side */
+.pp-info{padding:28px 24px 24px}
+.pp-cat{font-size:10px;color:var(--y);font-weight:700;text-transform:uppercase;letter-spacing:2px;font-family:'DM Mono',monospace;margin-bottom:8px}
+.pp-name{font-size:20px;font-weight:900;color:var(--white);line-height:1.25;margin-bottom:10px}
+.pp-ref-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.pp-ref{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace}
+.pp-stars-row{display:flex;align-items:center;gap:6px;margin-bottom:16px}
+.pp-stars{color:#f59e0b;font-size:15px}
+.pp-rev-ct{font-size:12px;color:var(--muted)}
+.pp-price-block{background:var(--surf);border-radius:12px;padding:14px 16px;margin-bottom:16px}
+.pp-price{font-size:28px;font-weight:900;color:var(--y);line-height:1}
+.pp-old-price{font-size:14px;color:var(--muted);text-decoration:line-through;margin:3px 0}
+.pp-discount-badge{display:inline-block;background:var(--y);color:#000;font-size:10px;font-weight:800;padding:2px 8px;border-radius:5px;font-family:'DM Mono',monospace}
+.pp-specs{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.pp-spec-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--bdr2)}
+.pp-spec-row:last-child{border-bottom:none}
+.pp-spec-key{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px}
+.pp-spec-val{font-size:12px;font-weight:600;color:var(--txt);text-align:right}
+.pp-spec-val.highlight{color:var(--y);font-weight:700}
+.pp-actions{display:flex;flex-direction:column;gap:8px}
+.pp-add-btn{width:100%;padding:13px;background:var(--y);color:#000;border-radius:10px;font-size:14px;font-weight:800;transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:8px}
+.pp-add-btn:hover{background:var(--yd);transform:translateY(-1px)}
+.pp-qty-ctrl{display:flex;align-items:center;justify-content:space-between;border-radius:10px;border:2px solid var(--y);overflow:hidden;background:rgba(244,245,0,.05)}
+.pp-qb{flex:0 0 46px;height:44px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:var(--y);transition:var(--tr);cursor:pointer}
+.pp-qb:hover{background:var(--y);color:#000}
+.pp-qnum{flex:1;text-align:center;font-size:17px;font-weight:800;color:var(--y)}
+.pp-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.pp-tag{font-size:10px;padding:3px 9px;background:var(--surf);border:1px solid var(--bdr2);border-radius:6px;color:var(--muted)}
+
+/* ══ MOBILE FILTER DRAWER ══ */
+.filter-drawer{position:fixed;inset:0;z-index:8500;background:var(--bg2);transform:translateX(-100%);transition:transform .32s cubic-bezier(.4,0,.2,1);overflow-y:auto;display:flex;flex-direction:column}
+.filter-drawer.on{transform:translateX(0)}
+.fd-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--bdr)}
+.fd-head h2{font-size:16px;font-weight:800}
+.fd-apply{padding:8px 18px;background:var(--y);color:#000;border-radius:8px;font-size:13px;font-weight:800}
+.fd-body{flex:1;overflow-y:auto;padding:16px}
+.mob-filter-btn{display:none;align-items:center;gap:7px;padding:8px 14px;background:var(--card);border:1px solid var(--bdr2);border-radius:9px;font-size:12px;font-weight:600;color:var(--txt);transition:var(--tr)}
+.mob-filter-btn:hover{border-color:var(--y);color:var(--y)}
+
+/* ══ FOOTER ══ */
+footer{background:var(--footer-bg);border-top:1px solid var(--bdr)}
+[data-theme="light"] footer{background:#1a1a2e}
+[data-theme="light"] footer .ftr-lnk,[data-theme="light"] footer .copy{color:#aab}
+[data-theme="light"] footer h4{color:#fff}
+.ftr-bot{padding:20px 0}
+.ftr-bot .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:11px}
+.ftr-left{display:flex;align-items:center;gap:18px}
+.ftr-brand{font-size:17px;font-weight:900;color:#fff}
+.ftr-brand em{color:var(--y);font-style:normal}
+.ftr-links{display:flex;gap:12px}
+.ftr-lnk{font-size:12px;color:#8888aa;transition:color var(--tr)}
+.ftr-lnk:hover{color:var(--y)}
+.copy{font-size:12px;color:#8888aa}
+.copy a{color:var(--y)}
+.pay-methods{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.pay-lbl{font-size:11px;color:#8888aa}
+.pay-b{background:rgba(255,255,255,.07);padding:3px 9px;border-radius:5px;font-size:11px;font-weight:700;color:#8888aa}
+
+/* ══ MOBILE SEARCH BAR ══ */
+.mob-search-bar{padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--bdr2)}
+.mob-search-bar .srch-box{display:flex;background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:10px;overflow:hidden;transition:border-color var(--tr)}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:1100px){
+  .pgrid.grid3{grid-template-columns:repeat(2,1fr)}
+  .pgrid.grid4{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:900px){
+  .catalog-wrap{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .mob-filter-btn{display:flex}
+  .htop,.hmain{display:none}
+  .mob-header{display:block}
+  .bnav{display:block}
+  body{padding-bottom:68px}
+  .pgrid.grid3,.pgrid.grid4{grid-template-columns:repeat(2,1fr)}
+  .pp-inner{grid-template-columns:1fr}
+  .pp-gallery{border-radius:22px 22px 0 0}
+  .side-panel{width:100vw;max-width:100vw}
+  .toast{max-width:calc(100vw - 30px)}
+}
+@media(max-width:520px){
+  .pgrid.list .pcard{flex-direction:column}
+  .pgrid.list .pc-img{width:100%;height:auto}
+}
+@media(max-width:400px){
+  .pgrid.grid3,.pgrid.grid4{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ OVERLAY ═══ -->
+<div class="overlay" id="ov"></div>
+
+<!-- ═══ TOAST ═══ -->
+<div class="toast" id="toast">
+  <div class="toast-thumb"><img src="https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=100&h=100&fit=crop" alt=""></div>
+  <div class="toast-info">
+    <p>Alguien acaba de comprar</p>
+    <strong>iPhone 16 Pro Max 256GB</strong>
+    <span>hace 2 min · Cúcuta</span>
+  </div>
+  <button class="toast-x" id="toastX">✕</button>
+</div>
+
+<!-- ═══ CART PANEL ═══ -->
+<div class="side-panel" id="cartPanel">
+  <div class="panel-hdr">
+    <h2>🛒 Mi Carrito</h2>
+    <div class="panel-hdr-r">
+      <span class="cpill" id="cartCnt">0</span>
+      <button class="px" onclick="closeCart()">✕</button>
+    </div>
+  </div>
+  <div class="panel-body" id="cartBody">
+    <div class="panel-empty" id="cartEmpty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="66" height="66" style="opacity:.2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <h3>Carrito vacío</h3><p>Agrega productos para continuar</p>
+    </div>
+  </div>
+  <div class="panel-ftr">
+    <div class="sub-row"><span>Subtotal</span><strong id="cartTotal">$0</strong></div>
+    <button class="chk-btn" onclick="doCheckout()">🔐 Ir al pago seguro</button>
+    <button class="cont-shop" onclick="closeCart()">← Seguir comprando</button>
+  </div>
+</div>
+
+<!-- ═══ PRODUCT POPUP ═══ -->
+<div class="popup-bg" id="productPopup">
+  <div class="popup-box">
+    <button class="pp-close" onclick="closePopup()">✕</button>
+    <div class="pp-inner">
+      <div class="pp-gallery" id="ppGallery">
+        <div class="pp-main-img" id="ppMainImg">
+          <img src="" alt="" id="ppMainImgEl">
+          <span class="pp-zoom-hint">🔍 Hover = zoom</span>
+        </div>
+        <div class="pp-thumbs" id="ppThumbs"></div>
+      </div>
+      <div class="pp-info" id="ppInfo"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FILTER DRAWER (mobile) ═══ -->
+<div class="filter-drawer" id="filterDrawer">
+  <div class="fd-head">
+    <h2>⚙️ Filtros</h2>
+    <div style="display:flex;gap:8px">
+      <button class="fd-apply" onclick="applyMobFilters()">Aplicar</button>
+      <button class="px" onclick="closeFilterDrawer()">✕</button>
+    </div>
+  </div>
+  <div class="fd-body" id="filterDrawerBody"></div>
+</div>
+
+<!-- ═══ DESKTOP HEADER TOP ═══ -->
+<div class="htop">
+  <div class="wrap">
+    <div style="display:flex;gap:10px">
+      <a href="#" style="color:#25D366;font-size:16px"><i class="fab fa-whatsapp"></i></a>
+      <a href="#" style="color:#E4405F;font-size:16px"><i class="fab fa-instagram"></i></a>
+      <a href="#" style="font-size:16px;color:var(--muted)"><i class="fab fa-tiktok"></i></a>
+    </div>
+    <p class="hticker">🚀 <strong>Envío rápido</strong> a todo Colombia · Garantía certificada · Repuestos originales</p>
+    <a href="tel:+573001234567" style="font-size:12px;color:var(--muted)">📞 +57 300 123 4567</a>
+  </div>
+</div>
+
+<!-- ═══ DESKTOP HEADER MAIN ═══ -->
+<header class="hmain">
+  <div class="wrap">
+    <a href="index.html" class="logo-area">
+      <div class="logo-box">
+        <img src="a.png" alt="CeluFénix" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">      </div>
+      <div class="logo-txt">
+        <div class="ln">CELU<em>FÉNIX</em></div>
+        <div class="lt">Tech · Repuestos · Hogar</div>
+      </div>
+    </a>
+    <div class="srch-wrap srch-area">
+      <div class="srch-box">
+        <input class="srch-inp" type="search" id="mainSearch" placeholder="Busca por modelo, marca, referencia, característica..." autocomplete="off">
+        <button class="srch-btn" onclick="doSearch()">🔍</button>
+      </div>
+      <div class="srch-suggestions" id="searchSuggestions"></div>
+    </div>
+    <div class="h-acts">
+      <button class="theme-btn" onclick="toggleTheme()" title="Modo claro/oscuro">
+        <span class="ico-sun">☀️</span><span class="ico-moon">🌙</span>
+      </button>
+      <button class="h-act" id="btnCart" onclick="openCart()" title="Carrito">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/></svg>
+        <span class="hbdg" id="cBdg">0</span>
+      </button>
+      <a href="index.html" class="h-act" title="Inicio" style="text-decoration:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ MOBILE HEADER ═══ -->
+<div class="mob-header">
+  <div class="mob-header-inner">
+    <a href="index.html" class="logo-area">
+      <div class="logo-box" style="width:36px;height:36px">
+        <span class="lfb" style="display:block;font-size:14px">CF</span>
+      </div>
+    </a>
+    <div class="mob-header-center">
+      <div class="site-name">CELU<em>FÉNIX</em></div>
+    </div>
+    <div class="mob-header-acts">
+      <button class="theme-btn" onclick="toggleTheme()" style="width:36px;height:36px">
+        <span class="ico-sun" style="font-size:15px">☀️</span><span class="ico-moon" style="font-size:15px">🌙</span>
+      </button>
+      <button class="mh-act" onclick="openCart()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/></svg>
+        <span class="mh-bdg" id="nbdg">0</span>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="mob-search-bar">
+  <div class="srch-box">
+    <input class="srch-inp" type="search" id="mobSearch" placeholder="Buscar productos..." autocomplete="on">
+    <button class="srch-btn" onclick="doMobSearch()">🔍</button>
+  </div>
+</div>
+
+<!-- ═══ MAIN CONTENT ═══ -->
+<main>
+<div class="wrap">
+  <div class="catalog-wrap">
+
+    <!-- ══ SIDEBAR ══ -->
+    <aside class="sidebar" id="desktopSidebar">
+      <!-- Categories -->
+      <div class="sb-section">
+        <div class="sb-head">Categorías</div>
+        <div class="sb-body">
+          <div class="cat-pills" id="catPills"></div>
+        </div>
+      </div>
+      <!-- Subcategories (dynamic) -->
+      <div class="sb-section" id="subcatSection" style="display:none">
+        <div class="sb-head" id="subcatHead">Subcategorías</div>
+        <div class="sb-body">
+          <div class="cat-pills" id="subcatPills"></div>
+        </div>
+      </div>
+      <!-- Price -->
+      <div class="sb-section">
+        <div class="sb-head">Precio</div>
+        <div class="sb-body">
+          <div class="price-range">
+            <div class="price-inputs">
+              <input class="price-inp" type="number" id="priceMin" placeholder="Mín" min="0">
+              <span class="price-sep">—</span>
+              <input class="price-inp" type="number" id="priceMax" placeholder="Máx" min="0">
+            </div>
+            <button class="price-apply" onclick="applyFilters()">Aplicar</button>
+          </div>
+        </div>
+      </div>
+      <!-- Stars -->
+      <div class="sb-section">
+        <div class="sb-head">Valoración</div>
+        <div class="sb-body">
+          <div class="star-filters" id="starFilters">
+            <label class="star-flt"><input type="radio" name="stars" value="0" checked onchange="applyFilters()"> <span class="s">★★★★★</span><span>Todas</span></label>
+            <label class="star-flt"><input type="radio" name="stars" value="5" onchange="applyFilters()"> <span class="s">★★★★★</span><span>5 estrellas</span></label>
+            <label class="star-flt"><input type="radio" name="stars" value="4" onchange="applyFilters()"> <span class="s">★★★★</span><span>4+ estrellas</span></label>
+            <label class="star-flt"><input type="radio" name="stars" value="3" onchange="applyFilters()"> <span class="s">★★★</span><span>3+ estrellas</span></label>
+          </div>
+        </div>
+      </div>
+      <!-- Brands -->
+      <div class="sb-section">
+        <div class="sb-head">Marca</div>
+        <div class="sb-body">
+          <div class="brand-checks" id="brandChecks"></div>
+        </div>
+      </div>
+      <!-- Guarantee -->
+      <div class="sb-section">
+        <div class="sb-head">Garantía</div>
+        <div class="sb-body">
+          <div class="guar-options">
+            <label class="guar-opt"><input type="radio" name="guar" value="0" checked onchange="applyFilters()"><span class="guar-opt-lbl">Todas</span></label>
+            <label class="guar-opt"><input type="radio" name="guar" value="365" onchange="applyFilters()"><span class="guar-opt-lbl">12 meses o más</span></label>
+            <label class="guar-opt"><input type="radio" name="guar" value="180" onchange="applyFilters()"><span class="guar-opt-lbl">6 meses o más</span></label>
+            <label class="guar-opt"><input type="radio" name="guar" value="90" onchange="applyFilters()"><span class="guar-opt-lbl">3 meses o más</span></label>
+          </div>
+        </div>
+      </div>
+      <button class="sb-reset" onclick="resetAllFilters()">↺ Limpiar filtros</button>
+    </aside>
+
+    <!-- ══ CATALOG MAIN ══ -->
+    <div class="catalog-main">
+      <!-- Breadcrumb -->
+      <div class="breadcrumb" id="breadcrumb">
+        <span class="bc-item" onclick="resetAllFilters()">Inicio</span>
+        <span class="bc-sep">›</span>
+        <span class="bc-item active" id="bcActive">Todos los productos</span>
+      </div>
+      <!-- Active filter tags -->
+      <div class="active-filters" id="activeFilters" style="display:none"></div>
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="tb-l">Mostrando <strong id="tbCount">0</strong> de <strong id="tbTotal">0</strong> productos</div>
+        <div class="tb-r">
+          <button class="mob-filter-btn" onclick="openFilterDrawer()">⚙️ Filtros</button>
+          <select class="tb-sort" id="sortSelect" onchange="applyFilters()">
+            <option value="featured">Destacados</option>
+            <option value="price_asc">Menor precio</option>
+            <option value="price_desc">Mayor precio</option>
+            <option value="stars">Mejor valorados</option>
+            <option value="newest">Más nuevos</option>
+            <option value="discount">Mayor descuento</option>
+          </select>
+          <div class="view-btns">
+            <button class="view-btn on" id="vGrid3" onclick="setView('grid3')" title="3 columnas">⊞</button>
+            <button class="view-btn" id="vGrid4" onclick="setView('grid4')" title="4 columnas">⊟</button>
+            <button class="view-btn" id="vList" onclick="setView('list')" title="Lista">☰</button>
+          </div>
+        </div>
+      </div>
+      <!-- Products Grid -->
+      <div class="pgrid grid3" id="pgrid"></div>
+      <!-- Pagination -->
+      <div class="pagination" id="pagination"></div>
+    </div>
+
+  </div>
+</div>
+</main>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="ftr-bot">
+    <div class="wrap">
+      <div class="ftr-left">
+        <div class="ftr-brand">CELU<em>FÉNIX</em></div>
+        <div class="ftr-links">
+          <a href="index.html" class="ftr-lnk">Inicio</a>
+          <a href="#" class="ftr-lnk">Catálogo</a>
+          <a href="#" class="ftr-lnk">WhatsApp</a>
+        </div>
+      </div>
+      <div class="pay-methods">
+        <span class="pay-lbl">Pagos:</span>
+        <span class="pay-b">PSE</span><span class="pay-b">Nequi</span><span class="pay-b">Daviplata</span><span class="pay-b">Visa</span><span class="pay-b">MC</span>
+      </div>
+      <div class="copy">© 2025 <a href="#">CeluFénix</a> · Todos los derechos reservados</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<div class="bnav">
+  <div class="bnav-inner">
+    <a href="index.html" class="bnav-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Inicio
+    </a>
+    <button class="bnav-btn on" onclick="">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Catálogo
+    </button>
+    <button class="bnav-btn" onclick="openFilterDrawer()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+      Filtros
+    </button>
+    <button class="bnav-btn" onclick="openCart()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/></svg>
+      Carrito
+      <span class="nb-bdg" id="nbdg2">0</span>
+    </button>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════
+   DATA — CATEGORIES & PRODUCTS
+══════════════════════════ */
+const CATS = [
+  {
+    id:'telefonos', name:'📱 Teléfonos', icon:'📱', count:0,
+    subs:[
+      {id:'iphone', name:'iPhone', icon:'🍎'},
+      {id:'samsung', name:'Samsung Galaxy', icon:'🌌'},
+      {id:'xiaomi', name:'Xiaomi / Redmi', icon:'⚡'},
+      {id:'motorola', name:'Motorola', icon:'🏎️'},
+      {id:'huawei', name:'Huawei', icon:'💇'},
+      {id:'otros_tel', name:'Otros Teléfonos', icon:'📲'},
+    ]
+  },
+  {
+    id:'pc', name:'💻 PC & Tablets', icon:'💻', count:0,
+    subs:[
+      {id:'laptops', name:'Laptops', icon:'💻'},
+      {id:'tablets', name:'Tablets', icon:'📱'},
+      {id:'accesorios_pc', name:'Accesorios PC', icon:'🖱️'},
+      {id:'monitores', name:'Monitores', icon:'🖥️'},
+    ]
+  },
+  {
+    id:'hogar', name:'🏠 Hogar', icon:'🏠', count:0,
+    subs:[
+      {id:'bafles', name:'Bafles & Parlantes', icon:'🔊'},
+      {id:'secadores', name:'Secadores de Cabello', icon:'💨'},
+      {id:'afeitadoras', name:'Afeitadoras Eléctricas', icon:'⚡'},
+      {id:'planchas', name:'Planchas de Cabello', icon:'♨️'},
+      {id:'aspiradoras', name:'Aspiradoras Portátiles', icon:'🌀'},
+    ]
+  },
+  {
+    id:'repuestos', name:'🔧 Repuestos', icon:'🔧', count:0,
+    subs:[
+      {id:'pantallas', name:'Pantallas LCD/OLED', icon:'📺'},
+      {id:'baterias', name:'Baterías Originales', icon:'🔋'},
+      {id:'camaras_rep', name:'Módulos Cámara', icon:'📷'},
+      {id:'conectores', name:'Conectores & Puertos', icon:'🔌'},
+      {id:'botones', name:'Botones & Flex', icon:'🎛️'},
+    ]
+  },
+  {
+    id:'electronica', name:'⚡ Electrónica', icon:'⚡', count:0,
+    subs:[
+      {id:'audifonos', name:'Audífonos & TWS', icon:'🎧'},
+      {id:'cargadores', name:'Cargadores & Cables', icon:'🔌'},
+      {id:'smartwatch', name:'Smartwatches', icon:'⌚'},
+      {id:'fundas', name:'Fundas & Protectores', icon:'🛡️'},
+      {id:'powerbanks', name:'Power Banks', icon:'🔋'},
+    ]
+  },
+  {
+    id:'maquinas', name:'⚙️ Máquinas', icon:'⚙️', count:0,
+    subs:[
+      {id:'separadoras', name:'Separadoras de Pantalla', icon:'🔬'},
+      {id:'soldadura', name:'Estaciones de Soldadura', icon:'🔥'},
+      {id:'laminadoras', name:'Laminadoras OCA', icon:'🔲'},
+      {id:'herramientas', name:'Herramientas', icon:'🔨'},
+    ]
+  },
+];
+
+const PRODS = [
+  // TELÉFONOS - iPhone
+  {id:1,cat:'telefonos',sub:'iphone',brand:'Apple',name:'iPhone 16 Pro Max 256GB Titanio Negro',ref:'APL-IP16PM-256-TN',price:5890000,old:6200000,warranty:365,guarantee:12,stars:5,rev:42,badge:'new',
+   imgs:['https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&h=600&fit=crop&q=80'],
+   specs:{Almacenamiento:'256 GB',RAM:'8 GB',Procesador:'Apple A18 Pro',Pantalla:'6.9" OLED Super Retina',Cámara:'48MP Triple',Batería:'4422 mAh',OS:'iOS 18',Red:'5G',Color:'Titanio Negro'},
+   tags:['5G','OLED','Titanio','Face ID']},
+  {id:2,cat:'telefonos',sub:'iphone',brand:'Apple',name:'iPhone 16 Pro 128GB Titanio Blanco',ref:'APL-IP16P-128-TW',price:5290000,old:5700000,warranty:365,guarantee:12,stars:5,rev:28,badge:'new',
+   imgs:['https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=600&h=600&fit=crop&q=80'],
+   specs:{Almacenamiento:'128 GB',RAM:'8 GB',Procesador:'Apple A18 Pro',Pantalla:'6.3" OLED ProMotion',Cámara:'48MP Triple',Batería:'3274 mAh',OS:'iOS 18',Red:'5G',Color:'Titanio Blanco'},
+   tags:['5G','ProMotion','120Hz']},
+  {id:3,cat:'telefonos',sub:'iphone',brand:'Apple',name:'iPhone 15 Plus 256GB Azul',ref:'APL-IP15PL-256-AZ',price:4190000,old:4800000,warranty:365,guarantee:12,stars:4,rev:64,badge:'sale',
+   imgs:['https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=600&h=600&fit=crop&q=80'],
+   specs:{Almacenamiento:'256 GB',RAM:'6 GB',Procesador:'Apple A16 Bionic',Pantalla:'6.7" OLED Super Retina',Cámara:'48MP Dual',Batería:'4383 mAh',OS:'iOS 17',Red:'5G',Color:'Azul'},
+   tags:['5G','Dynamic Island']},
+  // TELÉFONOS - Samsung
+  {id:4,cat:'telefonos',sub:'samsung',brand:'Samsung',name:'Galaxy S25 Ultra 512GB Phantom Black',ref:'SAM-S25U-512-PB',price:4990000,old:5400000,warranty:365,guarantee:12,stars:5,rev:33,badge:'hot',
+   imgs:['https://images.unsplash.com/photo-1678685888221-cda773a3dcdb?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=600&h=600&fit=crop&q=80'],
+   specs:{Almacenamiento:'512 GB',RAM:'12 GB',Procesador:'Snapdragon 8 Elite',Pantalla:'6.9" AMOLED 2X',Cámara:'200MP Cuádruple',Batería:'5000 mAh',OS:'Android 15',Red:'5G',Color:'Phantom Black'},
+   tags:['5G','S-Pen','200MP','AI']},
+  {id:5,cat:'telefonos',sub:'samsung',brand:'Samsung',name:'Galaxy A55 5G 256GB Azul Oscuro',ref:'SAM-A55-256-AO',price:1590000,old:1890000,warranty:180,guarantee:6,stars:4,rev:88,badge:'sale',
+   imgs:['https://images.unsplash.com/photo-1546054454-aa26e2b734c7?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1678685888221-cda773a3dcdb?w=600&h=600&fit=crop&q=80'],
+   specs:{Almacenamiento:'256 GB',RAM:'8 GB',Procesador:'Exynos 1480',Pantalla:'6.6" AMOLED 120Hz',Cámara:'50MP Triple',Batería:'5000 mAh',OS:'Android 14',Red:'5G',Color:'Azul Oscuro'},
+   tags:['5G','120Hz','IP67']},
+  // TELÉFONOS - Xiaomi
+  {id:6,cat:'telefonos',sub:'xiaomi',brand:'Xiaomi',name:'Redmi Note 14 Pro 5G 256GB',ref:'XMI-RN14P-256',price:1590000,old:1890000,warranty:180,guarantee:6,stars:5,rev:67,badge:'hot',
+   imgs:['https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=600&fit=crop&q=80'],
+   specs:{Almacenamiento:'256 GB',RAM:'8 GB',Procesador:'Snapdragon 7s Gen 3',Pantalla:'6.67" AMOLED 120Hz',Cámara:'200MP Triple',Batería:'5500 mAh',OS:'Android 14',Red:'5G',Color:'Midnight Black'},
+   tags:['5G','200MP','120Hz','67W']},
+  {id:7,cat:'telefonos',sub:'xiaomi',brand:'Xiaomi',name:'Xiaomi 14 Pro 5G 256GB',ref:'XMI-14P-256',price:3490000,old:3900000,warranty:365,guarantee:12,stars:5,rev:22,badge:'new',
+   imgs:['https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&h=600&fit=crop&q=80'],
+   specs:{Almacenamiento:'256 GB',RAM:'12 GB',Procesador:'Snapdragon 8 Gen 3',Pantalla:'6.73" AMOLED 120Hz',Cámara:'50MP Leica Triple',Batería:'4880 mAh',OS:'MIUI 15',Red:'5G',Color:'Titanio'},
+   tags:['Leica','5G','120W']},
+  // TELÉFONOS - Motorola
+  {id:8,cat:'telefonos',sub:'motorola',brand:'Motorola',name:'Moto G85 5G 256GB Azul Zafiro',ref:'MOT-G85-256-AZ',price:1190000,old:1390000,warranty:180,guarantee:6,stars:4,rev:19,badge:'',
+   imgs:['https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=600&fit=crop&q=80'],
+   specs:{Almacenamiento:'256 GB',RAM:'8 GB',Procesador:'Snapdragon 6s Gen 3',Pantalla:'6.67" POLED 120Hz',Cámara:'50MP Dual',Batería:'5000 mAh',OS:'Android 14',Red:'5G',Color:'Azul Zafiro'},
+   tags:['5G','120Hz','Dolby Atmos']},
+  // PC & Tablets
+  {id:9,cat:'pc',sub:'laptops',brand:'Lenovo',name:'Lenovo IdeaPad 5 Pro 16" Intel i7',ref:'LNV-IP5P-I7-16',price:3890000,old:4500000,warranty:365,guarantee:12,stars:5,rev:15,badge:'sale',
+   imgs:['https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600&h=600&fit=crop&q=80'],
+   specs:{Procesador:'Intel Core i7-13700H',RAM:'16 GB DDR5',Almacenamiento:'512 GB NVMe SSD',Pantalla:'16" IPS 2K 120Hz',GPU:'NVIDIA RTX 3050',OS:'Windows 11',Color:'Storm Grey',Batería:'75 Wh'},
+   tags:['i7','RTX 3050','2K','120Hz']},
+  {id:10,cat:'pc',sub:'tablets',brand:'Samsung',name:'Samsung Galaxy Tab S9 FE 256GB',ref:'SAM-GTS9FE-256',price:1890000,old:2200000,warranty:365,guarantee:12,stars:4,rev:31,badge:'hot',
+   imgs:['https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1547394765-185e1e68f34e?w=600&h=600&fit=crop&q=80'],
+   specs:{Almacenamiento:'256 GB',RAM:'8 GB',Procesador:'Exynos 1380',Pantalla:'10.9" TFT 90Hz',Cámara:'8MP Trasera',Batería:'10090 mAh',OS:'Android 14',Red:'WiFi + LTE',Color:'Graphite'},
+   tags:['S Pen','IP68','90Hz']},
+  // HOGAR
+  {id:11,cat:'hogar',sub:'bafles',brand:'JBL',name:'Bafle JBL Charge 5 Bluetooth',ref:'JBL-CHG5-BT',price:479000,old:599000,warranty:365,guarantee:12,stars:5,rev:88,badge:'hot',
+   imgs:['https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop&q=80'],
+   specs:{Potencia:'30W RMS',Conectividad:'Bluetooth 5.1',Batería:'20 horas',Resistencia:'IP67',Dimensiones:'22 x 9.5 cm',Peso:'960g',Color:'Negro',Extras:'PartyBoost'},
+   tags:['IP67','20h','PartyBoost']},
+  {id:12,cat:'hogar',sub:'bafles',brand:'Sony',name:'Sony SRS-XB43 Extra Bass Bluetooth',ref:'SNY-SRSXB43',price:389000,old:520000,warranty:365,guarantee:12,stars:5,rev:54,badge:'sale',
+   imgs:['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&h=600&fit=crop&q=80'],
+   specs:{Potencia:'24W RMS',Conectividad:'Bluetooth 5.0',Batería:'24 horas',Resistencia:'IP67',Dimensiones:'28 x 10 cm',Peso:'1.4 kg',Color:'Negro',Extras:'Extra Bass, Party Connect'},
+   tags:['Extra Bass','IP67','24h']},
+  {id:13,cat:'hogar',sub:'secadores',brand:'Dyson',name:'Secador Dyson Supersonic HD15',ref:'DYS-SPHD15',price:890000,old:1050000,warranty:365,guarantee:12,stars:5,rev:34,badge:'new',
+   imgs:['https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=600&h=600&fit=crop&q=80'],
+   specs:{Motor:'Dyson V9 Digital',Velocidad:'110.000 RPM',Temperatura:'Control magnético',Extras:'3 velocidades, 4 temperaturas',Voltaje:'110V-240V',Peso:'641g',Color:'Negro/Níquel',Garantía:'12 meses'},
+   tags:['110.000 RPM','Temperatura digital','Ligero']},
+  {id:14,cat:'hogar',sub:'afeitadoras',brand:'Philips',name:'Afeitadora Philips Series 7000',ref:'PHI-AF7000',price:320000,old:420000,warranty:365,guarantee:12,stars:4,rev:56,badge:'sale',
+   imgs:['https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=600&h=600&fit=crop&q=80'],
+   specs:{Cabezales:'3 cabezales auto-ajustables',Batería:'50 minutos',Carga:'1 hora',Resistencia:'Apta para ducha',Extras:'Recortador lateral',Voltaje:'110V-240V',Color:'Negro/Azul',Garantía:'12 meses'},
+   tags:['IP67','50 min','Auto-ajuste']},
+  {id:15,cat:'hogar',sub:'planchas',brand:'Remington',name:'Plancha Remington Cerámica Pro',ref:'RMG-PCR-PRO',price:145000,old:195000,warranty:180,guarantee:6,stars:4,rev:41,badge:'',
+   imgs:['https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=600&fit=crop&q=80'],
+   specs:{Temperatura:'150-230°C',Placas:'Cerámica flotante',Calentamiento:'30 segundos',Extras:'Indicador temp., Auto-off 60min',Voltaje:'110V-240V',Cable:'3 metros giratorio',Color:'Negro Rosa',Garantía:'6 meses'},
+   tags:['Cerámica','Auto-off','Dual voltage']},
+  // REPUESTOS
+  {id:16,cat:'repuestos',sub:'pantallas',brand:'Original',name:'Pantalla AMOLED Samsung Galaxy A55 Original',ref:'REP-PNT-A55-AMOLED',price:185000,old:240000,warranty:90,guarantee:3,stars:5,rev:22,badge:'',
+   imgs:['https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&h=600&fit=crop&q=80'],
+   specs:{Tipo:'AMOLED SuperAMOLED',Resolución:'2340 x 1080 FHD+',Compatibilidad:'Samsung Galaxy A55',Incluye:'Marco + Touch',Calidad:'Original OEM',Garantía:'3 meses',Color:'Negro',Ref:'GH82-33547A'},
+   tags:['Original','OEM','Con Marco']},
+  {id:17,cat:'repuestos',sub:'pantallas',brand:'Original',name:'Pantalla OLED iPhone 14 Pro Original',ref:'REP-PNT-IP14P-OLED',price:420000,old:560000,warranty:90,guarantee:3,stars:5,rev:18,badge:'',
+   imgs:['https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600&h=600&fit=crop&q=80'],
+   specs:{Tipo:'OLED ProMotion',Resolución:'2556 x 1179 Super Retina XDR',Compatibilidad:'iPhone 14 Pro',Incluye:'Touch + Marco',Calidad:'Original Apple OEM',Garantía:'3 meses',Color:'Negro',Ref:'661-21565'},
+   tags:['Original Apple','ProMotion','Con Touch']},
+  {id:18,cat:'repuestos',sub:'baterias',brand:'Original',name:'Batería iPhone 15 3349 mAh Original',ref:'REP-BAT-IP15-3349',price:95000,old:135000,warranty:90,guarantee:3,stars:5,rev:45,badge:'hot',
+   imgs:['https://images.unsplash.com/photo-1609592806596-b8d7a49f9c8e?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600&h=600&fit=crop&q=80'],
+   specs:{Capacidad:'3349 mAh',Voltaje:'3.87V',Compatibilidad:'iPhone 15',Calidad:'Original OEM',Incluye:'Adhesivos + Herramienta',Garantía:'3 meses',Peso:'42g',Ref:'616-00660'},
+   tags:['Original','3349mAh','Con herramienta']},
+  {id:19,cat:'repuestos',sub:'baterias',brand:'Original',name:'Batería Samsung Galaxy S24 Ultra 5000mAh',ref:'REP-BAT-S24U-5000',price:75000,old:110000,warranty:90,guarantee:3,stars:4,rev:33,badge:'sale',
+   imgs:['https://images.unsplash.com/photo-1609592806596-b8d7a49f9c8e?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=600&h=600&fit=crop&q=80'],
+   specs:{Capacidad:'5000 mAh',Voltaje:'3.88V',Compatibilidad:'Samsung Galaxy S24 Ultra',Calidad:'Original OEM',Incluye:'Adhesivos',Garantía:'3 meses',Ref:'EB-BN985ABY'},
+   tags:['Original','5000mAh','S24 Ultra']},
+  // ELECTRONICA
+  {id:20,cat:'electronica',sub:'audifonos',brand:'Samsung',name:'Galaxy Buds3 Pro ANC Blanco Perla',ref:'SAM-GB3P-ANC-WP',price:479000,old:599000,warranty:365,guarantee:12,stars:5,rev:35,badge:'sale',
+   imgs:['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&h=600&fit=crop&q=80'],
+   specs:{Cancelación:'ANC Activa',Batería:'37h (case)',Driver:'10mm Woofer + 6.1mm Tweeter',Conectividad:'Bluetooth 5.4',Resistencia:'IPX7',Extras:'Sound Optimization',Color:'Blanco Perla',Garantía:'12 meses'},
+   tags:['ANC','37h','IPX7','Hi-Fi']},
+  {id:21,cat:'electronica',sub:'audifonos',brand:'Apple',name:'AirPods Pro 2da Generación MagSafe',ref:'APL-APP2-MAGSAFE',price:890000,old:1100000,warranty:365,guarantee:12,stars:5,rev:72,badge:'hot',
+   imgs:['https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop&q=80'],
+   specs:{Cancelación:'ANC Adaptativo',Batería:'30h (case)',Chip:'Apple H2',Conectividad:'Bluetooth 5.3',Resistencia:'IP54 (audífonos), IPX4 (estuche)',Extras:'Audio espacial, Transparency mode',Color:'Blanco',Garantía:'12 meses'},
+   tags:['ANC','H2 Chip','MagSafe','30h']},
+  {id:22,cat:'electronica',sub:'cargadores',brand:'Anker',name:'Cargador Anker 67W GaN USB-C Triple',ref:'ANK-CGR-67W-GAN',price:89000,old:120000,warranty:180,guarantee:6,stars:5,rev:88,badge:'hot',
+   imgs:['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600&h=600&fit=crop&q=80'],
+   specs:{Potencia:'67W Total',Puertos:'2x USB-C + 1x USB-A',Tecnología:'GaN III',Compatibilidad:'Universal PD3.0',Voltaje:'100-240V',Tamaño:'Compacto',Color:'Negro',Garantía:'6 meses'},
+   tags:['GaN','67W','3 puertos','PD3.0']},
+  {id:23,cat:'electronica',sub:'smartwatch',brand:'Apple',name:'Apple Watch Series 10 45mm GPS+Cellular',ref:'APL-AW10-45-GPSC',price:2190000,old:2490000,warranty:365,guarantee:12,stars:5,rev:14,badge:'new',
+   imgs:['https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&h=600&fit=crop&q=80'],
+   specs:{Pantalla:'45mm LTPO OLED Siempre encendida',Procesador:'Apple S10',GPS:'GPS+GLONASS+Cellular',Resistencia:'IP6X + WR50',Batería:'18 horas',Extras:'ECG, SpO2, Temperatura',Color:'Aluminio Medianoche',Garantía:'12 meses'},
+   tags:['ECG','Always-On','Cellular','WR50']},
+  // MÁQUINAS
+  {id:24,cat:'maquinas',sub:'separadoras',brand:'TBK',name:'Separadora de Pantallas TBK-958B LCD',ref:'TBK-958B-SEP',price:890000,old:1200000,warranty:180,guarantee:6,stars:5,rev:9,badge:'',
+   imgs:['https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=600&fit=crop&q=80'],
+   specs:{Temperatura:'0-180°C regulable',Vacío:'≥-85KPA',Potencia:'450W',Plato:'340 x 270mm',Uso:'LCD/OLED/Curvas',Voltaje:'110V-220V',Peso:'15 kg',Garantía:'6 meses'},
+   tags:['Pantallas curvas','Vacío','180°C']},
+  {id:25,cat:'maquinas',sub:'soldadura',brand:'JBC',name:'Estación de Soldadura JBC CD-2BQF Profesional',ref:'JBC-CD2BQF-SOLD',price:1890000,old:2300000,warranty:365,guarantee:12,stars:5,rev:6,badge:'',
+   imgs:['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600&h=600&fit=crop&q=80'],
+   specs:{Temperatura:'90-450°C',Potencia:'60W',Control:'Digital + Sleep Automático',Herramientas:'2 herramientas simultáneas',Resp:'≤2 segundos',Estabilidad:'±1°C',Voltaje:'110V-240V',Garantía:'12 meses'},
+   tags:['Profesional','±1°C','Sleep','2 herramientas']},
+  {id:26,cat:'maquinas',sub:'laminadoras',brand:'TBK',name:'Laminadora OCA TBK-508S Autoclave',ref:'TBK-508S-OCALAM',price:1290000,old:1600000,warranty:180,guarantee:6,stars:4,rev:11,badge:'sale',
+   imgs:['https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=600&fit=crop&q=80'],
+   specs:{Presión:'6-8 Bar',Temperatura:'0-70°C',Tamaño:'Para dispositivos hasta 12"',Extras:'Autoclave integrado',Vacío:'≥-90KPA',Voltaje:'220V',Peso:'22 kg',Garantía:'6 meses'},
+   tags:['OCA','Autoclave','12 pulgadas','Vacío']},
+  {id:27,cat:'maquinas',sub:'herramientas',brand:'MECHANIC',name:'Kit Herramientas Reparación 22 Piezas Pro',ref:'MEC-KIT22P-REP',price:85000,old:120000,warranty:90,guarantee:3,stars:4,rev:67,badge:'hot',
+   imgs:['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-brown-tools?w=600&h=600&fit=crop'],
+   specs:{Piezas:'22 herramientas profesionales',Incluye:'Destornilladores pentalobe, torx, phillips',Extras:'Palancas plásticas, spudger, pinzas',Calidad:'Acero CrV',Almacenamiento:'Estuche enrollable',Uso:'iPhone, Samsung, Xiaomi',Color:'Negro/Plata',Garantía:'3 meses'},
+   tags:['22 piezas','Pentalobe','CrV','Estuche']},
+];
+
+// Count per category
+CATS.forEach(c=>{
+  c.count = PRODS.filter(p=>p.cat===c.id).length;
+  c.subs.forEach(s=>{
+    s.count = PRODS.filter(p=>p.sub===s.id).length;
+  });
+});
+
+/* ══════════════════════
+   STATE
+══════════════════════ */
+let state = {
+  cat: null,        // selected category id
+  sub: null,        // selected subcategory id
+  search: '',
+  priceMin: null,
+  priceMax: null,
+  stars: 0,
+  brands: new Set(),
+  guarantee: 0,
+  sort: 'featured',
+  view: 'grid3',
+  page: 1,
+  perPage: 12,
+};
+let cart = {}, wish = new Set();
+
+/* ══════════════════════
+   THEME
+══════════════════════ */
+function toggleTheme(){
+  const html=document.documentElement;
+  const next=html.dataset.theme==='dark'?'light':'dark';
+  html.dataset.theme=next;
+  localStorage.setItem('cf-theme',next);
+}
+(()=>{const s=localStorage.getItem('cf-theme');if(s)document.documentElement.dataset.theme=s;})();
+
+/* ══════════════════════
+   CART
+══════════════════════ */
+function fmtP(n){return '$'+n.toLocaleString('es-CO');}
+function starsHTML(n){return '★'.repeat(n)+'☆'.repeat(5-n);}
+function cartCount(){return Object.values(cart).reduce((s,i)=>s+i.qty,0);}
+function fmtTotal(){return fmtP(Object.values(cart).reduce((s,i)=>s+i.price*i.qty,0));}
+
+function updateCartUI(){
+  const cnt=cartCount();
+  ['cBdg','nbdg','nbdg2'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.textContent=cnt;el.classList.toggle('on',cnt>0);}
+  });
+  document.getElementById('cartCnt').textContent=cnt;
+  document.getElementById('cartTotal').textContent=fmtTotal();
+  const body=document.getElementById('cartBody');
+  const empty=document.getElementById('cartEmpty');
+  const ids=Object.keys(cart);
+  if(!ids.length){body.innerHTML='';body.appendChild(empty);empty.style.display='flex';return;}
+  empty.style.display='none';
+  body.innerHTML=ids.map(id=>{
+    const it=cart[id];
+    return `<div class="ci">
+      <div class="ci-img"><img src="${it.img}" alt="${it.name}"></div>
+      <div class="ci-info">
+        <div class="ci-cat">${it.cat}</div>
+        <div class="ci-name">${it.name}</div>
+        <div class="ci-bot">
+          <span class="ci-price">${fmtP(it.price)}</span>
+          <div class="qrow">
+            <button class="qb" onclick="chQty('${id}',-1)">−</button>
+            <span class="qn">${it.qty}</span>
+            <button class="qb" onclick="chQty('${id}',1)">+</button>
+            <button class="qi" onclick="rmItem('${id}')">🗑</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function chQty(id,d){
+  if(!cart[id])return;
+  cart[id].qty+=d;
+  if(cart[id].qty<=0) delete cart[id];
+  updateCartUI();
+  rerenderCardControl(id);
+}
+function rmItem(id){delete cart[id];updateCartUI();rerenderCardControl(id);}
+function getQty(id){return cart[id]?cart[id].qty:0;}
+function addCart(id){
+  const p=PRODS.find(x=>x.id==id);if(!p)return;
+  cart[id]={name:p.name,price:p.price,img:p.imgs[0],cat:p.brand,qty:1};
+  updateCartUI();rerenderCardControl(id);
+  setTimeout(openCart,250);
+}
+function cardPlus(id){
+  const p=PRODS.find(x=>x.id==id);if(!p)return;
+  cart[id]?cart[id].qty++:(cart[id]={name:p.name,price:p.price,img:p.imgs[0],cat:p.brand,qty:1});
+  rerenderCardControl(id);updateCartUI();
+}
+function cardMinus(id){
+  if(!cart[id])return;
+  cart[id].qty--;
+  if(cart[id].qty<=0) delete cart[id];
+  rerenderCardControl(id);updateCartUI();
+}
+function ppQtyPlus(id){
+  const p=PRODS.find(x=>x.id==id);if(!p)return;
+  cart[id]?cart[id].qty++:(cart[id]={name:p.name,price:p.price,img:p.imgs[0],cat:p.brand,qty:1});
+  updateCartUI();rerenderCardControl(id);
+  const pp=document.getElementById('ppQtyNum');if(pp)pp.textContent=getQty(id);
+  renderPopupActions(p);
+}
+function ppQtyMinus(id){
+  if(!cart[id])return;
+  cart[id].qty--;
+  if(cart[id].qty<=0)delete cart[id];
+  updateCartUI();rerenderCardControl(id);
+  const pp=document.getElementById('ppQtyNum');if(pp)pp.textContent=getQty(id)||0;
+  const p=PRODS.find(x=>x.id==id);if(p)renderPopupActions(p);
+}
+
+function rerenderCardControl(id){
+  const wrap=document.querySelector(`.pcard[data-id="${id}"] .pc-add-wrap`);
+  if(!wrap) return;
+  const qty=getQty(id);
+  if(qty===0){
+    wrap.innerHTML=`<button class="pc-add-btn" onclick="addCart(${id})">🛒 Agregar</button>`;
+  } else {
+    wrap.innerHTML=`<div class="pc-qty-ctrl">
+      <button class="pc-qb minus" onclick="cardMinus(${id})">−</button>
+      <span class="pc-qnum">${qty}</span>
+      <button class="pc-qb" onclick="cardPlus(${id})">+</button>
+    </div>`;
+  }
+}
+
+/* ══════════════════════
+   PANELS
+══════════════════════ */
+const ov=document.getElementById('ov');
+function openCart(){document.getElementById('cartPanel').classList.add('on');ov.classList.add('on');}
+function closeCart(){document.getElementById('cartPanel').classList.remove('on');ov.classList.remove('on');}
+function openFilterDrawer(){buildFilterDrawer();document.getElementById('filterDrawer').classList.add('on');ov.classList.add('on');}
+function closeFilterDrawer(){document.getElementById('filterDrawer').classList.remove('on');ov.classList.remove('on');}
+ov.addEventListener('click',()=>{closeCart();closeFilterDrawer();closePopup();});
+function doCheckout(){alert('¡Gracias! Serás redirigido a la pasarela de pago seguro.');}
+
+/* ══════════════════════
+   SIDEBAR RENDERING
+══════════════════════ */
+function renderCatPills(){
+  const c=document.getElementById('catPills');
+  c.innerHTML=CATS.map(cat=>`
+    <div class="cat-pill ${state.cat===cat.id?'active':''}" onclick="selectCat('${cat.id}')">
+      <span class="cat-pill-l">${cat.icon} ${cat.name.replace(cat.icon,'').trim()}</span>
+      <span class="cat-pill-ct">${cat.count}</span>
+    </div>
+  `).join('');
+}
+
+function renderSubcatPills(){
+  const catObj=CATS.find(c=>c.id===state.cat);
+  const sec=document.getElementById('subcatSection');
+  const head=document.getElementById('subcatHead');
+  const pills=document.getElementById('subcatPills');
+  if(!catObj||!state.cat){sec.style.display='none';return;}
+  sec.style.display='block';
+  head.textContent='Subcategorías de '+catObj.name.replace(catObj.icon,'').trim();
+  pills.innerHTML=`
+    <div class="subcat-pill ${!state.sub?'active':''}" onclick="selectSub(null)">
+      <span>Todas</span><span class="subcat-pill-ct">${catObj.count}</span>
+    </div>
+  `+catObj.subs.map(s=>`
+    <div class="subcat-pill ${state.sub===s.id?'active':''}" onclick="selectSub('${s.id}')">
+      ${s.icon} ${s.name}<span class="subcat-pill-ct">${s.count||0}</span>
+    </div>
+  `).join('');
+}
+
+function renderBrandChecks(){
+  const el=document.getElementById('brandChecks');
+  // Get brands from filtered results (before brand filter)
+  const prods=PRODS.filter(p=>{
+    if(state.cat&&p.cat!==state.cat)return false;
+    if(state.sub&&p.sub!==state.sub)return false;
+    return true;
+  });
+  const brands=[...new Set(prods.map(p=>p.brand))].sort();
+  el.innerHTML=brands.map(b=>{
+    const ct=prods.filter(p=>p.brand===b).length;
+    return `<label class="brand-chk">
+      <input type="checkbox" ${state.brands.has(b)?'checked':''} onchange="toggleBrand('${b}',this.checked)">
+      <span class="brand-chk-lbl">${b}</span>
+      <span class="brand-chk-ct">${ct}</span>
+    </label>`;
+  }).join('');
+}
+
+function selectCat(id){
+  state.cat = state.cat===id ? null : id;
+  state.sub = null;
+  state.page = 1;
+  updateAll();
+}
+function selectSub(id){
+  state.sub = id;
+  state.page = 1;
+  updateAll();
+}
+function toggleBrand(b,checked){
+  if(checked) state.brands.add(b);
+  else state.brands.delete(b);
+  state.page=1;
+  applyFilters();
+}
+
+/* ══════════════════════
+   FILTER & SEARCH
+══════════════════════ */
+function getFiltered(){
+  let prods=[...PRODS];
+  // Search
+  if(state.search){
+    const q=state.search.toLowerCase();
+    prods=prods.filter(p=>
+      p.name.toLowerCase().includes(q)||
+      p.brand.toLowerCase().includes(q)||
+      p.ref.toLowerCase().includes(q)||
+      (p.tags&&p.tags.some(t=>t.toLowerCase().includes(q)))||
+      Object.values(p.specs).some(v=>String(v).toLowerCase().includes(q))
+    );
+  }
+  // Category
+  if(state.cat) prods=prods.filter(p=>p.cat===state.cat);
+  // Subcategory
+  if(state.sub) prods=prods.filter(p=>p.sub===state.sub);
+  // Price
+  if(state.priceMin) prods=prods.filter(p=>p.price>=Number(state.priceMin));
+  if(state.priceMax) prods=prods.filter(p=>p.price<=Number(state.priceMax));
+  // Stars
+  if(state.stars>0) prods=prods.filter(p=>p.stars>=Number(state.stars));
+  // Brands
+  if(state.brands.size>0) prods=prods.filter(p=>state.brands.has(p.brand));
+  // Guarantee
+  if(state.guarantee>0) prods=prods.filter(p=>p.warranty>=Number(state.guarantee));
+  // Sort
+  if(state.sort==='price_asc') prods.sort((a,b)=>a.price-b.price);
+  else if(state.sort==='price_desc') prods.sort((a,b)=>b.price-a.price);
+  else if(state.sort==='stars') prods.sort((a,b)=>b.stars-a.stars||(b.rev-a.rev));
+  else if(state.sort==='newest') prods.sort((a,b)=>(b.badge==='new'?1:0)-(a.badge==='new'?1:0));
+  else if(state.sort==='discount') prods.sort((a,b)=>((b.old-b.price)/b.old)-((a.old-a.price)/a.old));
+  return prods;
+}
+
+function applyFilters(){
+  state.sort=document.getElementById('sortSelect').value;
+  state.stars=document.querySelector('input[name="stars"]:checked')?.value||0;
+  state.guarantee=document.querySelector('input[name="guar"]:checked')?.value||0;
+  state.priceMin=document.getElementById('priceMin').value||null;
+  state.priceMax=document.getElementById('priceMax').value||null;
+  state.page=1;
+  renderProducts();
+  renderBreadcrumb();
+  renderActiveFilters();
+}
+
+function resetAllFilters(){
+  state={...state,cat:null,sub:null,search:'',priceMin:null,priceMax:null,stars:0,brands:new Set(),guarantee:0,sort:'featured',page:1};
+  document.getElementById('mainSearch').value='';
+  const ms=document.getElementById('mobSearch');if(ms)ms.value='';
+  document.getElementById('priceMin').value='';
+  document.getElementById('priceMax').value='';
+  document.querySelector('input[name="stars"][value="0"]').checked=true;
+  document.querySelector('input[name="guar"][value="0"]').checked=true;
+  document.getElementById('sortSelect').value='featured';
+  updateAll();
+}
+
+/* ══════════════════════
+   SEARCH
+══════════════════════ */
+function doSearch(){
+  state.search=document.getElementById('mainSearch').value.trim();
+  state.page=1;
+  hideSuggestions();
+  renderProducts();
+  renderBreadcrumb();
+  renderActiveFilters();
+}
+function doMobSearch(){
+  const v=document.getElementById('mobSearch').value.trim();
+  state.search=v;
+  document.getElementById('mainSearch').value=v;
+  state.page=1;
+  renderProducts();
+  renderBreadcrumb();
+  renderActiveFilters();
+}
+
+let sugTimer;
+document.getElementById('mainSearch').addEventListener('input',function(){
+  clearTimeout(sugTimer);
+  sugTimer=setTimeout(()=>showSuggestions(this.value),180);
+});
+document.getElementById('mainSearch').addEventListener('keydown',function(e){
+  if(e.key==='Enter'){doSearch();}
+  if(e.key==='Escape'){hideSuggestions();}
+});
+document.getElementById('mobSearch').addEventListener('keydown',function(e){
+  if(e.key==='Enter'){doMobSearch();}
+});
+
+function showSuggestions(q){
+  const box=document.getElementById('searchSuggestions');
+  if(!q||q.length<2){hideSuggestions();return;}
+  const ql=q.toLowerCase();
+  const matches=PRODS.filter(p=>
+    p.name.toLowerCase().includes(ql)||p.brand.toLowerCase().includes(ql)||
+    p.ref.toLowerCase().includes(ql)||p.tags.some(t=>t.toLowerCase().includes(ql))||
+    Object.values(p.specs).some(v=>String(v).toLowerCase().includes(ql))
+  ).slice(0,6);
+  if(!matches.length){
+    box.innerHTML=`<div class="sug-empty">Sin resultados para "${q}"</div>`;
+    box.classList.add('on');return;
+  }
+  box.innerHTML=`<div class="sug-section">Resultados (${matches.length})</div>`+
+    matches.map(p=>{
+      const disc=Math.round((1-p.price/p.old)*100);
+      return `<div class="sug-item" onclick="selectFromSuggestion(${p.id})">
+        <div class="sug-img"><img src="${p.imgs[0]}" alt="${p.name}" loading="lazy"></div>
+        <div class="sug-info">
+          <div class="sug-cat">${p.brand} · ${CATS.find(c=>c.id===p.cat)?.name.replace(/[^\w\s]/g,'').trim()||p.cat}</div>
+          <div class="sug-name">${highlightMatch(p.name,q)}</div>
+        </div>
+        <span class="sug-price">${fmtP(p.price)}${disc>0?` <small style="color:#10b981">-${disc}%</small>`:''}</span>
+      </div>`;
+    }).join('');
+  box.classList.add('on');
+}
+function highlightMatch(text,q){
+  const re=new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return text.replace(re,'<mark style="background:rgba(244,245,0,.3);color:inherit;border-radius:2px">$1</mark>');
+}
+function hideSuggestions(){
+  document.getElementById('searchSuggestions').classList.remove('on');
+}
+function selectFromSuggestion(id){
+  const p=PRODS.find(x=>x.id==id);
+  if(p){
+    state.cat=p.cat;state.sub=p.sub;
+    state.search='';
+    document.getElementById('mainSearch').value='';
+    hideSuggestions();
+    updateAll();
+    setTimeout(()=>openProductPopup(id),100);
+  }
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.srch-wrap')) hideSuggestions();
+});
+
+/* ══════════════════════
+   RENDER PRODUCTS
+══════════════════════ */
+function badgeHTML(b){
+  if(b==='new') return '<span class="pc-badge new">NUEVO</span>';
+  if(b==='hot') return '<span class="pc-badge hot">🔥 HOT</span>';
+  if(b==='sale') return '<span class="pc-badge sale">OFERTA</span>';
+  return '';
+}
+
+function renderProducts(){
+  const filtered=getFiltered();
+  const total=filtered.length;
+  const perPage=state.perPage;
+  const pages=Math.ceil(total/perPage);
+  if(state.page>pages) state.page=1;
+  const start=(state.page-1)*perPage;
+  const paginated=filtered.slice(start,start+perPage);
+
+  document.getElementById('tbCount').textContent=paginated.length;
+  document.getElementById('tbTotal').textContent=total;
+
+  const grid=document.getElementById('pgrid');
+  grid.className=`pgrid ${state.view}`;
+
+  if(!paginated.length){
+    grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1">
+      <div class="e-icon">🔍</div>
+      <h3>Sin resultados</h3>
+      <p>Intenta con otros términos o limpia los filtros</p>
+    </div>`;
+    document.getElementById('pagination').innerHTML='';
+    return;
+  }
+
+  const isList=state.view==='list';
+  grid.innerHTML=paginated.map(p=>{
+    const disc=Math.round((1-p.price/p.old)*100);
+    const qty=getQty(p.id);
+    const qtyHtml=qty>0?
+      `<div class="pc-qty-ctrl">
+        <button class="pc-qb minus" onclick="cardMinus(${p.id})">−</button>
+        <span class="pc-qnum">${qty}</span>
+        <button class="pc-qb" onclick="cardPlus(${p.id})">+</button>
+      </div>`:
+      `<button class="pc-add-btn" onclick="addCart(${p.id})">🛒 Agregar</button>`;
+    return `
+    <div class="pcard" data-id="${p.id}" onclick="handleCardClick(event,${p.id})">
+      ${badgeHTML(p.badge)}
+      <div class="pc-img"><img src="${p.imgs[0]}" alt="${p.name}" loading="lazy"></div>
+      <div class="pc-acts">
+        <button class="pca" title="Ver detalle" onclick="event.stopPropagation();openProductPopup(${p.id})">👁</button>
+        <button class="pca" title="Compartir" onclick="event.stopPropagation();alert('¡Enlace copiado!')">🔗</button>
+      </div>
+      <div class="pc-body">
+        <div class="pc-cat">${p.brand} · ${CATS.find(c=>c.id===p.cat)?.icon||''} ${CATS.find(c=>c.id===p.cat)?.subs.find(s=>s.id===p.sub)?.name||''}</div>
+        <div class="pc-name">${p.name}</div>
+        <div class="pc-ref">Ref: ${p.ref}</div>
+        <div class="pc-stars-row"><span class="s">${starsHTML(p.stars)}</span><span class="sr">(${p.rev})</span></div>
+        <div class="pc-pr-row">
+          <span class="pc-price">${fmtP(p.price)}</span>
+          <span class="pc-old">${fmtP(p.old)}</span>
+          ${disc>0?`<span style="font-size:10px;background:rgba(244,245,0,.15);color:var(--y);padding:1px 6px;border-radius:5px;font-weight:700;font-family:'DM Mono',monospace">-${disc}%</span>`:''}
+        </div>
+        <div class="pc-add-wrap">${qtyHtml}</div>
+        ${isList?`<div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">${p.tags.map(t=>`<span style="font-size:10px;padding:2px 7px;background:var(--surf);border-radius:5px;color:var(--muted)">${t}</span>`).join('')}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+
+  renderPagination(pages);
+}
+
+function handleCardClick(e,id){
+  // Don't open popup if clicking on buttons
+  if(e.target.closest('button')) return;
+  openProductPopup(id);
+}
+
+function renderPagination(pages){
+  const el=document.getElementById('pagination');
+  if(pages<=1){el.innerHTML='';return;}
+  let html='';
+  html+=`<button class="pg-btn" onclick="goPage(${state.page-1})" ${state.page===1?'disabled':''}>‹</button>`;
+  for(let i=1;i<=pages;i++){
+    if(pages>7&&Math.abs(i-state.page)>2&&i!==1&&i!==pages){
+      if(i===2||i===pages-1) html+=`<button class="pg-btn" disabled>…</button>`;
+      continue;
+    }
+    html+=`<button class="pg-btn ${i===state.page?'on':''}" onclick="goPage(${i})">${i}</button>`;
+  }
+  html+=`<button class="pg-btn" onclick="goPage(${state.page+1})" ${state.page===pages?'disabled':''}>›</button>`;
+  el.innerHTML=html;
+}
+function goPage(n){state.page=n;renderProducts();window.scrollTo({top:200,behavior:'smooth'});}
+
+/* ══════════════════════
+   BREADCRUMB & ACTIVE FILTERS
+══════════════════════ */
+function renderBreadcrumb(){
+  const bc=document.getElementById('breadcrumb');
+  const catObj=CATS.find(c=>c.id===state.cat);
+  const subObj=catObj?.subs.find(s=>s.id===state.sub);
+  let html=`<span class="bc-item" onclick="resetAllFilters()">Inicio</span>
+  <span class="bc-sep">›</span>`;
+  if(!state.cat&&!state.search){
+    html+=`<span class="bc-item active">Todos los productos</span>`;
+  } else if(state.search){
+    html+=`<span class="bc-item" onclick="selectCat(null)">Todos</span>
+    <span class="bc-sep">›</span>
+    <span class="bc-item active">Búsqueda: "${state.search}"</span>`;
+  } else {
+    html+=`<span class="bc-item" onclick="selectCat('${catObj.id}')">${catObj.icon} ${catObj.name.replace(catObj.icon,'').trim()}</span>`;
+    if(subObj){
+      html+=`<span class="bc-sep">›</span>
+      <span class="bc-item active">${subObj.icon} ${subObj.name}</span>`;
+    }
+  }
+  bc.innerHTML=html;
+}
+
+function renderActiveFilters(){
+  const af=document.getElementById('activeFilters');
+  let tags=[];
+  if(state.search) tags.push(`🔍 "${state.search}"`);
+  if(state.priceMin) tags.push(`Desde ${fmtP(state.priceMin)}`);
+  if(state.priceMax) tags.push(`Hasta ${fmtP(state.priceMax)}`);
+  if(state.stars>0) tags.push(`★ ${state.stars}+`);
+  state.brands.forEach(b=>tags.push(`Marca: ${b}`));
+  if(state.guarantee>0) tags.push(`Garantía: ${state.guarantee>=365?'12':'state.guarantee>=180?6:3'} meses+`);
+  if(!tags.length){af.style.display='none';return;}
+  af.style.display='flex';
+  af.innerHTML=`<span class="af-lbl">Filtros activos:</span>`+
+    tags.map(t=>`<span class="af-tag">${t} <span class="af-x">×</span></span>`).join('')+
+    `<button class="af-clear" onclick="resetAllFilters()">Limpiar todo</button>`;
+}
+
+/* ══════════════════════
+   PRODUCT POPUP
+══════════════════════ */
+function openProductPopup(id){
+  const p=PRODS.find(x=>x.id==id);if(!p)return;
+  // Gallery
+  let activeImg=0;
+  function updateMain(idx){
+    activeImg=idx;
+    document.getElementById('ppMainImgEl').src=p.imgs[idx];
+    document.querySelectorAll('.pp-thumb').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  }
+  document.getElementById('ppMainImgEl').src=p.imgs[0];
+  document.getElementById('ppThumbs').innerHTML=p.imgs.map((img,i)=>`
+    <div class="pp-thumb ${i===0?'active':''}" onclick="document.getElementById('ppMainImgEl').src='${img}';document.querySelectorAll('.pp-thumb').forEach((t,j)=>t.classList.toggle('active',j===${i}))">
+      <img src="${img}" alt="">
+    </div>
+  `).join('');
+  // Info
+  const disc=Math.round((1-p.price/p.old)*100);
+  const catObj=CATS.find(c=>c.id===p.cat);
+  const subObj=catObj?.subs.find(s=>s.id===p.sub);
+  document.getElementById('ppInfo').innerHTML=`
+    <div class="pp-cat">${catObj?.icon||''} ${catObj?.name.replace(catObj?.icon,'').trim()||p.cat} › ${subObj?.name||''}</div>
+    <div class="pp-name">${p.name}</div>
+    <div class="pp-ref-row">
+      <span class="pp-ref">Ref: ${p.ref}</span>
+      ${p.badge?`<span style="font-size:10px;padding:2px 8px;background:${p.badge==='new'?'#10b981':p.badge==='hot'?'#f59e0b':'var(--y)'};color:${p.badge==='sale'?'#000':'#000'};border-radius:5px;font-weight:800">${p.badge==='new'?'NUEVO':p.badge==='hot'?'🔥 HOT':'OFERTA'}</span>`:''}
+    </div>
+    <div class="pp-stars-row">
+      <span class="pp-stars">${starsHTML(p.stars)}</span>
+      <span class="pp-rev-ct">${p.rev} reseñas</span>
+    </div>
+    <div class="pp-price-block">
+      <div class="pp-price">${fmtP(p.price)}</div>
+      <div class="pp-old-price">${fmtP(p.old)}</div>
+      ${disc>0?`<span class="pp-discount-badge">-${disc}% OFF</span>`:''}
+    </div>
+    <div class="pp-specs">
+      ${Object.entries(p.specs).map(([k,v])=>`
+        <div class="pp-spec-row">
+          <span class="pp-spec-key">${k}</span>
+          <span class="pp-spec-val ${k==='Garantía'?'highlight':''}">${v}</span>
+        </div>
+      `).join('')}
+      <div class="pp-spec-row">
+        <span class="pp-spec-key">Garantía</span>
+        <span class="pp-spec-val highlight">🛡️ ${p.guarantee} ${p.guarantee===1?'mes':'meses'}</span>
+      </div>
+    </div>
+    <div class="pp-actions" id="ppActionsBox"></div>
+    <div class="pp-tags">${p.tags.map(t=>`<span class="pp-tag">${t}</span>`).join('')}</div>
+  `;
+  renderPopupActions(p);
+  document.getElementById('productPopup').classList.add('on');
+  document.body.style.overflow='hidden';
+}
+
+function renderPopupActions(p){
+  const box=document.getElementById('ppActionsBox');if(!box)return;
+  const qty=getQty(p.id);
+  if(qty===0){
+    box.innerHTML=`<button class="pp-add-btn" onclick="ppAddToCart(${p.id})">🛒 Agregar al carrito</button>`;
+  } else {
+    box.innerHTML=`
+      <div class="pp-qty-ctrl">
+        <button class="pp-qb" onclick="ppQtyMinus(${p.id})">−</button>
+        <span class="pp-qnum" id="ppQtyNum">${qty}</span>
+        <button class="pp-qb" onclick="ppQtyPlus(${p.id})">+</button>
+      </div>
+      <button class="pp-add-btn" style="background:var(--surf);color:var(--txt);border:1px solid var(--bdr2)" onclick="closePopup();openCart()">Ver carrito (${qty})</button>`;
+  }
+}
+
+function ppAddToCart(id){
+  const p=PRODS.find(x=>x.id==id);if(!p)return;
+  cart[id]={name:p.name,price:p.price,img:p.imgs[0],cat:p.brand,qty:1};
+  updateCartUI();rerenderCardControl(id);
+  renderPopupActions(p);
+}
+
+function closePopup(){
+  document.getElementById('productPopup').classList.remove('on');
+  document.body.style.overflow='';
+}
+
+/* ══════════════════════
+   VIEWS
+══════════════════════ */
+function setView(v){
+  state.view=v;
+  ['grid3','grid4','list'].forEach(id=>document.getElementById('v'+id.charAt(0).toUpperCase()+id.slice(1))?.classList.remove('on'));
+  document.getElementById('v'+v.charAt(0).toUpperCase()+v.slice(1))?.classList.add('on');
+  renderProducts();
+}
+
+/* ══════════════════════
+   MOBILE FILTER DRAWER
+══════════════════════ */
+function buildFilterDrawer(){
+  const catObj=CATS.find(c=>c.id===state.cat);
+  let html=`<div style="margin-bottom:20px">
+    <div class="sb-head">Categorías</div>
+    <div class="cat-pills">${CATS.map(cat=>`
+      <div class="cat-pill ${state.cat===cat.id?'active':''}" onclick="selectCat('${cat.id}');closeFilterDrawer()">
+        <span class="cat-pill-l">${cat.icon} ${cat.name.replace(cat.icon,'').trim()}</span>
+        <span class="cat-pill-ct">${cat.count}</span>
+      </div>`).join('')}</div>
+  </div>`;
+  if(catObj){
+    html+=`<div style="margin-bottom:20px">
+      <div class="sb-head">Subcategorías</div>
+      <div class="cat-pills">
+        <div class="subcat-pill ${!state.sub?'active':''}" onclick="selectSub(null);closeFilterDrawer()">Todas <span class="subcat-pill-ct">${catObj.count}</span></div>
+        ${catObj.subs.map(s=>`<div class="subcat-pill ${state.sub===s.id?'active':''}" onclick="selectSub('${s.id}');closeFilterDrawer()">${s.icon} ${s.name} <span class="subcat-pill-ct">${s.count||0}</span></div>`).join('')}
+      </div>
+    </div>`;
+  }
+  html+=`<div style="margin-bottom:20px">
+    <div class="sb-head">Ordenar por</div>
+    <select class="tb-sort" style="width:100%;margin:6px 0" id="mobSortSel">
+      <option value="featured" ${state.sort==='featured'?'selected':''}>Destacados</option>
+      <option value="price_asc" ${state.sort==='price_asc'?'selected':''}>Menor precio</option>
+      <option value="price_desc" ${state.sort==='price_desc'?'selected':''}>Mayor precio</option>
+      <option value="stars" ${state.sort==='stars'?'selected':''}>Mejor valorados</option>
+      <option value="discount" ${state.sort==='discount'?'selected':''}>Mayor descuento</option>
+    </select>
+  </div>`;
+  html+=`<button class="sb-reset" onclick="resetAllFilters();closeFilterDrawer()" style="width:100%;margin:0;display:block">↺ Limpiar todo</button>`;
+  document.getElementById('filterDrawerBody').innerHTML=html;
+}
+function applyMobFilters(){
+  const s=document.getElementById('mobSortSel');
+  if(s){state.sort=s.value;document.getElementById('sortSelect').value=s.value;}
+  closeFilterDrawer();
+  applyFilters();
+}
+
+/* ══════════════════════
+   URL PARAMS (from index.html navigation)
+══════════════════════ */
+function readUrlParams(){
+  const params=new URLSearchParams(window.location.search);
+  const cat=params.get('cat');
+  const sub=params.get('sub');
+  const search=params.get('q');
+  if(cat) state.cat=cat;
+  if(sub) state.sub=sub;
+  if(search){state.search=search;document.getElementById('mainSearch').value=search;}
+}
+
+/* ══════════════════════
+   INIT
+══════════════════════ */
+function updateAll(){
+  renderCatPills();
+  renderSubcatPills();
+  renderBrandChecks();
+  renderProducts();
+  renderBreadcrumb();
+  renderActiveFilters();
+}
+
+readUrlParams();
+updateAll();
+updateCartUI();
+
+// Toast
+setTimeout(()=>{
+  document.getElementById('toast').classList.add('on');
+  setTimeout(()=>document.getElementById('toast').classList.remove('on'),6000);
+},4000);
+document.getElementById('toastX').addEventListener('click',()=>document.getElementById('toast').classList.remove('on'));
+</script>
+</body>
+</html>
