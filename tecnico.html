@@ -409,6 +409,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
       <div class="sb-link on" onclick="goPage('dashboard',this)"><span class="si">📊</span><span class="sl">Dashboard</span></div>
       <div class="sb-link" onclick="goPage('repairs',this)"><span class="si">🔧</span><span class="sl">Reparaciones</span><span class="sbdg" id="sbRepCount">0</span></div>
       <div class="sb-link" id="lnkAdmin" onclick="goPage('admin',this)"><span class="si">👑</span><span class="sl">Admin Panel</span></div>
+      <div class="sb-link" id="lnkTecnicos" onclick="goPage('tecnicos',this)"><span class="si">👷</span><span class="sl">Técnicos</span></div>
       <div class="sb-nav-lbl" style="margin-top:6px">Mi cuenta</div>
       <div class="sb-link" onclick="goPage('myRepairs',this)" id="lnkMyRep"><span class="si">📋</span><span class="sl">Mis Equipos</span><span class="sbdg" id="sbMyCount">0</span></div>
       <div class="sb-link" onclick="goPage('profile',this)"><span class="si">👤</span><span class="sl">Mi Perfil</span></div>
@@ -583,27 +584,70 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 
       <!-- ══ PROFILE PAGE ══ -->
       <div class="page" id="pageProfile">
-        <div style="max-width:540px">
+        <div style="max-width:560px">
           <div class="dash-card" style="margin-bottom:18px">
-            <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px">
-              <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--y),#6a6a00);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#000" id="profileAv">LR</div>
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+              <div style="width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--y),#6a6a00);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#000;flex-shrink:0" id="profileAv">LR</div>
               <div>
                 <div style="font-size:20px;font-weight:800;color:var(--white)" id="profileName">Luis Ramírez</div>
-                <div style="font-size:12px;color:var(--y);font-family:'DM Mono',monospace" id="profileRole">Técnico Senior</div>
+                <div style="font-size:12px;color:var(--y);font-family:'DM Mono',monospace;margin-top:2px" id="profileRole">Técnico Senior</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:4px" id="profileEmail">—</div>
               </div>
             </div>
-            <div class="fg"><label>Nombre completo</label><input type="text" id="pName" value="Luis Ramírez"></div>
-            <div class="fg"><label>Email</label><input type="email" id="pEmail" value="luis.ramirez@celufenix.com"></div>
-            <div class="fg"><label>Teléfono</label><input type="tel" id="pPhone" value="+57 310 456 7890"></div>
-            <div class="fg"><label>Especialidad</label><input type="text" id="pSpec" value="Smartphones Android · Apple iOS"></div>
-            <button class="tb-btn primary" onclick="saveProfile()" style="margin-top:8px">💾 Guardar cambios</button>
+            <div class="sec-div">Información Personal</div>
+            <div class="fg"><label>Nombre completo</label><input type="text" id="pName"></div>
+            <div class="fg"><label>Email</label><input type="email" id="pEmail"></div>
+            <div class="fg"><label>Teléfono</label><input type="tel" id="pPhone"></div>
+            <div class="fg"><label>Especialidad</label><input type="text" id="pSpec"></div>
+            <button class="tb-btn primary" onclick="saveProfile()" style="margin-top:4px">💾 Guardar cambios</button>
           </div>
-          <div class="dash-card">
-            <h3>🔒 Cambiar Contraseña</h3>
-            <div class="fg"><label>Contraseña actual</label><input type="password" placeholder="••••••••"></div>
-            <div class="fg"><label>Nueva contraseña</label><input type="password" placeholder="••••••••"></div>
-            <div class="fg"><label>Confirmar nueva</label><input type="password" placeholder="••••••••"></div>
-            <button class="tb-btn primary" style="margin-top:8px" onclick="showNotif('Contraseña actualizada','success')">🔒 Cambiar contraseña</button>
+          <!-- Solo admin puede cambiar contraseña desde su perfil -->
+          <div class="dash-card" id="passCard">
+            <h3 style="font-size:14px;font-weight:800;color:var(--white);margin-bottom:16px;display:flex;align-items:center;gap:8px">🔒 Cambiar Contraseña</h3>
+            <div id="passCardContent"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ TÉCNICOS PAGE (solo admin) ══ -->
+      <div class="page" id="pageTecnicos">
+        <div class="filter-bar" style="margin-bottom:18px">
+          <div class="srch-box">
+            <input class="srch-inp" type="search" id="techSearch" placeholder="Buscar técnico…" oninput="renderTechsTable()">
+            <button class="srch-btn">🔍</button>
+          </div>
+          <div class="flt-tabs">
+            <div class="flt-tab on" data-ta="all" onclick="setTechTab(this)">Todos</div>
+            <div class="flt-tab" data-ta="active" onclick="setTechTab(this)">Activos</div>
+            <div class="flt-tab" data-ta="inactive" onclick="setTechTab(this)">Inactivos</div>
+          </div>
+          <button class="tb-btn primary" onclick="openNewTechModal()">➕ Nuevo Técnico</button>
+        </div>
+        <div class="table-wrap">
+          <div class="table-head">
+            <h3>👷 Gestión de Técnicos</h3>
+            <div style="font-size:12px;color:var(--muted)" id="techCount">—</div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Técnico</th>
+                  <th>Usuario / Email</th>
+                  <th>Teléfono</th>
+                  <th>Especialidad</th>
+                  <th>Equipos activos</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="techsTbody"></tbody>
+            </table>
+          </div>
+          <div id="techsEmpty" class="empty-state" style="display:none">
+            <div class="ei">👷</div>
+            <h3>Sin técnicos</h3>
+            <p>Agrega el primer técnico al equipo</p>
           </div>
         </div>
       </div>
@@ -798,7 +842,107 @@ input,select,textarea{font-family:'Outfit',sans-serif}
   </div>
 </div>
 
-<!-- DELETE CONFIRM MODAL -->
+<!-- NEW / EDIT TECH MODAL -->
+<div class="modal-bg" id="techModal">
+  <div class="modal-box md">
+    <div class="mhdr">
+      <div><h2 id="techModalTitle">➕ Nuevo Técnico</h2><p id="techModalSub">Crear cuenta de técnico</p></div>
+      <button class="mcl" onclick="closeModal('techModal')">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="sec-div">Información Personal</div>
+      <div class="form-grid">
+        <div class="fg"><label>Nombre completo *</label><input type="text" id="tm_name" placeholder="Ej: Juan Pérez"></div>
+        <div class="fg"><label>Teléfono *</label><input type="tel" id="tm_phone" placeholder="+57 300 000 0000"></div>
+        <div class="fg full"><label>Email (usado como usuario) *</label><input type="email" id="tm_email" placeholder="juan.perez@celufenix.com"></div>
+        <div class="fg full"><label>Especialidad</label><input type="text" id="tm_spec" placeholder="Ej: Smartphones Android · Pantallas OLED"></div>
+      </div>
+      <div class="sec-div">Acceso al Sistema</div>
+      <div class="form-grid">
+        <div class="fg" id="tm_passField"><label>Contraseña *</label><input type="password" id="tm_pass" placeholder="Mínimo 6 caracteres"></div>
+        <div class="fg" id="tm_pass2Field"><label>Confirmar contraseña *</label><input type="password" id="tm_pass2" placeholder="Repetir contraseña"></div>
+        <div class="fg"><label>Rol</label>
+          <select id="tm_role">
+            <option value="Técnico">Técnico</option>
+            <option value="Técnico Senior">Técnico Senior</option>
+            <option value="Técnico Especialista">Técnico Especialista</option>
+          </select>
+        </div>
+        <div class="fg"><label>Estado inicial</label>
+          <select id="tm_active">
+            <option value="true">✅ Activo</option>
+            <option value="false">🔴 Inactivo</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="mftr">
+      <button class="btn-cancel" onclick="closeModal('techModal')">Cancelar</button>
+      <button class="btn-primary" id="techModalSaveBtn" onclick="saveTech()">✅ Crear Técnico</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESET PASSWORD MODAL -->
+<div class="modal-bg" id="resetPassModal">
+  <div class="modal-box sm">
+    <div class="mhdr">
+      <div><h2>🔑 Restablecer Contraseña</h2><p id="rp_techName">—</p></div>
+      <button class="mcl" onclick="closeModal('resetPassModal')">✕</button>
+    </div>
+    <div class="mbody">
+      <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:#f59e0b">
+        ⚠️ Esta acción reemplazará la contraseña actual del técnico. El técnico deberá usar la nueva contraseña en su próximo ingreso.
+      </div>
+      <div class="fg"><label>Nueva contraseña *</label><input type="password" id="rp_newPass" placeholder="Mínimo 6 caracteres"></div>
+      <div class="fg"><label>Confirmar nueva contraseña *</label><input type="password" id="rp_newPass2" placeholder="Repetir nueva contraseña"></div>
+    </div>
+    <div class="mftr">
+      <button class="btn-cancel" onclick="closeModal('resetPassModal')">Cancelar</button>
+      <button class="btn-primary" onclick="saveResetPass()">🔑 Restablecer</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOGGLE ACTIVE CONFIRM MODAL -->
+<div class="modal-bg" id="toggleActiveModal">
+  <div class="modal-box sm">
+    <div class="mhdr">
+      <div><h2 id="taTitle">🔴 Inactivar Técnico</h2></div>
+      <button class="mcl" onclick="closeModal('toggleActiveModal')">✕</button>
+    </div>
+    <div class="mbody">
+      <p style="font-size:14px;color:var(--txt);margin-bottom:8px" id="taMsg">¿Estás seguro de inactivar a <strong id="taTechName" style="color:var(--y)">—</strong>?</p>
+      <p style="font-size:13px;color:var(--muted)" id="taSubMsg">Un técnico inactivo no podrá ingresar al sistema. Sus reparaciones asignadas se conservan.</p>
+    </div>
+    <div class="mftr">
+      <button class="btn-cancel" onclick="closeModal('toggleActiveModal')">Cancelar</button>
+      <button id="taConfirmBtn" class="btn-danger" onclick="confirmToggleActive()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE TECH MODAL -->
+<div class="modal-bg" id="deleteTechModal">
+  <div class="modal-box sm">
+    <div class="mhdr">
+      <div><h2>🗑️ Eliminar Técnico</h2></div>
+      <button class="mcl" onclick="closeModal('deleteTechModal')">✕</button>
+    </div>
+    <div class="mbody">
+      <p style="font-size:14px;color:var(--txt);margin-bottom:8px">¿Eliminar permanentemente a <strong id="delTechName" style="color:var(--y)">—</strong>?</p>
+      <div style="background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.25);border-radius:10px;padding:12px 14px;font-size:12px;color:#fb7185">
+        🚨 Esta acción no se puede deshacer. El técnico perderá acceso inmediatamente. Las reparaciones asignadas quedarán sin técnico asignado.
+      </div>
+    </div>
+    <div class="mftr">
+      <button class="btn-cancel" onclick="closeModal('deleteTechModal')">Cancelar</button>
+      <button class="btn-danger" onclick="confirmDeleteTech()">🗑️ Eliminar definitivamente</button>
+    </div>
+  </div>
+</div>
+
+
 <div class="modal-bg" id="deleteModal">
   <div class="modal-box sm">
     <div class="mhdr">
@@ -820,10 +964,10 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 /* ═══════════════════════════════════════
    DATA & STATE
 ═══════════════════════════════════════ */
-const TECHS = [
-  {id:'tech1',name:'Luis Ramírez',initials:'LR',role:'Técnico Senior',email:'luis.ramirez@celufenix.com',phone:'+57 310 456 7890',spec:'Smartphones Android · Apple iOS',pass:'123456'},
-  {id:'tech2',name:'Patricia Gómez',initials:'PG',role:'Técnico Especialista',email:'patricia.gomez@celufenix.com',phone:'+57 315 678 9012',spec:'Pantallas · Soldadura SMD',pass:'123456'},
-  {id:'admin1',name:'Administrador',initials:'AD',role:'Administrador',email:'admin@celufenix.com',phone:'+57 300 000 0001',spec:'Administración general',pass:'admin123'},
+let TECHS = [
+  {id:'tech1',name:'Luis Ramírez',initials:'LR',role:'Técnico Senior',email:'luis.ramirez@celufenix.com',phone:'+57 310 456 7890',spec:'Smartphones Android · Apple iOS',pass:'123456',active:true},
+  {id:'tech2',name:'Patricia Gómez',initials:'PG',role:'Técnico Especialista',email:'patricia.gomez@celufenix.com',phone:'+57 315 678 9012',spec:'Pantallas · Soldadura SMD',pass:'123456',active:true},
+  {id:'admin1',name:'Administrador',initials:'AD',role:'Administrador',email:'admin@celufenix.com',phone:'+57 300 000 0001',spec:'Administración general',pass:'admin123',active:true},
 ];
 
 let REPAIRS = [
@@ -955,7 +1099,8 @@ function doLogin(){
   const p=document.getElementById('loginPass').value;
   const err=document.getElementById('loginErr');
   const found=TECHS.find(t=>t.email.split('@')[0].toLowerCase()===u && t.pass===p);
-  if(!found){err.classList.add('on');return;}
+  if(!found){err.textContent='Usuario o contraseña incorrectos';err.classList.add('on');return;}
+  if(!found.active){err.textContent='Esta cuenta está inactiva. Contacta al administrador.';err.classList.add('on');return;}
   err.classList.remove('on');
   currentUser=found;
   document.getElementById('loginScreen').classList.add('hide');
@@ -980,30 +1125,56 @@ function initApp(){
   document.getElementById('sbAv').textContent=currentUser.initials;
   document.getElementById('sbName').textContent=currentUser.name;
   document.getElementById('sbRole').textContent=currentUser.role;
-  // Show/hide admin links
+  // Show/hide admin-only links
   document.getElementById('lnkAdmin').style.display=isAdmin?'flex':'none';
+  document.getElementById('lnkTecnicos').style.display=isAdmin?'flex':'none';
+  document.getElementById('lnkMyRep').style.display=isAdmin?'none':'flex';
   // Populate tech selects
-  const techSel=document.getElementById('nr_tech');
-  const techFlt=document.getElementById('techFilter');
-  techSel.innerHTML='<option value="">Sin asignar</option>'+
-    TECHS.filter(t=>t.role!=='Administrador').map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
-  techFlt.innerHTML='<option value="all">Todos los técnicos</option>'+
-    TECHS.filter(t=>t.role!=='Administrador').map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+  refreshTechSelects();
   // Profile
   document.getElementById('profileAv').textContent=currentUser.initials;
   document.getElementById('profileName').textContent=currentUser.name;
   document.getElementById('profileRole').textContent=currentUser.role;
+  document.getElementById('profileEmail').textContent=currentUser.email;
   document.getElementById('pName').value=currentUser.name;
   document.getElementById('pEmail').value=currentUser.email;
   document.getElementById('pPhone').value=currentUser.phone;
   document.getElementById('pSpec').value=currentUser.spec;
+  // Password section: admin can change, tech cannot
+  const passCard=document.getElementById('passCard');
+  const passContent=document.getElementById('passCardContent');
+  if(isAdmin){
+    passContent.innerHTML=`
+      <div class="fg"><label>Contraseña actual *</label><input type="password" id="pCurrPass" placeholder="••••••••"></div>
+      <div class="fg"><label>Nueva contraseña *</label><input type="password" id="pNewPass" placeholder="Mínimo 6 caracteres"></div>
+      <div class="fg"><label>Confirmar nueva contraseña *</label><input type="password" id="pNewPass2" placeholder="Repetir nueva contraseña"></div>
+      <button class="tb-btn primary" style="margin-top:4px" onclick="saveAdminPassword()">🔒 Cambiar contraseña</button>`;
+  } else {
+    passContent.innerHTML=`
+      <div style="display:flex;align-items:center;gap:12px;padding:14px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);border-radius:10px">
+        <span style="font-size:24px">🔒</span>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--white)">Cambio de contraseña restringido</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:3px">Solo el administrador puede restablecer tu contraseña. Contáctalo si necesitas cambiarla.</div>
+        </div>
+      </div>`;
+  }
   // If tech, pre-select in new repair
   if(!isAdmin){
-    techSel.value=currentUser.id;
+    const techSel=document.getElementById('nr_tech');
+    if(techSel) techSel.value=currentUser.id;
   }
-  goPage('dashboard',document.querySelector('.sb-link'));
+  goPage('dashboard',document.querySelector('.sb-link:not([style*="none"])'));
   renderAll();
   showNotif(`Bienvenido, ${currentUser.name}`,'success',`${currentUser.role} · CeluFénix`);
+}
+
+function refreshTechSelects(){
+  const active=TECHS.filter(t=>t.role!=='Administrador'&&t.active);
+  const techSel=document.getElementById('nr_tech');
+  const techFlt=document.getElementById('techFilter');
+  if(techSel) techSel.innerHTML='<option value="">Sin asignar</option>'+active.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+  if(techFlt) techFlt.innerHTML='<option value="all">Todos los técnicos</option>'+active.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
 }
 
 /* ═══════════════════════
@@ -1012,8 +1183,8 @@ function initApp(){
 function goPage(pageId,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('on'));
-  const pages={dashboard:'pageDashboard',repairs:'pageRepairs',myRepairs:'pageMyRepairs',admin:'pageAdmin',profile:'pageProfile'};
-  const titles={dashboard:['Dashboard','Resumen general del sistema'],repairs:['Reparaciones','Gestión de equipos en servicio'],myRepairs:['Mis Equipos','Equipos asignados a mí'],admin:['Admin Panel','Gestión general del sistema'],profile:['Mi Perfil','Configuración de cuenta']};
+  const pages={dashboard:'pageDashboard',repairs:'pageRepairs',myRepairs:'pageMyRepairs',admin:'pageAdmin',profile:'pageProfile',tecnicos:'pageTecnicos'};
+  const titles={dashboard:['Dashboard','Resumen general del sistema'],repairs:['Reparaciones','Gestión de equipos en servicio'],myRepairs:['Mis Equipos','Equipos asignados a mí'],admin:['Admin Panel','Gestión general del sistema'],profile:['Mi Perfil','Configuración de cuenta'],tecnicos:['Técnicos','Gestión del equipo técnico']};
   const pg=document.getElementById(pages[pageId]);
   if(pg) pg.classList.add('on');
   if(el) el.classList.add('on');
@@ -1024,6 +1195,7 @@ function goPage(pageId,el){
   if(pageId==='repairs') renderRepairsTable();
   if(pageId==='myRepairs') renderMyRepairsTable();
   if(pageId==='admin') renderAdminPage();
+  if(pageId==='tecnicos') renderTechsTable();
 }
 
 function toggleSidebar(){
@@ -1486,13 +1658,253 @@ function confirmDelete(){
    PROFILE
 ═══════════════════════ */
 function saveProfile(){
-  showNotif('Perfil actualizado correctamente','success');
-  const n=document.getElementById('pName').value;
-  if(currentUser&&n){
-    currentUser.name=n;
+  const n=document.getElementById('pName').value.trim();
+  const e=document.getElementById('pEmail').value.trim();
+  const ph=document.getElementById('pPhone').value.trim();
+  const sp=document.getElementById('pSpec').value.trim();
+  if(!n||!e){showNotif('Nombre y email son obligatorios','warn');return;}
+  if(currentUser){
+    currentUser.name=n;currentUser.email=e;currentUser.phone=ph;currentUser.spec=sp;
+    const t=TECHS.find(x=>x.id===currentUser.id);
+    if(t){t.name=n;t.email=e;t.phone=ph;t.spec=sp;}
     document.getElementById('sbName').textContent=n;
     document.getElementById('profileName').textContent=n;
+    document.getElementById('profileEmail').textContent=e;
+    // Update initials
+    const parts=n.split(' ');
+    const ini=(parts[0]?.[0]||'')+(parts[1]?.[0]||'');
+    currentUser.initials=ini.toUpperCase();
+    if(t) t.initials=ini.toUpperCase();
+    document.getElementById('sbAv').textContent=currentUser.initials;
+    document.getElementById('profileAv').textContent=currentUser.initials;
   }
+  showNotif('Perfil actualizado correctamente','success');
+}
+
+function saveAdminPassword(){
+  const curr=document.getElementById('pCurrPass')?.value||'';
+  const nw=document.getElementById('pNewPass')?.value||'';
+  const nw2=document.getElementById('pNewPass2')?.value||'';
+  if(!curr||!nw||!nw2){showNotif('Completa todos los campos','warn');return;}
+  if(curr!==currentUser.pass){showNotif('La contraseña actual es incorrecta','err');return;}
+  if(nw.length<6){showNotif('La nueva contraseña debe tener al menos 6 caracteres','warn');return;}
+  if(nw!==nw2){showNotif('Las contraseñas nuevas no coinciden','err');return;}
+  const t=TECHS.find(x=>x.id===currentUser.id);
+  if(t) t.pass=nw;
+  currentUser.pass=nw;
+  document.getElementById('pCurrPass').value='';
+  document.getElementById('pNewPass').value='';
+  document.getElementById('pNewPass2').value='';
+  showNotif('Contraseña actualizada correctamente','success');
+}
+
+/* ═══════════════════════
+   TÉCNICOS CRUD
+═══════════════════════ */
+let techTabFilter='all';
+let editingTechId=null;
+let pendingTechActionId=null;
+
+function setTechTab(el){
+  document.querySelectorAll('[data-ta]').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  techTabFilter=el.dataset.ta;
+  renderTechsTable();
+}
+
+function renderTechsTable(){
+  const q=(document.getElementById('techSearch')?.value||'').toLowerCase();
+  let techs=TECHS.filter(t=>t.role!=='Administrador');
+  if(techTabFilter==='active') techs=techs.filter(t=>t.active);
+  if(techTabFilter==='inactive') techs=techs.filter(t=>!t.active);
+  if(q) techs=techs.filter(t=>t.name.toLowerCase().includes(q)||t.email.toLowerCase().includes(q)||t.spec.toLowerCase().includes(q));
+  document.getElementById('techCount').textContent=techs.length+' técnico'+(techs.length!==1?'s':'');
+  const tbody=document.getElementById('techsTbody');
+  const empty=document.getElementById('techsEmpty');
+  if(!techs.length){tbody.innerHTML='';empty.style.display='flex';return;}
+  empty.style.display='none';
+  tbody.innerHTML=techs.map(t=>{
+    const active=REPAIRS.filter(r=>r.techId===t.id&&r.status!=='Entregado').length;
+    return `<tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--y),#6a6a00);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#000;flex-shrink:0">${t.initials}</div>
+          <div>
+            <div style="font-weight:700;color:var(--white)">${t.name}</div>
+            <div style="font-size:10px;color:var(--y);font-family:'DM Mono',monospace">${t.role}</div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div style="font-size:12px;font-family:'DM Mono',monospace;color:var(--muted)">${t.email.split('@')[0]}</div>
+        <div style="font-size:11px;color:var(--muted)">${t.email}</div>
+      </td>
+      <td style="font-size:12px;color:var(--muted)">${t.phone}</td>
+      <td style="font-size:12px;color:var(--txt);max-width:180px">${t.spec}</td>
+      <td style="text-align:center">
+        <span style="font-size:13px;font-weight:800;font-family:'DM Mono',monospace;color:${active>0?'var(--y)':'var(--muted)'}">${active}</span>
+        <span style="font-size:10px;color:var(--muted);display:block">activos</span>
+      </td>
+      <td>
+        ${t.active
+          ?'<span class="sbadge st-listo">✅ Activo</span>'
+          :'<span class="sbadge st-entregado">🔴 Inactivo</span>'}
+      </td>
+      <td>
+        <div class="action-btns">
+          <button class="abtn" title="Editar" onclick="openEditTechModal('${t.id}')">✏️</button>
+          <button class="abtn" title="Restablecer contraseña" onclick="openResetPass('${t.id}')">🔑</button>
+          <button class="abtn ${t.active?'danger':'success'}" title="${t.active?'Inactivar':'Activar'}" onclick="openToggleActive('${t.id}')">${t.active?'🔴':'✅'}</button>
+          <button class="abtn danger" title="Eliminar" onclick="openDeleteTech('${t.id}')">🗑</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function openNewTechModal(){
+  editingTechId=null;
+  document.getElementById('techModalTitle').textContent='➕ Nuevo Técnico';
+  document.getElementById('techModalSub').textContent='Crear cuenta de técnico';
+  document.getElementById('techModalSaveBtn').textContent='✅ Crear Técnico';
+  ['tm_name','tm_email','tm_phone','tm_spec','tm_pass','tm_pass2'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('tm_role').value='Técnico';
+  document.getElementById('tm_active').value='true';
+  document.getElementById('tm_passField').style.display='flex';
+  document.getElementById('tm_pass2Field').style.display='flex';
+  openModal('techModal');
+}
+
+function openEditTechModal(id){
+  editingTechId=id;
+  const t=TECHS.find(x=>x.id===id);if(!t)return;
+  document.getElementById('techModalTitle').textContent='✏️ Editar Técnico';
+  document.getElementById('techModalSub').textContent=t.name;
+  document.getElementById('techModalSaveBtn').textContent='💾 Guardar Cambios';
+  document.getElementById('tm_name').value=t.name;
+  document.getElementById('tm_email').value=t.email;
+  document.getElementById('tm_phone').value=t.phone;
+  document.getElementById('tm_spec').value=t.spec;
+  document.getElementById('tm_role').value=t.role;
+  document.getElementById('tm_active').value=String(t.active);
+  // Hide password on edit
+  document.getElementById('tm_passField').style.display='none';
+  document.getElementById('tm_pass2Field').style.display='none';
+  openModal('techModal');
+}
+
+function saveTech(){
+  const name=document.getElementById('tm_name').value.trim();
+  const email=document.getElementById('tm_email').value.trim().toLowerCase();
+  const phone=document.getElementById('tm_phone').value.trim();
+  const spec=document.getElementById('tm_spec').value.trim();
+  const role=document.getElementById('tm_role').value;
+  const active=document.getElementById('tm_active').value==='true';
+  if(!name||!email){showNotif('Nombre y email son obligatorios','warn');return;}
+  if(!email.includes('@')){showNotif('Email inválido','warn');return;}
+
+  if(editingTechId){
+    // EDIT
+    const t=TECHS.find(x=>x.id===editingTechId);if(!t)return;
+    // Check email not duplicated by another
+    const dup=TECHS.find(x=>x.email===email&&x.id!==editingTechId);
+    if(dup){showNotif('Ese email ya está en uso por otro usuario','err');return;}
+    t.name=name;t.email=email;t.phone=phone;t.spec=spec;t.role=role;t.active=active;
+    const parts=name.split(' ');
+    t.initials=((parts[0]?.[0]||'')+(parts[1]?.[0]||'')).toUpperCase();
+    // Update repairs techName
+    REPAIRS.filter(r=>r.techId===editingTechId).forEach(r=>r.techName=name);
+    showNotif(`Técnico "${name}" actualizado`,'success');
+  } else {
+    // CREATE
+    const pass=document.getElementById('tm_pass').value;
+    const pass2=document.getElementById('tm_pass2').value;
+    if(!pass){showNotif('La contraseña es obligatoria','warn');return;}
+    if(pass.length<6){showNotif('La contraseña debe tener al menos 6 caracteres','warn');return;}
+    if(pass!==pass2){showNotif('Las contraseñas no coinciden','err');return;}
+    if(TECHS.find(x=>x.email===email)){showNotif('Ese email ya está registrado','err');return;}
+    const parts=name.split(' ');
+    const initials=((parts[0]?.[0]||'')+(parts[1]?.[0]||'')).toUpperCase();
+    const newId='tech'+Date.now();
+    TECHS.push({id:newId,name,initials,role,email,phone,spec,pass,active});
+    showNotif(`Técnico "${name}" creado exitosamente`,'success',email);
+  }
+  closeModal('techModal');
+  refreshTechSelects();
+  renderTechsTable();
+  renderAll();
+}
+
+function openResetPass(id){
+  pendingTechActionId=id;
+  const t=TECHS.find(x=>x.id===id);if(!t)return;
+  document.getElementById('rp_techName').textContent=t.name+' · '+t.email;
+  document.getElementById('rp_newPass').value='';
+  document.getElementById('rp_newPass2').value='';
+  openModal('resetPassModal');
+}
+
+function saveResetPass(){
+  const nw=document.getElementById('rp_newPass').value;
+  const nw2=document.getElementById('rp_newPass2').value;
+  if(!nw||!nw2){showNotif('Completa ambos campos','warn');return;}
+  if(nw.length<6){showNotif('La contraseña debe tener al menos 6 caracteres','warn');return;}
+  if(nw!==nw2){showNotif('Las contraseñas no coinciden','err');return;}
+  const t=TECHS.find(x=>x.id===pendingTechActionId);if(!t)return;
+  t.pass=nw;
+  // If active session is this tech, update too
+  if(currentUser?.id===t.id) currentUser.pass=nw;
+  closeModal('resetPassModal');
+  showNotif(`Contraseña restablecida para ${t.name}`,'success','El técnico deberá usar la nueva contraseña');
+  pendingTechActionId=null;
+}
+
+function openToggleActive(id){
+  pendingTechActionId=id;
+  const t=TECHS.find(x=>x.id===id);if(!t)return;
+  const willDeactivate=t.active;
+  document.getElementById('taTitle').textContent=willDeactivate?'🔴 Inactivar Técnico':'✅ Activar Técnico';
+  document.getElementById('taTechName').textContent=t.name;
+  document.getElementById('taMsg').innerHTML=willDeactivate
+    ?`¿Estás seguro de <strong>inactivar</strong> a <strong style="color:var(--y)">${t.name}</strong>?`
+    :`¿Estás seguro de <strong>activar</strong> a <strong style="color:var(--y)">${t.name}</strong>?`;
+  document.getElementById('taSubMsg').textContent=willDeactivate
+    ?'Un técnico inactivo no podrá ingresar al sistema. Sus reparaciones asignadas se conservan.'
+    :'El técnico podrá ingresar al sistema nuevamente con su contraseña actual.';
+  const btn=document.getElementById('taConfirmBtn');
+  btn.textContent=willDeactivate?'🔴 Inactivar':'✅ Activar';
+  btn.className=willDeactivate?'btn-danger':'btn-primary';
+  openModal('toggleActiveModal');
+}
+
+function confirmToggleActive(){
+  const t=TECHS.find(x=>x.id===pendingTechActionId);if(!t)return;
+  t.active=!t.active;
+  closeModal('toggleActiveModal');
+  renderTechsTable();renderAll();
+  showNotif(`${t.name} ${t.active?'activado':'inactivado'} correctamente`,t.active?'success':'warn');
+  pendingTechActionId=null;
+}
+
+function openDeleteTech(id){
+  pendingTechActionId=id;
+  const t=TECHS.find(x=>x.id===id);if(!t)return;
+  document.getElementById('delTechName').textContent=t.name;
+  openModal('deleteTechModal');
+}
+
+function confirmDeleteTech(){
+  const t=TECHS.find(x=>x.id===pendingTechActionId);if(!t)return;
+  const name=t.name;
+  // Unassign repairs
+  REPAIRS.filter(r=>r.techId===t.id).forEach(r=>{r.techId='';r.techName='Sin asignar';});
+  const idx=TECHS.findIndex(x=>x.id===pendingTechActionId);
+  if(idx>-1) TECHS.splice(idx,1);
+  closeModal('deleteTechModal');
+  refreshTechSelects();
+  renderTechsTable();renderAll();
+  showNotif(`Técnico "${name}" eliminado`,'warn','Sus reparaciones quedaron sin asignar');
+  pendingTechActionId=null;
 }
 
 /* ═══════════════════════
