@@ -286,7 +286,22 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 .empty-state h3{font-size:16px;font-weight:700;color:var(--txt);margin-bottom:6px}
 .empty-state p{font-size:13px;max-width:280px;line-height:1.6}
 
-/* ══ PRINT / PDF ══ */
+/* ══ PART TYPE BUTTONS ══ */
+.part-type-btn{display:flex;align-items:center;gap:7px;padding:9px 14px;border-radius:10px;border:1.5px solid var(--bdr2);background:var(--surf);color:var(--muted);font-size:13px;font-weight:600;transition:var(--tr);cursor:pointer}
+.part-type-btn:hover{border-color:var(--y);color:var(--white);background:rgba(244,245,0,.06)}
+.part-type-btn.on{border-color:var(--y);background:rgba(244,245,0,.12);color:var(--y);font-weight:700}
+.part-panel{animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.stock-item{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;border:1.5px solid var(--bdr2);background:var(--bg3);cursor:pointer;transition:var(--tr)}
+.stock-item:hover{border-color:var(--y);background:rgba(244,245,0,.06)}
+.stock-item.selected{border-color:var(--y);background:rgba(244,245,0,.1)}
+.stock-item-info{flex:1;min-width:0}
+.stock-item-name{font-size:13px;font-weight:700;color:var(--white);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stock-item-ref{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace}
+.stock-item-price{font-size:13px;font-weight:800;color:var(--y);flex-shrink:0;font-family:'DM Mono',monospace}
+.stock-item-cat{font-size:9px;padding:2px 7px;background:var(--surf);border-radius:4px;color:var(--muted);font-family:'DM Mono',monospace;flex-shrink:0}
+
+
 @media print{
   *{print-color-adjust:exact;-webkit-print-color-adjust:exact}
   body,html{background:#fff!important;color:#000!important}
@@ -791,53 +806,238 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 
 <!-- ADD PARTS MODAL -->
 <div class="modal-bg" id="addPartsModal">
-  <div class="modal-box md">
+  <div class="modal-box lg">
     <div class="mhdr">
-      <div><h2>🛒 Agregar Repuesto / Servicio</h2><p id="apTicket">REP-0001</p></div>
+      <div><h2>🛒 Repuestos y Servicios</h2><p id="apTicket">REP-0001</p></div>
       <button class="mcl" onclick="closeModal('addPartsModal')">✕</button>
     </div>
     <div class="mbody">
-      <div class="sec-div">Repuestos y Servicios Aplicados</div>
+
+      <!-- PASO 1: Seleccionar tipo -->
+      <div class="sec-div" style="margin-top:0">① Selecciona el tipo de ítem a agregar</div>
+      <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
+        <button class="part-type-btn on" id="ptb_repuesto" onclick="selectPartType('Repuesto')">
+          🔩 <span>Repuesto del stock</span>
+        </button>
+        <button class="part-type-btn" id="ptb_externo" onclick="selectPartType('Externo')">
+          🛍️ <span>Repuesto externo</span>
+        </button>
+        <button class="part-type-btn" id="ptb_cliente" onclick="selectPartType('Cliente')">
+          📦 <span>Traído por cliente</span>
+        </button>
+        <button class="part-type-btn" id="ptb_mdo" onclick="selectPartType('Mano de obra')">
+          🔧 <span>Mano de obra</span>
+        </button>
+        <button class="part-type-btn" id="ptb_servicio" onclick="selectPartType('Servicio')">
+          ⚙️ <span>Servicio / Diagnóstico</span>
+        </button>
+      </div>
+
+      <!-- PANEL: Repuesto del stock -->
+      <div id="panel_Repuesto" class="part-panel">
+        <div class="sec-div">② Buscar en inventario del negocio</div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <div class="srch-box" style="flex:1;min-width:200px">
+            <input class="srch-inp" type="search" id="stockSearch" placeholder="Buscar por nombre, referencia, marca…" oninput="filterStock()">
+            <span class="srch-btn" style="background:var(--surf);cursor:default;color:var(--muted)">🔍</span>
+          </div>
+          <select class="flt-select" id="stockCatFilter" onchange="filterStock()">
+            <option value="">Todas las categorías</option>
+            <option>Pantallas</option><option>Baterías</option><option>Módulos Cámara</option>
+            <option>Conectores</option><option>Botones</option><option>Herramientas</option>
+            <option>Audífonos</option><option>Cargadores</option><option>Otros</option>
+          </select>
+        </div>
+        <div id="stockList" style="display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;padding-right:4px"></div>
+        <!-- Selected from stock -->
+        <div id="stockSelected" style="display:none;margin-top:12px;background:rgba(244,245,0,.06);border:1px solid var(--bdr);border-radius:10px;padding:12px">
+          <div style="font-size:10px;font-weight:700;color:var(--y);font-family:'DM Mono',monospace;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">✅ Repuesto seleccionado</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+            <div>
+              <div style="font-weight:700;color:var(--white)" id="selStockName">—</div>
+              <div style="font-size:11px;color:var(--muted)" id="selStockRef">—</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span style="font-size:13px;font-weight:800;color:var(--y)" id="selStockPrice">$0</span>
+              <div style="display:flex;align-items:center;gap:6px">
+                <button onclick="adjStockQty(-1)" style="width:28px;height:28px;border-radius:6px;background:var(--surf);color:var(--txt);border:1px solid var(--bdr2);cursor:pointer;font-size:15px;font-weight:700">−</button>
+                <span id="selStockQty" style="font-size:15px;font-weight:800;min-width:24px;text-align:center">1</span>
+                <button onclick="adjStockQty(1)" style="width:28px;height:28px;border-radius:6px;background:var(--surf);color:var(--txt);border:1px solid var(--bdr2);cursor:pointer;font-size:15px;font-weight:700">+</button>
+              </div>
+              <button class="tb-btn primary" onclick="addFromStock()">+ Agregar</button>
+              <button class="tb-btn" onclick="clearStockSel()">✕ Quitar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL: Repuesto externo / traído por cliente -->
+      <div id="panel_Externo" class="part-panel" style="display:none">
+        <div class="sec-div">② Repuesto externo (no en stock)</div>
+        <div class="form-grid">
+          <div class="fg full"><label>Descripción del repuesto *</label>
+            <input type="text" id="ext_desc" placeholder="Ej: Pantalla AMOLED Samsung A55 original"></div>
+          <div class="fg"><label>Precio unitario ($COP) *</label>
+            <input type="number" id="ext_price" placeholder="0"></div>
+          <div class="fg"><label>Cantidad</label>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:5px">
+              <button onclick="adjExtQty(-1)" style="width:32px;height:36px;border-radius:7px;background:var(--surf);color:var(--txt);border:1px solid var(--bdr2);cursor:pointer;font-size:16px;font-weight:700">−</button>
+              <span id="ext_qty_num" style="font-size:16px;font-weight:800;min-width:28px;text-align:center">1</span>
+              <button onclick="adjExtQty(1)" style="width:32px;height:36px;border-radius:7px;background:var(--surf);color:var(--txt);border:1px solid var(--bdr2);cursor:pointer;font-size:16px;font-weight:700">+</button>
+              <input type="hidden" id="ext_qty" value="1">
+            </div>
+          </div>
+          <div class="fg full"><label>Proveedor / Fuente (opcional)</label>
+            <input type="text" id="ext_provider" placeholder="Ej: Distribuidor Zona Norte, Mercado Libre…"></div>
+        </div>
+        <button class="tb-btn primary" style="margin-top:4px" onclick="addExternal('Externo')">+ Agregar repuesto externo</button>
+      </div>
+
+      <div id="panel_Cliente" class="part-panel" style="display:none">
+        <div class="sec-div">② Repuesto traído por el cliente</div>
+        <div class="form-grid">
+          <div class="fg full"><label>Descripción del repuesto *</label>
+            <input type="text" id="cli_desc" placeholder="Ej: Pantalla nueva que trajo el cliente"></div>
+          <div class="fg"><label>Cantidad</label>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:5px">
+              <button onclick="adjCliQty(-1)" style="width:32px;height:36px;border-radius:7px;background:var(--surf);color:var(--txt);border:1px solid var(--bdr2);cursor:pointer;font-size:16px;font-weight:700">−</button>
+              <span id="cli_qty_num" style="font-size:16px;font-weight:800;min-width:28px;text-align:center">1</span>
+              <button onclick="adjCliQty(1)" style="width:32px;height:36px;border-radius:7px;background:var(--surf);color:var(--txt);border:1px solid var(--bdr2);cursor:pointer;font-size:16px;font-weight:700">+</button>
+              <input type="hidden" id="cli_qty" value="1">
+            </div>
+          </div>
+          <div class="fg"><label>Valor cobrado por instalación ($COP)</label>
+            <input type="number" id="cli_price" placeholder="0 si es sin costo extra"></div>
+        </div>
+        <div style="background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);border-radius:8px;padding:10px 13px;font-size:12px;color:#818cf8;margin-bottom:12px">
+          ℹ️ Este repuesto fue suministrado por el cliente. Solo se cobra la mano de obra de instalación si aplica.
+        </div>
+        <button class="tb-btn primary" onclick="addExternal('Cliente')">+ Agregar repuesto del cliente</button>
+      </div>
+
+      <!-- PANEL: Mano de obra -->
+      <div id="panel_Mano de obra" class="part-panel" style="display:none">
+        <div class="sec-div">② Mano de obra</div>
+        <div class="form-grid">
+          <div class="fg full"><label>Descripción del trabajo *</label>
+            <input type="text" id="mdo_desc" placeholder="Ej: Cambio de pantalla, limpieza de placa, soldadura…"></div>
+          <div class="fg full"><label>Valor de la mano de obra ($COP) *</label>
+            <input type="number" id="mdo_price" placeholder="0"></div>
+        </div>
+        <button class="tb-btn primary" style="margin-top:4px" onclick="addMDO()">+ Agregar mano de obra</button>
+      </div>
+
+      <!-- PANEL: Servicio / Diagnóstico -->
+      <div id="panel_Servicio" class="part-panel" style="display:none">
+        <div class="sec-div">② Servicio o Diagnóstico</div>
+        <div class="form-grid">
+          <div class="fg"><label>Tipo de servicio</label>
+            <select id="svc_type"><option>Diagnóstico</option><option>Servicio</option><option>Garantía</option><option>Revisión</option></select>
+          </div>
+          <div class="fg"><label>Valor ($COP) *</label>
+            <input type="number" id="svc_price" placeholder="0"></div>
+          <div class="fg full"><label>Descripción *</label>
+            <input type="text" id="svc_desc" placeholder="Ej: Diagnóstico completo de placa, garantía 30 días…"></div>
+        </div>
+        <button class="tb-btn primary" style="margin-top:4px" onclick="addService()">+ Agregar servicio</button>
+      </div>
+
+      <!-- LISTA DE ÍTEMS AGREGADOS -->
+      <div class="sec-div" style="margin-top:18px">③ Ítems registrados para esta reparación</div>
       <div style="overflow-x:auto">
-        <table class="parts-table" id="partsTable">
+        <table class="parts-table">
           <thead>
-            <tr>
-              <th>Descripción</th>
-              <th>Tipo</th>
-              <th>Cant.</th>
-              <th>P. Unit ($)</th>
-              <th>Total</th>
-              <th></th>
-            </tr>
+            <tr><th>Descripción</th><th>Tipo</th><th style="text-align:center">Cant.</th><th style="text-align:right">P. Unit</th><th style="text-align:right">Total</th><th></th></tr>
           </thead>
           <tbody id="partsTbody"></tbody>
         </table>
       </div>
-      <div class="add-part-row" style="margin-top:14px">
-        <input class="fg" style="flex:2;padding:9px 12px;background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:8px;color:var(--txt)" type="text" id="newPartDesc" placeholder="Descripción del repuesto o servicio">
-        <select id="newPartType" style="flex:1;padding:9px 10px;background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:8px;color:var(--txt)">
-          <option>Repuesto</option>
-          <option>Mano de obra</option>
-          <option>Diagnóstico</option>
-          <option>Servicio</option>
-          <option>Garantía</option>
-        </select>
-        <input style="width:60px;padding:9px 8px;background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:8px;color:var(--txt);text-align:center" type="number" id="newPartQty" value="1" min="1">
-        <input style="flex:1;padding:9px 12px;background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:8px;color:var(--txt)" type="number" id="newPartPrice" placeholder="Precio unitario">
-        <button class="tb-btn primary" onclick="addPart()" style="flex-shrink:0">+ Agregar</button>
-      </div>
-      <div class="parts-total" id="partsTotalRow">
-        <span>Total estimado</span>
-        <strong id="partsTotalAmt">$0</strong>
+      <div id="partsEmptyMsg" style="text-align:center;padding:18px;font-size:13px;color:var(--muted);display:none">Sin ítems agregados aún</div>
+      <div class="parts-total" id="partsTotalRow" style="margin-top:10px">
+        <span>Total ítems</span><strong id="partsTotalAmt">$0</strong>
       </div>
       <div class="fg" style="margin-top:12px">
-        <label>Costo total acordado con cliente ($COP)</label>
-        <input type="number" id="apFinalCost" placeholder="0">
+        <label>Costo total acordado con cliente ($COP) — opcional</label>
+        <input type="number" id="apFinalCost" placeholder="Si difiere del total calculado">
       </div>
     </div>
     <div class="mftr">
       <button class="btn-cancel" onclick="closeModal('addPartsModal')">Cancelar</button>
-      <button class="btn-primary" onclick="saveParts()">💾 Guardar</button>
+      <button class="btn-primary" onclick="saveParts()">💾 Guardar todo</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT REPAIR MODAL -->
+<div class="modal-bg" id="editRepairModal">
+  <div class="modal-box lg">
+    <div class="mhdr">
+      <div><h2>✏️ Editar Reparación</h2><p id="er_ticket">REP-0001</p></div>
+      <button class="mcl" onclick="closeModal('editRepairModal')">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="sec-div">Datos del Cliente</div>
+      <div class="form-grid">
+        <div class="fg"><label>Nombre del cliente *</label><input type="text" id="er_client" placeholder="Nombre completo"></div>
+        <div class="fg"><label>Teléfono / WhatsApp *</label><input type="tel" id="er_phone" placeholder="+57 300 000 0000"></div>
+        <div class="fg full"><label>Email</label><input type="email" id="er_email" placeholder="cliente@email.com"></div>
+      </div>
+      <div class="sec-div">Datos del Equipo</div>
+      <div class="form-grid">
+        <div class="fg"><label>Tipo de equipo *</label>
+          <select id="er_type">
+            <option value="">Seleccionar...</option>
+            <option>Smartphone</option><option>Tablet</option><option>Laptop</option>
+            <option>Smartwatch</option><option>Audífonos</option><option>Otro</option>
+          </select>
+        </div>
+        <div class="fg"><label>Marca *</label>
+          <select id="er_brand">
+            <option value="">Seleccionar...</option>
+            <option>Apple</option><option>Samsung</option><option>Xiaomi</option><option>Motorola</option>
+            <option>Huawei</option><option>Realme</option><option>OnePlus</option><option>Otro</option>
+          </select>
+        </div>
+        <div class="fg"><label>Modelo *</label><input type="text" id="er_model" placeholder="Ej: iPhone 14 Pro Max"></div>
+        <div class="fg"><label>IMEI / Serial</label><input type="text" id="er_imei" placeholder="15 dígitos o S/N"></div>
+        <div class="fg"><label>Color</label><input type="text" id="er_color" placeholder="Ej: Negro, Blanco..."></div>
+        <div class="fg"><label>PIN de desbloqueo</label><input type="text" id="er_pin" placeholder="Solo si el cliente autoriza"></div>
+        <div class="fg full"><label>Accesorios entregados</label><input type="text" id="er_acc" placeholder="Ej: Cargador, funda..."></div>
+        <div class="fg full"><label>Estado físico *</label>
+          <select id="er_condition">
+            <option>Excelente - Sin daños visibles</option>
+            <option>Bueno - Rayones leves</option>
+            <option>Regular - Golpes visibles</option>
+            <option>Dañado - Pantalla rota</option>
+            <option>Muy dañado - Múltiples daños</option>
+          </select>
+        </div>
+        <div class="fg full"><label>Descripción del problema *</label>
+          <textarea id="er_problem" placeholder="Problema reportado por el cliente..."></textarea>
+        </div>
+      </div>
+      <div class="sec-div">Asignación y Costos</div>
+      <div class="form-grid">
+        <div class="fg"><label>Técnico asignado</label>
+          <select id="er_tech"><option value="">Sin asignar</option></select>
+        </div>
+        <div class="fg"><label>Prioridad</label>
+          <select id="er_priority">
+            <option value="Normal">Normal</option>
+            <option value="Alta">Alta</option>
+            <option value="Urgente">Urgente</option>
+          </select>
+        </div>
+        <div class="fg"><label>Costo estimado ($COP)</label><input type="number" id="er_estCost" placeholder="0"></div>
+        <div class="fg"><label>Anticipo recibido ($COP)</label><input type="number" id="er_advance" placeholder="0"></div>
+        <div class="fg full"><label>Notas internas</label>
+          <textarea id="er_notes" placeholder="Observaciones para el equipo técnico..." style="min-height:60px"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="mftr">
+      <button class="btn-cancel" onclick="closeModal('editRepairModal')">Cancelar</button>
+      <button class="btn-primary" onclick="saveEditRepair()">💾 Guardar cambios</button>
     </div>
   </div>
 </div>
@@ -1322,6 +1522,7 @@ function renderRepairsTable(){
       <td>
         <div class="action-btns">
           <button class="abtn" title="Ver detalle" onclick="openDetail('${r.id}')">👁</button>
+          <button class="abtn" title="Editar reparación" onclick="openEditRepair('${r.id}')">✏️</button>
           <button class="abtn" title="Cambiar estado" onclick="openChangeStatus('${r.id}')">🔄</button>
           <button class="abtn" title="Repuestos" onclick="openAddParts('${r.id}')">🛒</button>
           <button class="abtn" title="PDF" onclick="currentRepairId='${r.id}';generatePDF()">📄</button>
@@ -1377,6 +1578,7 @@ function renderMyRepairsTable(){
       <td>
         <div class="action-btns">
           <button class="abtn" title="Ver detalle" onclick="openDetail('${r.id}')">👁</button>
+          <button class="abtn" title="Editar reparación" onclick="openEditRepair('${r.id}')">✏️</button>
           <button class="abtn" title="Cambiar estado" onclick="openChangeStatus('${r.id}')">🔄</button>
           <button class="abtn" title="Repuestos" onclick="openAddParts('${r.id}')">🛒</button>
           <button class="abtn" title="PDF" onclick="currentRepairId='${r.id}';generatePDF()">📄</button>
@@ -1406,6 +1608,7 @@ function renderAdminPage(){
       <td>
         <div class="action-btns">
           <button class="abtn" onclick="openDetail('${r.id}')">👁</button>
+          <button class="abtn" onclick="openEditRepair('${r.id}')">✏️</button>
           <button class="abtn" onclick="openChangeStatus('${r.id}')">🔄</button>
           <button class="abtn" onclick="openAddParts('${r.id}')">🛒</button>
           <button class="abtn" onclick="currentRepairId='${r.id}';generatePDF()">📄</button>
@@ -1502,7 +1705,8 @@ function openDetail(id){
     <!-- Quick actions -->
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:1px solid var(--bdr2)">
       <button class="tb-btn primary" onclick="closeModal('repairDetailModal');openChangeStatus('${r.id}')">🔄 Cambiar Estado</button>
-      <button class="tb-btn" onclick="closeModal('repairDetailModal');openAddParts('${r.id}')">🛒 Gestionar Repuestos</button>
+      <button class="tb-btn" onclick="closeModal('repairDetailModal');openEditRepair('${r.id}')">✏️ Editar</button>
+      <button class="tb-btn" onclick="closeModal('repairDetailModal');openAddParts('${r.id}')">🛒 Repuestos</button>
       <button class="tb-btn" onclick="generatePDF()">📄 Exportar PDF</button>
       ${r.clientPhone?`<a href="https://wa.me/${r.clientPhone.replace(/\D/g,'')}" target="_blank" class="tb-btn" style="color:#25d366;border-color:#25d366">💬 WhatsApp</a>`:''}
     </div>`;
@@ -1543,35 +1747,190 @@ function saveStatusChange(){
 }
 
 /* ═══════════════════════
-   PARTS MANAGEMENT
+   PARTS MANAGEMENT — STOCK DATA
 ═══════════════════════ */
+const STOCK = [
+  {id:'s1',name:'Pantalla AMOLED Samsung Galaxy A55',ref:'REP-PNT-A55-AMOLED',cat:'Pantallas',price:185000,stock:4},
+  {id:'s2',name:'Pantalla OLED iPhone 14 Pro Original',ref:'REP-PNT-IP14P-OLED',cat:'Pantallas',price:420000,stock:2},
+  {id:'s3',name:'Pantalla LCD Samsung Galaxy A14',ref:'REP-PNT-A14-LCD',cat:'Pantallas',price:95000,stock:6},
+  {id:'s4',name:'Pantalla AMOLED Xiaomi Redmi Note 12',ref:'REP-PNT-RN12',cat:'Pantallas',price:110000,stock:3},
+  {id:'s5',name:'Batería iPhone 15 3349 mAh Original',ref:'REP-BAT-IP15',cat:'Baterías',price:95000,stock:8},
+  {id:'s6',name:'Batería Samsung Galaxy S24 Ultra 5000mAh',ref:'REP-BAT-S24U',cat:'Baterías',price:75000,stock:5},
+  {id:'s7',name:'Batería Xiaomi Redmi Note 12 5000mAh',ref:'REP-BAT-RN12',cat:'Baterías',price:65000,stock:7},
+  {id:'s8',name:'Batería iPhone 14 3279mAh Original',ref:'REP-BAT-IP14',cat:'Baterías',price:88000,stock:4},
+  {id:'s9',name:'Módulo Cámara Trasera Samsung A55',ref:'REP-CAM-A55',cat:'Módulos Cámara',price:145000,stock:2},
+  {id:'s10',name:'Conector de Carga iPhone 14 Type-C',ref:'REP-CON-IP14C',cat:'Conectores',price:38000,stock:10},
+  {id:'s11',name:'Conector de Carga USB-C Samsung A55',ref:'REP-CON-A55C',cat:'Conectores',price:28000,stock:12},
+  {id:'s12',name:'Botón Power Samsung Galaxy A-Series',ref:'REP-BTN-SMA',cat:'Botones',price:18000,stock:15},
+  {id:'s13',name:'Flex Botones Volumen iPhone 13',ref:'REP-FLX-IP13V',cat:'Botones',price:32000,stock:6},
+  {id:'s14',name:'Kit Herramientas Reparación 22 Piezas',ref:'MEC-KIT22P',cat:'Herramientas',price:85000,stock:3},
+  {id:'s15',name:'Auricular Altavoz iPhone 14 Original',ref:'REP-AUD-IP14',cat:'Audífonos',price:42000,stock:5},
+  {id:'s16',name:'Cargador Anker 67W GaN USB-C',ref:'ANK-CGR-67W',cat:'Cargadores',price:89000,stock:4},
+  {id:'s17',name:'Adhesivo OCA 250 micras 10" (10 uds)',ref:'REP-OCA-250-10',cat:'Otros',price:25000,stock:20},
+  {id:'s18',name:'Pasta térmica conductora 2g',ref:'REP-PASTA-2G',cat:'Otros',price:15000,stock:18},
+];
+
+let currentPartType = 'Repuesto';
+let selectedStockItem = null;
+let stockQty = 1;
+let extQty = 1;
+let cliQty = 1;
+
+function selectPartType(type){
+  currentPartType = type;
+  // Update buttons
+  document.querySelectorAll('.part-type-btn').forEach(b=>b.classList.remove('on'));
+  const map={'Repuesto':'ptb_repuesto','Externo':'ptb_externo','Cliente':'ptb_cliente','Mano de obra':'ptb_mdo','Servicio':'ptb_servicio'};
+  const btn = document.getElementById(map[type]);
+  if(btn) btn.classList.add('on');
+  // Show/hide panels
+  ['Repuesto','Externo','Cliente','Mano de obra','Servicio'].forEach(t=>{
+    const p=document.getElementById('panel_'+t);
+    if(p) p.style.display = t===type ? 'block' : 'none';
+  });
+  if(type==='Repuesto') filterStock();
+}
+
+function filterStock(){
+  const q=(document.getElementById('stockSearch')?.value||'').toLowerCase();
+  const cat=document.getElementById('stockCatFilter')?.value||'';
+  let items=STOCK;
+  if(q) items=items.filter(s=>s.name.toLowerCase().includes(q)||s.ref.toLowerCase().includes(q)||s.cat.toLowerCase().includes(q));
+  if(cat) items=items.filter(s=>s.cat===cat);
+  const list=document.getElementById('stockList');
+  if(!list) return;
+  if(!items.length){list.innerHTML='<div style="padding:16px;text-align:center;color:var(--muted);font-size:13px">Sin resultados en inventario</div>';return;}
+  list.innerHTML=items.map(s=>`
+    <div class="stock-item ${selectedStockItem?.id===s.id?'selected':''}" onclick="selectStock('${s.id}')">
+      <div class="stock-item-info">
+        <div class="stock-item-name">${s.name}</div>
+        <div class="stock-item-ref">${s.ref} &nbsp;·&nbsp; Stock: ${s.stock}</div>
+      </div>
+      <span class="stock-item-cat">${s.cat}</span>
+      <span class="stock-item-price">${fmtCOP(s.price)}</span>
+    </div>`).join('');
+}
+
+function selectStock(id){
+  selectedStockItem=STOCK.find(s=>s.id===id)||null;
+  stockQty=1;
+  const sel=document.getElementById('stockSelected');
+  if(!selectedStockItem){sel.style.display='none';filterStock();return;}
+  document.getElementById('selStockName').textContent=selectedStockItem.name;
+  document.getElementById('selStockRef').textContent=selectedStockItem.ref+' · Stock: '+selectedStockItem.stock;
+  document.getElementById('selStockPrice').textContent=fmtCOP(selectedStockItem.price);
+  document.getElementById('selStockQty').textContent=stockQty;
+  sel.style.display='block';
+  filterStock(); // re-render to show selected highlight
+}
+
+function adjStockQty(d){
+  if(!selectedStockItem) return;
+  stockQty=Math.max(1,stockQty+d);
+  document.getElementById('selStockQty').textContent=stockQty;
+}
+
+function clearStockSel(){
+  selectedStockItem=null;stockQty=1;
+  document.getElementById('stockSelected').style.display='none';
+  filterStock();
+}
+
+function addFromStock(){
+  if(!selectedStockItem){showNotif('Selecciona un repuesto del inventario','warn');return;}
+  tempParts.push({desc:selectedStockItem.name,type:'Repuesto (stock)',qty:stockQty,price:selectedStockItem.price,ref:selectedStockItem.ref});
+  clearStockSel();
+  renderPartsTable();
+  showNotif('Repuesto agregado del inventario','success');
+}
+
+function adjExtQty(d){extQty=Math.max(1,extQty+d);document.getElementById('ext_qty_num').textContent=extQty;document.getElementById('ext_qty').value=extQty;}
+function adjCliQty(d){cliQty=Math.max(1,cliQty+d);document.getElementById('cli_qty_num').textContent=cliQty;document.getElementById('cli_qty').value=cliQty;}
+
+function addExternal(type){
+  const descId=type==='Cliente'?'cli_desc':'ext_desc';
+  const priceId=type==='Cliente'?'cli_price':'ext_price';
+  const qtyId=type==='Cliente'?'cli_qty':'ext_qty';
+  const desc=document.getElementById(descId)?.value.trim()||'';
+  const price=parseFloat(document.getElementById(priceId)?.value)||0;
+  const qty=parseInt(document.getElementById(qtyId)?.value)||1;
+  if(!desc){showNotif('Escribe la descripción del repuesto','warn');return;}
+  const label=type==='Cliente'?'Repuesto cliente':'Repuesto externo';
+  const provider=document.getElementById('ext_provider')?.value.trim()||'';
+  tempParts.push({desc:desc+(provider?` (${provider})`:''),type:label,qty,price});
+  // Clear
+  [descId,priceId].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  if(type==='Cliente'){cliQty=1;document.getElementById('cli_qty_num').textContent=1;document.getElementById('cli_qty').value=1;}
+  else{extQty=1;document.getElementById('ext_qty_num').textContent=1;document.getElementById('ext_qty').value=1;const pp=document.getElementById('ext_provider');if(pp)pp.value='';}
+  renderPartsTable();
+  showNotif('Repuesto agregado','success');
+}
+
+function addMDO(){
+  const desc=document.getElementById('mdo_desc')?.value.trim()||'';
+  const price=parseFloat(document.getElementById('mdo_price')?.value)||0;
+  if(!desc){showNotif('Escribe la descripción del trabajo','warn');return;}
+  if(!price){showNotif('Ingresa el valor de la mano de obra','warn');return;}
+  tempParts.push({desc,type:'Mano de obra',qty:1,price});
+  document.getElementById('mdo_desc').value='';
+  document.getElementById('mdo_price').value='';
+  renderPartsTable();
+  showNotif('Mano de obra agregada','success');
+}
+
+function addService(){
+  const desc=document.getElementById('svc_desc')?.value.trim()||'';
+  const price=parseFloat(document.getElementById('svc_price')?.value)||0;
+  const type=document.getElementById('svc_type')?.value||'Servicio';
+  if(!desc){showNotif('Escribe la descripción del servicio','warn');return;}
+  if(!price){showNotif('Ingresa el valor del servicio','warn');return;}
+  tempParts.push({desc,type,qty:1,price});
+  document.getElementById('svc_desc').value='';
+  document.getElementById('svc_price').value='';
+  renderPartsTable();
+  showNotif('Servicio agregado','success');
+}
+
 function openAddParts(id){
   currentRepairId=id;
   const r=REPAIRS.find(x=>x.id===id);if(!r)return;
   document.getElementById('apTicket').textContent=`${r.id} · ${r.client} · ${r.brand} ${r.model}`;
   document.getElementById('apFinalCost').value=r.finalCost||'';
   tempParts=[...r.parts.map(p=>({...p}))];
+  // Reset panel state
+  currentPartType='Repuesto';
+  selectedStockItem=null;stockQty=1;extQty=1;cliQty=1;
+  selectPartType('Repuesto');
   renderPartsTable();
   openModal('addPartsModal');
 }
 
 function renderPartsTable(){
   const tbody=document.getElementById('partsTbody');
-  tbody.innerHTML=tempParts.map((p,i)=>`
-    <tr>
-      <td style="font-weight:600">${p.desc}</td>
-      <td><span style="font-size:10px;padding:1px 6px;background:var(--surf);border-radius:4px;color:var(--muted)">${p.type}</span></td>
+  const empty=document.getElementById('partsEmptyMsg');
+  if(!tempParts.length){tbody.innerHTML='';if(empty)empty.style.display='block';document.getElementById('partsTotalAmt').textContent='$0';return;}
+  if(empty) empty.style.display='none';
+  tbody.innerHTML=tempParts.map((p,i)=>{
+    const typeColors={'Repuesto (stock)':'rgba(16,185,129,.15);color:#34d399','Repuesto externo':'rgba(245,158,11,.12);color:#f59e0b','Repuesto cliente':'rgba(99,102,241,.12);color:#818cf8','Mano de obra':'rgba(59,130,246,.12);color:#60a5fa','Diagnóstico':'rgba(244,245,0,.1);color:var(--y)','Servicio':'rgba(244,245,0,.1);color:var(--y)','Garantía':'rgba(16,185,129,.1);color:#34d399'};
+    const tc=typeColors[p.type]||'rgba(107,114,128,.1);color:#9ca3af';
+    return `<tr>
+      <td>
+        <div style="font-weight:600;color:var(--white)">${p.desc}</div>
+        ${p.ref?`<div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace">${p.ref}</div>`:''}
+      </td>
+      <td><span style="font-size:10px;padding:2px 8px;background:${tc.split(';')[0]};color:${tc.split(':')[2]||'var(--muted)'};border-radius:5px;font-family:'DM Mono',monospace;font-weight:700;white-space:nowrap">${p.type}</span></td>
       <td style="text-align:center">
         <div style="display:flex;align-items:center;gap:4px;justify-content:center">
-          <button style="width:22px;height:22px;border-radius:4px;background:var(--surf);color:var(--txt);border:1px solid var(--bdr2);cursor:pointer;font-size:12px" onclick="changePartQty(${i},-1)">−</button>
-          <span style="font-weight:700;min-width:16px;text-align:center">${p.qty}</span>
-          <button style="width:22px;height:22px;border-radius:4px;background:var(--surf);color:var(--txt);border:1px solid var(--bdr2);cursor:pointer;font-size:12px" onclick="changePartQty(${i},1)">+</button>
+          <button style="width:22px;height:22px;border-radius:5px;background:var(--surf);color:var(--txt);border:1px solid var(--bdr2);cursor:pointer;font-size:13px;font-weight:700" onclick="changePartQty(${i},-1)">−</button>
+          <span style="font-weight:800;min-width:20px;text-align:center;font-family:'DM Mono',monospace">${p.qty}</span>
+          <button style="width:22px;height:22px;border-radius:5px;background:var(--surf);color:var(--txt);border:1px solid var(--bdr2);cursor:pointer;font-size:13px;font-weight:700" onclick="changePartQty(${i},1)">+</button>
         </div>
       </td>
-      <td style="font-family:'DM Mono',monospace">${fmtCOP(p.price)}</td>
-      <td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--y)">${fmtCOP(p.qty*p.price)}</td>
-      <td><button class="abtn danger" onclick="removePart(${i})" style="width:24px;height:24px">✕</button></td>
-    </tr>`).join('');
+      <td style="font-family:'DM Mono',monospace;text-align:right">${fmtCOP(p.price)}</td>
+      <td style="font-family:'DM Mono',monospace;font-weight:800;color:var(--y);text-align:right">${fmtCOP(p.qty*p.price)}</td>
+      <td><button class="abtn danger" onclick="removePart(${i})" style="width:26px;height:26px;font-size:13px">✕</button></td>
+    </tr>`;
+  }).join('');
   document.getElementById('partsTotalAmt').textContent=fmtCOP(partsTotal(tempParts));
 }
 
@@ -1581,21 +1940,6 @@ function changePartQty(idx,d){
 }
 function removePart(idx){tempParts.splice(idx,1);renderPartsTable();}
 
-function addPart(){
-  const desc=document.getElementById('newPartDesc').value.trim();
-  const type=document.getElementById('newPartType').value;
-  const qty=parseInt(document.getElementById('newPartQty').value)||1;
-  const price=parseFloat(document.getElementById('newPartPrice').value)||0;
-  if(!desc){showNotif('Escribe la descripción del repuesto','warn');return;}
-  if(!price){showNotif('Ingresa el precio unitario','warn');return;}
-  tempParts.push({desc,type,qty,price});
-  document.getElementById('newPartDesc').value='';
-  document.getElementById('newPartPrice').value='';
-  document.getElementById('newPartQty').value='1';
-  renderPartsTable();
-  showNotif('Repuesto agregado','success');
-}
-
 function saveParts(){
   const r=REPAIRS.find(x=>x.id===currentRepairId);if(!r)return;
   r.parts=[...tempParts];
@@ -1603,7 +1947,52 @@ function saveParts(){
   r.finalCost=fc;
   closeModal('addPartsModal');
   renderAll();renderRepairsTable();renderMyRepairsTable();
-  showNotif('Repuestos guardados','success',`Total: ${fmtCOP(partsTotal(r.parts))}`);
+  showNotif('Repuestos y servicios guardados','success',`Total: ${fmtCOP(partsTotal(r.parts))}`);
+}
+
+/* ═══════════════════════
+   EDIT REPAIR
+═══════════════════════ */
+function openEditRepair(id){
+  currentRepairId=id;
+  const r=REPAIRS.find(x=>x.id===id);if(!r)return;
+  document.getElementById('er_ticket').textContent=`${r.id} · ${r.client} · ${r.brand} ${r.model}`;
+  // Fill fields
+  const set=(fid,val)=>{const el=document.getElementById(fid);if(el)el.value=val||'';};
+  set('er_client',r.client);set('er_phone',r.clientPhone);set('er_email',r.clientEmail);
+  set('er_type',r.type);set('er_brand',r.brand);set('er_model',r.model);
+  set('er_imei',r.imei);set('er_color',r.color);set('er_pin',r.pin);
+  set('er_acc',r.accessories);set('er_condition',r.condition);set('er_problem',r.problem);
+  set('er_priority',r.priority);set('er_estCost',r.estCost||0);set('er_advance',r.advance||0);
+  set('er_notes',r.notes);
+  // Populate tech select
+  const ts=document.getElementById('er_tech');
+  ts.innerHTML='<option value="">Sin asignar</option>'+
+    TECHS.filter(t=>t.role!=='Administrador'&&t.active).map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+  ts.value=r.techId||'';
+  openModal('editRepairModal');
+}
+
+function saveEditRepair(){
+  const r=REPAIRS.find(x=>x.id===currentRepairId);if(!r)return;
+  const get=id=>(document.getElementById(id)?.value||'').trim();
+  const client=get('er_client'),phone=get('er_phone'),type=get('er_type'),brand=get('er_brand'),model=get('er_model'),problem=get('er_problem');
+  if(!client||!phone||!type||!brand||!model||!problem){showNotif('Completa los campos obligatorios (*)','warn');return;}
+  const techId=get('er_tech');
+  const tech=TECHS.find(t=>t.id===techId);
+  r.client=client;r.clientPhone=phone;r.clientEmail=get('er_email');
+  r.type=type;r.brand=brand;r.model=model;r.imei=get('er_imei');
+  r.color=get('er_color');r.pin=get('er_pin');r.accessories=get('er_acc');
+  r.condition=get('er_condition');r.problem=problem;r.notes=get('er_notes');
+  r.priority=get('er_priority');
+  r.estCost=parseFloat(document.getElementById('er_estCost').value)||0;
+  r.advance=parseFloat(document.getElementById('er_advance').value)||0;
+  r.techId=techId||'';r.techName=tech?tech.name:'Sin asignar';
+  // Log edit in timeline
+  r.timeline.push({action:`Reparación editada por ${currentUser?.name}`,date:new Date().toISOString().slice(0,16).replace('T',' '),note:`Datos actualizados: ${client} · ${brand} ${model}`,status:r.status});
+  closeModal('editRepairModal');
+  renderAll();renderRepairsTable();renderMyRepairsTable();renderDashboard();
+  showNotif('Reparación actualizada','success',r.id);
 }
 
 /* ═══════════════════════
