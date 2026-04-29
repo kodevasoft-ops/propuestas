@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CeluFénix — ERP Técnico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ══ THEME ══ */
+:root{--y:#adad03;--yd:#9a9a02;--tr:.22s cubic-bezier(.4,0,.2,1);}
+[data-theme="dark"]{
+  --bg:#08080f;--bg2:#0d0d18;--bg3:#121220;--card:#161626;--card2:#1c1c30;--surf:#22223a;
+  --bdr:rgba(244,245,0,.1);--bdr2:rgba(255,255,255,.07);--txt:#e8e8f4;--muted:#6868a0;
+  --white:#fff;--sh:0 4px 24px rgba(0,0,0,.55);--sh2:0 12px 48px rgba(0,0,0,.7);
+  --header-bg:rgba(8,8,15,.96);--input-bg:#22223a;--input-bdr:rgba(255,255,255,.1);
+  --modal-bg:#0d0d18;--sidebar-bg:#0d0d18;
+}
+[data-theme="light"]{
+  --bg:#f0f0f7;--bg2:#ffffff;--bg3:#e8e8f2;--card:#ffffff;--card2:#f0f0f5;--surf:#e4e4ef;
+  --bdr:rgba(100,100,200,.15);--bdr2:rgba(0,0,0,.08);--txt:#1a1a2e;--muted:#5555aa;
+  --white:#1a1a2e;--sh:0 4px 16px rgba(0,0,0,.1);--sh2:0 8px 32px rgba(0,0,0,.15);
+  --header-bg:rgba(255,255,255,.97);--input-bg:#f0f0f5;--input-bdr:rgba(0,0,0,.12);
+  --modal-bg:#ffffff;--sidebar-bg:#f5f5fc;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+a{text-decoration:none;color:inherit}ul{list-style:none}
+img{max-width:100%;display:block}
+button{cursor:pointer;border:none;background:none;font-family:inherit;transition:var(--tr)}
+input,select,textarea{font-family:'Outfit',sans-serif}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--y);border-radius:3px}
+
+/* ══ STATUS COLORS ══ */
+.st-recibido{background:rgba(99,102,241,.15);color:#818cf8;border:1px solid rgba(99,102,241,.3)}
+.st-diagnostico{background:rgba(245,158,11,.1);color:#f59e0b;border:1px solid rgba(245,158,11,.25)}
+.st-reparando{background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.25)}
+.st-esperando{background:rgba(244,63,94,.1);color:#fb7185;border:1px solid rgba(244,63,94,.25)}
+.st-listo{background:rgba(16,185,129,.1);color:#34d399;border:1px solid rgba(16,185,129,.25)}
+.st-entregado{background:rgba(107,114,128,.1);color:#9ca3af;border:1px solid rgba(107,114,128,.2)}
+.sbadge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px}
+.sbadge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+/* ══ OVERLAY ══ */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px)}
+.overlay.on{opacity:1;pointer-events:all}
+
+/* ═══════════════════════════
+   LOGIN SCREEN
+═══════════════════════════ */
+#loginScreen{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+}
+#loginScreen.hide{display:none}
+.login-wrap{width:100%;max-width:420px;padding:20px}
+.login-brand{text-align:center;margin-bottom:32px}
+.login-logo{width:68px;height:68px;border-radius:18px;border:2px solid var(--y);background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:var(--y);margin:0 auto 14px;box-shadow:0 0 30px rgba(244,245,0,.2)}
+.login-brand h1{font-size:24px;font-weight:900;color:var(--white)}
+.login-brand h1 em{color:var(--y);font-style:normal}
+.login-brand p{font-size:12px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:2px}
+.login-box{background:var(--card);border:1px solid var(--bdr2);border-radius:20px;padding:30px;box-shadow:var(--sh2)}
+.login-box h2{font-size:18px;font-weight:800;color:var(--white);margin-bottom:6px}
+.login-box p{font-size:13px;color:var(--muted);margin-bottom:24px}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.fg label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-family:'DM Mono',monospace}
+.fg input,.fg select,.fg textarea{
+  background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:9px;
+  padding:10px 13px;color:var(--txt);font-size:14px;transition:border-color var(--tr);width:100%;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--y);box-shadow:0 0 0 3px rgba(244,245,0,.08)}
+.fg textarea{resize:vertical;min-height:80px}
+.fg select{cursor:pointer}
+.login-submit{width:100%;padding:12px;background:var(--y);color:#000;border-radius:9px;font-size:15px;font-weight:800;margin-top:8px;transition:var(--tr)}
+.login-submit:hover{background:var(--yd);transform:translateY(-1px)}
+.login-err{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.3);color:#fb7185;border-radius:8px;padding:10px 14px;font-size:13px;margin-top:10px;display:none}
+.login-err.on{display:block}
+.login-rol-tabs{display:flex;background:var(--surf);border-radius:9px;padding:3px;gap:2px;margin-bottom:20px}
+.lrt{flex:1;padding:7px;border-radius:7px;font-size:12px;font-weight:700;color:var(--muted);text-align:center;cursor:pointer;transition:var(--tr)}
+.lrt.on{background:var(--y);color:#000}
+
+/* ═══════════════════════════
+   APP LAYOUT
+═══════════════════════════ */
+#app{display:none}
+#app.on{display:flex;height:100dvh;overflow:hidden}
+
+/* ══ SIDEBAR ══ */
+.sidebar{
+  width:240px;min-width:240px;background:var(--sidebar-bg);border-right:1px solid var(--bdr2);
+  display:flex;flex-direction:column;transition:width .3s;overflow:hidden;z-index:100;
+}
+.sidebar.collapsed{width:64px;min-width:64px}
+.sb-top{padding:18px 16px;border-bottom:1px solid var(--bdr2);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.sb-logo{width:36px;height:36px;min-width:36px;border-radius:10px;border:2px solid var(--y);background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:var(--y);flex-shrink:0}
+.sb-brand{overflow:hidden}
+.sb-brand .bn{font-size:14px;font-weight:900;color:var(--white);white-space:nowrap}
+.sb-brand .bn em{color:var(--y);font-style:normal}
+.sb-brand .bt{font-size:9px;color:var(--muted);white-space:nowrap;font-family:'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase}
+.sb-user{padding:14px 14px;border-bottom:1px solid var(--bdr2);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.sb-av{width:34px;height:34px;min-width:34px;border-radius:50%;background:linear-gradient(135deg,var(--y),#6a6a00);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#000}
+.sb-uinfo{overflow:hidden}
+.sb-uname{font-size:13px;font-weight:700;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-urole{font-size:10px;color:var(--y);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px}
+.sb-nav{flex:1;overflow-y:auto;padding:8px}
+.sb-nav-lbl{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:2px;padding:10px 8px 4px;font-family:'DM Mono',monospace;white-space:nowrap;overflow:hidden}
+.sb-link{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:var(--tr);white-space:nowrap;border:1px solid transparent}
+.sb-link:hover{background:var(--surf);color:var(--white)}
+.sb-link.on{background:rgba(244,245,0,.1);border-color:var(--bdr);color:var(--y)}
+.sb-link .si{width:18px;height:18px;min-width:18px;flex-shrink:0;text-align:center;font-size:16px}
+.sb-link .sl{overflow:hidden;white-space:nowrap}
+.sb-link .sbdg{margin-left:auto;background:var(--y);color:#000;font-size:9px;font-weight:900;padding:1px 6px;border-radius:10px;font-family:'DM Mono',monospace;flex-shrink:0}
+.sb-bottom{padding:10px;border-top:1px solid var(--bdr2);flex-shrink:0}
+.sb-toggle{width:100%;padding:8px;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:8px;font-size:12px;font-weight:600;color:var(--muted);border:1px solid var(--bdr2);transition:var(--tr)}
+.sb-toggle:hover{background:var(--surf);color:var(--white)}
+
+/* ══ MAIN AREA ══ */
+.main-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:var(--header-bg);border-bottom:1px solid var(--bdr2);padding:12px 22px;display:flex;align-items:center;gap:14px;flex-shrink:0;backdrop-filter:blur(20px)}
+.topbar-title{font-size:16px;font-weight:800;color:var(--white)}
+.topbar-sub{font-size:12px;color:var(--muted);margin-top:1px}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.tb-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:9px;font-size:12px;font-weight:700;border:1px solid var(--bdr2);color:var(--muted);background:var(--surf);transition:var(--tr)}
+.tb-btn:hover{border-color:var(--y);color:var(--y)}
+.tb-btn.primary{background:var(--y);color:#000;border-color:var(--y)}
+.tb-btn.primary:hover{background:var(--yd)}
+.theme-btn{width:36px;height:36px;border-radius:9px;background:var(--surf);border:1px solid var(--bdr2);display:flex;align-items:center;justify-content:center;font-size:16px}
+.theme-btn:hover{background:var(--y);border-color:var(--y)}
+[data-theme="dark"] .ico-sun{display:block}[data-theme="dark"] .ico-moon{display:none}
+[data-theme="light"] .ico-sun{display:none}[data-theme="light"] .ico-moon{display:block}
+
+/* ══ CONTENT PAGES ══ */
+.content{flex:1;overflow-y:auto;padding:22px}
+.page{display:none}
+.page.on{display:block}
+
+/* ══ STATS CARDS ══ */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:22px}
+.stat-card{background:var(--card);border:1px solid var(--bdr2);border-radius:14px;padding:18px;transition:var(--tr);cursor:pointer}
+.stat-card:hover{border-color:var(--bdr);transform:translateY(-2px);box-shadow:var(--sh)}
+.stat-card.active{border-color:var(--y);background:rgba(244,245,0,.05)}
+.sc-lbl{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.sc-num{font-size:30px;font-weight:900;color:var(--white);line-height:1;font-family:'DM Mono',monospace}
+.sc-sub{font-size:11px;color:var(--muted);margin-top:4px}
+.sc-icon{font-size:22px;margin-bottom:8px}
+
+/* ══ FILTER BAR ══ */
+.filter-bar{display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.srch-box{display:flex;background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:9px;overflow:hidden;flex:1;min-width:200px;max-width:360px;transition:border-color var(--tr)}
+.srch-box:focus-within{border-color:var(--y)}
+.srch-inp{flex:1;background:none;border:none;padding:9px 13px;color:var(--txt);font-size:13px}
+.srch-inp:focus{outline:none}
+.srch-inp::placeholder{color:var(--muted)}
+.srch-btn{padding:0 13px;background:var(--y);color:#000;font-size:13px;font-weight:700;display:flex;align-items:center}
+.flt-tabs{display:flex;gap:4px;flex-wrap:wrap}
+.flt-tab{padding:7px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1px solid var(--bdr2);color:var(--muted);cursor:pointer;transition:var(--tr);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px}
+.flt-tab:hover{border-color:var(--y);color:var(--y)}
+.flt-tab.on{background:var(--y);border-color:var(--y);color:#000}
+.flt-select{background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:9px;padding:7px 12px;color:var(--txt);font-size:12px;cursor:pointer}
+.flt-select:focus{outline:none;border-color:var(--y)}
+
+/* ══ TABLE ══ */
+.table-wrap{background:var(--card);border:1px solid var(--bdr2);border-radius:16px;overflow:hidden}
+.table-head{padding:14px 18px;border-bottom:1px solid var(--bdr2);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.table-head h3{font-size:14px;font-weight:800;color:var(--white)}
+.live-dot{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#34d399;font-family:'DM Mono',monospace}
+.live-dot::before{content:'';width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 0 2px rgba(52,211,153,.3);animation:pulse 1.5s ease infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 2px rgba(52,211,153,.3)}50%{box-shadow:0 0 0 5px rgba(52,211,153,.1)}}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{padding:10px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-family:'DM Mono',monospace;border-bottom:1px solid var(--bdr2);white-space:nowrap}
+.tbl td{padding:12px 14px;border-bottom:1px solid var(--bdr2);font-size:13px;color:var(--txt);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(244,245,0,.03)}
+.tbl-ticket{font-family:'DM Mono',monospace;font-weight:700;font-size:12px;color:var(--y)}
+.tbl-client{font-weight:600;color:var(--white)}
+.tbl-device{color:var(--muted);font-size:12px}
+.tbl-imei{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+.tbl-tech{display:flex;align-items:center;gap:6px}
+.tech-av{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--y),#6a6a00);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#000;flex-shrink:0}
+.action-btns{display:flex;gap:5px}
+.abtn{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;border:1px solid var(--bdr2);color:var(--muted);background:var(--surf);transition:var(--tr)}
+.abtn:hover{border-color:var(--y);color:var(--y)}
+.abtn.danger:hover{border-color:#f43f5e;color:#f43f5e}
+.abtn.success:hover{border-color:#10b981;color:#10b981}
+
+/* ══ MODALS ══ */
+.modal-bg{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;padding:16px;background:rgba(0,0,0,.7);backdrop-filter:blur(8px)}
+.modal-bg.on{opacity:1;pointer-events:all}
+.modal-box{background:var(--modal-bg);border:1px solid var(--bdr);border-radius:20px;width:100%;position:relative;transform:translateY(16px) scale(.97);transition:transform .3s cubic-bezier(.34,1.56,.64,1);box-shadow:var(--sh2);max-height:92vh;overflow-y:auto}
+.modal-bg.on .modal-box{transform:none}
+.modal-box.sm{max-width:440px}
+.modal-box.md{max-width:620px}
+.modal-box.lg{max-width:860px}
+.modal-box.xl{max-width:1040px}
+.mhdr{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--bdr2);flex-shrink:0}
+.mhdr h2{font-size:17px;font-weight:800;color:var(--white)}
+.mhdr p{font-size:12px;color:var(--muted);margin-top:2px}
+.mcl{width:32px;height:32px;border-radius:50%;background:var(--surf);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;flex-shrink:0;cursor:pointer;transition:var(--tr)}
+.mcl:hover{background:var(--y);color:#000}
+.mbody{padding:24px}
+.mftr{padding:16px 24px;border-top:1px solid var(--bdr2);display:flex;justify-content:flex-end;gap:8px}
+.mftr .btn-cancel{padding:9px 18px;border-radius:9px;font-size:13px;font-weight:700;color:var(--muted);border:1px solid var(--bdr2);background:var(--surf)}
+.mftr .btn-cancel:hover{color:var(--txt)}
+.mftr .btn-primary{padding:9px 22px;border-radius:9px;font-size:13px;font-weight:800;background:var(--y);color:#000}
+.mftr .btn-primary:hover{background:var(--yd)}
+.mftr .btn-danger{padding:9px 18px;border-radius:9px;font-size:13px;font-weight:800;background:#f43f5e;color:#fff}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-grid .full{grid-column:1/-1}
+.sec-div{font-size:10px;font-weight:700;color:var(--y);text-transform:uppercase;letter-spacing:2px;font-family:'DM Mono',monospace;padding:10px 0 6px;border-bottom:1px solid var(--bdr2);margin:4px 0 14px}
+
+/* ══ REPAIR DETAIL MODAL ══ */
+.repair-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.detail-section{background:var(--bg3);border-radius:12px;padding:16px}
+.detail-section.full{grid-column:1/-1}
+.ds-title{font-size:10px;font-weight:700;color:var(--y);text-transform:uppercase;letter-spacing:2px;font-family:'DM Mono',monospace;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.ds-row{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--bdr2)}
+.ds-row:last-child{border-bottom:none}
+.ds-key{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.3px}
+.ds-val{font-size:12px;font-weight:600;color:var(--txt);text-align:right;max-width:200px}
+
+/* ══ TIMELINE ══ */
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:12px;padding:10px 0}
+.tl-dot{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.tl-circle{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;border:2px solid var(--y);background:rgba(244,245,0,.1);color:var(--y)}
+.tl-line{flex:1;width:2px;background:var(--bdr2);margin-top:4px}
+.tl-item:last-child .tl-line{display:none}
+.tl-content{flex:1;padding-top:3px}
+.tl-action{font-size:13px;font-weight:600;color:var(--white)}
+.tl-date{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px}
+.tl-note{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5;background:var(--bg3);border-radius:8px;padding:8px 10px}
+
+/* ══ PARTS TABLE ══ */
+.parts-table{width:100%;border-collapse:collapse;margin-top:8px}
+.parts-table th{padding:7px 10px;text-align:left;font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;border-bottom:1px solid var(--bdr2)}
+.parts-table td{padding:9px 10px;border-bottom:1px solid var(--bdr2);font-size:12px}
+.parts-table tr:last-child td{border-bottom:none}
+.parts-total{display:flex;justify-content:space-between;align-items:center;padding:12px 10px;background:rgba(244,245,0,.05);border-radius:8px;margin-top:8px}
+.parts-total span{font-size:13px;color:var(--muted)}
+.parts-total strong{font-size:18px;font-weight:900;color:var(--y);font-family:'DM Mono',monospace}
+.add-part-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.add-part-row input,.add-part-row select{flex:1;min-width:100px}
+
+/* ══ STATUS STEPPER ══ */
+.status-stepper{display:flex;align-items:center;gap:0;margin:16px 0;overflow-x:auto;padding-bottom:6px}
+.st-step{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;min-width:80px;cursor:pointer;transition:var(--tr);padding:8px 4px;border-radius:8px;border:2px solid transparent}
+.st-step:hover{background:var(--surf)}
+.st-step.active{border-color:var(--y);background:rgba(244,245,0,.05)}
+.st-step.done .ss-circle{background:var(--y);color:#000;border-color:var(--y)}
+.st-step.done .ss-line{background:var(--y)}
+.ss-circle{width:30px;height:30px;border-radius:50%;border:2px solid var(--bdr2);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);background:var(--surf)}
+.st-step.active .ss-circle{border-color:var(--y);color:var(--y)}
+.ss-label{font-size:10px;font-weight:700;color:var(--muted);text-align:center;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.3px}
+.st-step.active .ss-label,.st-step.done .ss-label{color:var(--y)}
+
+/* ══ NOTIFICATIONS ══ */
+.notif{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.notif-item{background:var(--card);border:1px solid var(--bdr);border-left:3px solid #10b981;border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:10px;max-width:300px;box-shadow:var(--sh2);animation:slideIn .4s cubic-bezier(.34,1.56,.64,1) both}
+.notif-item.warn{border-left-color:#f59e0b}
+.notif-item.err{border-left-color:#f43f5e}
+@keyframes slideIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+.ni-icon{font-size:18px;flex-shrink:0}
+.ni-txt strong{display:block;font-size:12px;font-weight:700;color:var(--white)}
+.ni-txt span{font-size:11px;color:var(--muted)}
+
+/* ══ DASHBOARD CARDS ══ */
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:20px}
+.dash-card{background:var(--card);border:1px solid var(--bdr2);border-radius:14px;padding:18px}
+.dash-card h3{font-size:13px;font-weight:800;color:var(--white);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.mini-repair{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bdr2)}
+.mini-repair:last-child{border-bottom:none}
+.mr-info{flex:1;min-width:0}
+.mr-ticket{font-size:10px;color:var(--y);font-family:'DM Mono',monospace;font-weight:700}
+.mr-name{font-size:12px;font-weight:600;color:var(--white);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mr-device{font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ══ EMPTY STATE ══ */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center;color:var(--muted)}
+.empty-state .ei{font-size:48px;margin-bottom:14px;opacity:.3}
+.empty-state h3{font-size:16px;font-weight:700;color:var(--txt);margin-bottom:6px}
+.empty-state p{font-size:13px;max-width:280px;line-height:1.6}
+
+/* ══ PRINT / PDF ══ */
+@media print{
+  *{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  body,html{background:#fff!important;color:#000!important}
+  #loginScreen,#app,#notifContainer{display:none!important}
+  #printArea{display:block!important}
+}
+#printArea{display:none}
+.print-doc{background:#fff;color:#000;font-family:'Outfit',sans-serif;max-width:800px;margin:0 auto;padding:40px}
+.print-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:30px;padding-bottom:20px;border-bottom:3px solid #adad03}
+.print-logo{font-size:24px;font-weight:900;color:#000}
+.print-logo em{color:#adad03;font-style:normal}
+.print-logo p{font-size:11px;color:#666;margin-top:2px;font-family:'DM Mono',monospace}
+.print-ticket-info{text-align:right}
+.print-ticket-num{font-size:22px;font-weight:900;color:#adad03;font-family:'DM Mono',monospace}
+.print-date{font-size:11px;color:#666}
+.print-section{margin-bottom:24px}
+.print-section h3{font-size:12px;font-weight:700;color:#adad03;text-transform:uppercase;letter-spacing:2px;border-bottom:1px solid #e0e0e0;padding-bottom:6px;margin-bottom:12px;font-family:'DM Mono',monospace}
+.print-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.print-row{display:flex;gap:6px;padding:5px 0;border-bottom:1px solid #f5f5f5}
+.print-key{font-size:11px;color:#888;min-width:120px;font-family:'DM Mono',monospace;text-transform:uppercase;font-weight:600}
+.print-val{font-size:12px;font-weight:600;color:#000;flex:1}
+.print-table{width:100%;border-collapse:collapse;margin-top:8px}
+.print-table th{background:#adad03;color:#000;padding:8px 10px;text-align:left;font-size:11px;font-weight:700;font-family:'DM Mono',monospace;text-transform:uppercase}
+.print-table td{padding:8px 10px;border-bottom:1px solid #f0f0f0;font-size:12px}
+.print-table tr:nth-child(even) td{background:#fafafa}
+.print-total{display:flex;justify-content:flex-end;margin-top:10px}
+.print-total-box{background:#f5f5f5;border-left:4px solid #adad03;padding:10px 20px;text-align:right}
+.print-total-box span{font-size:11px;color:#666;display:block}
+.print-total-box strong{font-size:22px;font-weight:900;color:#000;font-family:'DM Mono',monospace}
+.print-signature{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:40px;padding-top:20px;border-top:2px solid #e0e0e0}
+.sign-box{text-align:center}
+.sign-line{height:40px;border-bottom:1px solid #000;margin-bottom:8px}
+.sign-lbl{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:1px;font-family:'DM Mono',monospace}
+.print-status-badge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;font-family:'DM Mono',monospace;text-transform:uppercase}
+.print-watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:100px;font-weight:900;color:rgba(173,173,3,.07);pointer-events:none;z-index:0;font-family:'DM Mono',monospace}
+
+/* ══ PROGRESS BAR ══ */
+.progress-bar{height:4px;background:var(--surf);border-radius:2px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;background:var(--y);border-radius:2px;transition:width .5s ease}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:900px){
+  .sidebar{display:none}
+  .repair-detail-grid{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .form-grid .full{grid-column:1}
+}
+@media(max-width:600px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .tbl th:nth-child(4),.tbl td:nth-child(4),
+  .tbl th:nth-child(3),.tbl td:nth-child(3){display:none}
+  .topbar-title{font-size:14px}
+  .filter-bar{gap:6px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NOTIFICATIONS ══ -->
+<div class="notif" id="notifContainer"></div>
+
+<!-- ══ PRINT AREA ══ -->
+<div id="printArea"></div>
+
+<!-- ═══════════ LOGIN ═══════════ -->
+<div id="loginScreen">
+  <div class="login-wrap">
+    <div class="login-brand">
+      <div class="login-logo">CF</div>
+      <h1>CELU<em>FÉNIX</em></h1>
+      <p>ERP · Módulo de Servicio Técnico</p>
+    </div>
+    <div class="login-box">
+      <h2>Bienvenido de nuevo</h2>
+      <p>Ingresa con tu cuenta de técnico o administrador</p>
+      <div class="login-rol-tabs">
+        <div class="lrt on" onclick="setLoginRole('tecnico',this)">🔧 Técnico</div>
+        <div class="lrt" onclick="setLoginRole('admin',this)">👑 Administrador</div>
+      </div>
+      <div class="fg">
+        <label>Usuario / Email</label>
+        <input type="text" id="loginUser" placeholder="usuario@celufenix.com" value="luis.ramirez">
+      </div>
+      <div class="fg">
+        <label>Contraseña</label>
+        <input type="password" id="loginPass" placeholder="••••••••" value="123456">
+      </div>
+      <div id="loginErr" class="login-err">Usuario o contraseña incorrectos</div>
+      <button class="login-submit" onclick="doLogin()">Ingresar al sistema</button>
+      <div style="margin-top:16px;padding:10px 12px;background:var(--bg3);border-radius:8px;font-size:11px;color:var(--muted)">
+        <strong style="color:var(--y);display:block;margin-bottom:4px">👤 Cuentas de prueba</strong>
+        Técnico: luis.ramirez / 123456 · patricia.gomez / 123456<br>
+        Admin: admin / admin123
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ APP ═══════════ -->
+<div id="app">
+
+  <!-- ══ SIDEBAR ══ -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sb-top">
+      <div class="sb-logo">CF</div>
+      <div class="sb-brand">
+        <div class="bn">CELU<em>FÉNIX</em></div>
+        <div class="bt">Servicio Técnico</div>
+      </div>
+    </div>
+    <div class="sb-user">
+      <div class="sb-av" id="sbAv">LR</div>
+      <div class="sb-uinfo">
+        <div class="sb-uname" id="sbName">Luis Ramírez</div>
+        <div class="sb-urole" id="sbRole">Técnico</div>
+      </div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-nav-lbl">Principal</div>
+      <div class="sb-link on" onclick="goPage('dashboard',this)"><span class="si">📊</span><span class="sl">Dashboard</span></div>
+      <div class="sb-link" onclick="goPage('repairs',this)"><span class="si">🔧</span><span class="sl">Reparaciones</span><span class="sbdg" id="sbRepCount">0</span></div>
+      <div class="sb-link" id="lnkAdmin" onclick="goPage('admin',this)"><span class="si">👑</span><span class="sl">Admin Panel</span></div>
+      <div class="sb-nav-lbl" style="margin-top:6px">Mi cuenta</div>
+      <div class="sb-link" onclick="goPage('myRepairs',this)" id="lnkMyRep"><span class="si">📋</span><span class="sl">Mis Equipos</span><span class="sbdg" id="sbMyCount">0</span></div>
+      <div class="sb-link" onclick="goPage('profile',this)"><span class="si">👤</span><span class="sl">Mi Perfil</span></div>
+    </div>
+    <div class="sb-bottom">
+      <button class="tb-btn" onclick="doLogout()" style="width:100%;justify-content:center;margin-bottom:6px">🚪 Cerrar sesión</button>
+      <button class="sb-toggle" onclick="toggleSidebar()" id="sbToggleBtn">◀ Colapsar</button>
+    </div>
+  </nav>
+
+  <!-- ══ MAIN ══ -->
+  <div class="main-area">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div>
+        <div class="topbar-title" id="topbarTitle">Dashboard</div>
+        <div class="topbar-sub" id="topbarSub">Bienvenido al sistema de gestión</div>
+      </div>
+      <div class="topbar-right">
+        <button class="tb-btn" onclick="openModal('newRepairModal')">➕ Nueva Reparación</button>
+        <button class="theme-btn" onclick="toggleTheme()">
+          <span class="ico-sun">☀️</span><span class="ico-moon">🌙</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- ══ DASHBOARD PAGE ══ -->
+      <div class="page on" id="pageDashboard">
+        <div class="stats-grid" id="dashStats"></div>
+        <div class="dash-grid" id="dashCards"></div>
+        <div class="dash-grid">
+          <div class="dash-card" id="dashRecent">
+            <h3>🕐 Actividad Reciente</h3>
+            <div id="dashRecentList"></div>
+          </div>
+          <div class="dash-card">
+            <h3>📈 Por Estado</h3>
+            <div id="dashByStatus"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ REPAIRS PAGE ══ -->
+      <div class="page" id="pageRepairs">
+        <div class="filter-bar">
+          <div class="srch-box">
+            <input class="srch-inp" type="search" id="repSearch" placeholder="Buscar IMEI, cliente, ticket…" oninput="filterRepairs()">
+            <button class="srch-btn">🔍</button>
+          </div>
+          <div class="flt-tabs" id="statusTabs">
+            <div class="flt-tab on" data-st="all" onclick="setStatusTab(this)">Todas</div>
+            <div class="flt-tab" data-st="Recibido" onclick="setStatusTab(this)">Recibido</div>
+            <div class="flt-tab" data-st="Diagnóstico" onclick="setStatusTab(this)">Diagnóstico</div>
+            <div class="flt-tab" data-st="Reparando" onclick="setStatusTab(this)">Reparando</div>
+            <div class="flt-tab" data-st="Esperando" onclick="setStatusTab(this)">Esperando</div>
+            <div class="flt-tab" data-st="Listo" onclick="setStatusTab(this)">Listos</div>
+            <div class="flt-tab" data-st="Entregado" onclick="setStatusTab(this)">Entregados</div>
+          </div>
+          <select class="flt-select" id="techFilter" onchange="filterRepairs()">
+            <option value="all">Todos los técnicos</option>
+          </select>
+          <button class="tb-btn primary" onclick="openModal('newRepairModal')">➕ Nueva</button>
+        </div>
+        <div class="table-wrap">
+          <div class="table-head">
+            <div>
+              <h3>Gestión de Equipos en Servicio</h3>
+              <div class="live-dot" style="margin-top:4px">En vivo</div>
+            </div>
+            <div style="font-size:12px;color:var(--muted)" id="repCount">— registros</div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Ticket</th>
+                  <th>Cliente</th>
+                  <th>Equipo</th>
+                  <th>IMEI / Serial</th>
+                  <th>Técnico</th>
+                  <th>Estado</th>
+                  <th>Recibido</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="repairsTbody"></tbody>
+            </table>
+          </div>
+          <div id="repairsEmpty" class="empty-state" style="display:none">
+            <div class="ei">🔍</div>
+            <h3>Sin resultados</h3>
+            <p>Prueba con otros filtros o crea una nueva reparación</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ MY REPAIRS PAGE ══ -->
+      <div class="page" id="pageMyRepairs">
+        <div class="filter-bar">
+          <div class="srch-box">
+            <input class="srch-inp" type="search" id="myRepSearch" placeholder="Buscar en mis equipos…" oninput="filterMyRepairs()">
+            <button class="srch-btn">🔍</button>
+          </div>
+          <div class="flt-tabs" id="myStatusTabs">
+            <div class="flt-tab on" data-st="all" onclick="setMyStatusTab(this)">Todos</div>
+            <div class="flt-tab" data-st="Recibido" onclick="setMyStatusTab(this)">Recibido</div>
+            <div class="flt-tab" data-st="Diagnóstico" onclick="setMyStatusTab(this)">Diagnóstico</div>
+            <div class="flt-tab" data-st="Reparando" onclick="setMyStatusTab(this)">Reparando</div>
+            <div class="flt-tab" data-st="Esperando" onclick="setMyStatusTab(this)">Esperando</div>
+            <div class="flt-tab" data-st="Listo" onclick="setMyStatusTab(this)">Listos</div>
+            <div class="flt-tab" data-st="Entregado" onclick="setMyStatusTab(this)">Entregados</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-head">
+            <h3 id="myRepTitle">Mis Equipos Asignados</h3>
+            <div style="font-size:12px;color:var(--muted)" id="myRepCount">— registros</div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Ticket</th>
+                  <th>Cliente</th>
+                  <th>Equipo</th>
+                  <th>IMEI / Serial</th>
+                  <th>Estado</th>
+                  <th>Recibido</th>
+                  <th>Progreso</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="myRepairsTbody"></tbody>
+            </table>
+          </div>
+          <div id="myRepairsEmpty" class="empty-state" style="display:none">
+            <div class="ei">🛠️</div>
+            <h3>Sin equipos asignados</h3>
+            <p>No tienes equipos asignados actualmente</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ ADMIN PAGE ══ -->
+      <div class="page" id="pageAdmin">
+        <div style="margin-bottom:18px">
+          <h2 style="font-size:18px;font-weight:800;color:var(--white);margin-bottom:4px">Panel de Administración</h2>
+          <p style="font-size:13px;color:var(--muted)">Gestión general del sistema de reparaciones</p>
+        </div>
+        <div class="stats-grid" id="adminStats"></div>
+        <div class="table-wrap" style="margin-top:18px">
+          <div class="table-head">
+            <h3>📋 Todas las Reparaciones</h3>
+            <button class="tb-btn primary" onclick="openModal('newRepairModal')">➕ Nueva reparación</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Ticket</th><th>Cliente</th><th>Equipo</th><th>IMEI</th>
+                  <th>Técnico</th><th>Estado</th><th>Total</th><th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="adminRepairsTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PROFILE PAGE ══ -->
+      <div class="page" id="pageProfile">
+        <div style="max-width:540px">
+          <div class="dash-card" style="margin-bottom:18px">
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px">
+              <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--y),#6a6a00);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#000" id="profileAv">LR</div>
+              <div>
+                <div style="font-size:20px;font-weight:800;color:var(--white)" id="profileName">Luis Ramírez</div>
+                <div style="font-size:12px;color:var(--y);font-family:'DM Mono',monospace" id="profileRole">Técnico Senior</div>
+              </div>
+            </div>
+            <div class="fg"><label>Nombre completo</label><input type="text" id="pName" value="Luis Ramírez"></div>
+            <div class="fg"><label>Email</label><input type="email" id="pEmail" value="luis.ramirez@celufenix.com"></div>
+            <div class="fg"><label>Teléfono</label><input type="tel" id="pPhone" value="+57 310 456 7890"></div>
+            <div class="fg"><label>Especialidad</label><input type="text" id="pSpec" value="Smartphones Android · Apple iOS"></div>
+            <button class="tb-btn primary" onclick="saveProfile()" style="margin-top:8px">💾 Guardar cambios</button>
+          </div>
+          <div class="dash-card">
+            <h3>🔒 Cambiar Contraseña</h3>
+            <div class="fg"><label>Contraseña actual</label><input type="password" placeholder="••••••••"></div>
+            <div class="fg"><label>Nueva contraseña</label><input type="password" placeholder="••••••••"></div>
+            <div class="fg"><label>Confirmar nueva</label><input type="password" placeholder="••••••••"></div>
+            <button class="tb-btn primary" style="margin-top:8px" onclick="showNotif('Contraseña actualizada','success')">🔒 Cambiar contraseña</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main-area -->
+</div><!-- /app -->
+
+<!-- ═══════════════════════════
+     MODALS
+═══════════════════════════ -->
+
+<!-- NEW REPAIR MODAL -->
+<div class="modal-bg" id="newRepairModal">
+  <div class="modal-box lg">
+    <div class="mhdr">
+      <div><h2>➕ Nueva Reparación</h2><p>Registrar equipo en servicio</p></div>
+      <button class="mcl" onclick="closeModal('newRepairModal')">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="sec-div">Datos del Cliente</div>
+      <div class="form-grid">
+        <div class="fg"><label>Nombre del cliente *</label><input type="text" id="nr_client" placeholder="Ej: Carlos Mendoza"></div>
+        <div class="fg"><label>Teléfono / WhatsApp *</label><input type="tel" id="nr_phone" placeholder="+57 300 123 4567"></div>
+        <div class="fg full"><label>Email (opcional)</label><input type="email" id="nr_email" placeholder="cliente@email.com"></div>
+      </div>
+      <div class="sec-div">Datos del Equipo</div>
+      <div class="form-grid">
+        <div class="fg"><label>Tipo de equipo *</label>
+          <select id="nr_type">
+            <option value="">Seleccionar...</option>
+            <option>Smartphone</option><option>Tablet</option><option>Laptop</option>
+            <option>Smartwatch</option><option>Audífonos</option><option>Otro</option>
+          </select>
+        </div>
+        <div class="fg"><label>Marca *</label>
+          <select id="nr_brand">
+            <option value="">Seleccionar...</option>
+            <option>Apple</option><option>Samsung</option><option>Xiaomi</option><option>Motorola</option>
+            <option>Huawei</option><option>Realme</option><option>OnePlus</option><option>Otro</option>
+          </select>
+        </div>
+        <div class="fg"><label>Modelo *</label><input type="text" id="nr_model" placeholder="Ej: iPhone 14 Pro Max"></div>
+        <div class="fg"><label>IMEI / Serial</label><input type="text" id="nr_imei" placeholder="15 dígitos o S/N" maxlength="20"></div>
+        <div class="fg"><label>Color del equipo</label><input type="text" id="nr_color" placeholder="Ej: Negro, Blanco..."></div>
+        <div class="fg"><label>Contraseña de desbloqueo</label><input type="text" id="nr_pin" placeholder="Solo si el cliente autoriza"></div>
+        <div class="fg full"><label>Accesorios entregados</label>
+          <input type="text" id="nr_acc" placeholder="Ej: Cargador, funda, audífonos..."></div>
+        <div class="fg full"><label>Estado físico del equipo *</label>
+          <select id="nr_condition">
+            <option value="">Seleccionar...</option>
+            <option>Excelente - Sin daños visibles</option>
+            <option>Bueno - Rayones leves</option>
+            <option>Regular - Golpes visibles</option>
+            <option>Dañado - Pantalla rota</option>
+            <option>Muy dañado - Múltiples daños</option>
+          </select>
+        </div>
+        <div class="fg full"><label>Descripción del problema (cliente) *</label>
+          <textarea id="nr_problem" placeholder="Descripción detallada del problema reportado por el cliente..."></textarea>
+        </div>
+      </div>
+      <div class="sec-div">Asignación</div>
+      <div class="form-grid">
+        <div class="fg"><label>Técnico asignado *</label>
+          <select id="nr_tech">
+            <option value="">Sin asignar</option>
+          </select>
+        </div>
+        <div class="fg"><label>Prioridad</label>
+          <select id="nr_priority">
+            <option value="Normal">Normal</option>
+            <option value="Alta">Alta</option>
+            <option value="Urgente">Urgente</option>
+          </select>
+        </div>
+        <div class="fg"><label>Costo estimado ($COP)</label><input type="number" id="nr_estCost" placeholder="0"></div>
+        <div class="fg"><label>Anticipo recibido ($COP)</label><input type="number" id="nr_advance" placeholder="0"></div>
+        <div class="fg full"><label>Observaciones internas</label>
+          <textarea id="nr_notes" placeholder="Notas para el equipo técnico..." style="min-height:60px"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="mftr">
+      <button class="btn-cancel" onclick="closeModal('newRepairModal')">Cancelar</button>
+      <button class="btn-primary" onclick="saveNewRepair()">✅ Registrar Reparación</button>
+    </div>
+  </div>
+</div>
+
+<!-- REPAIR DETAIL MODAL -->
+<div class="modal-bg" id="repairDetailModal">
+  <div class="modal-box xl">
+    <div class="mhdr">
+      <div>
+        <h2 id="detailTicket">REP-0001</h2>
+        <p id="detailSub">Detalle completo de la reparación</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="tb-btn" onclick="generatePDF()">📄 Exportar PDF</button>
+        <button class="mcl" onclick="closeModal('repairDetailModal')">✕</button>
+      </div>
+    </div>
+    <div class="mbody" id="repairDetailBody">
+      <!-- Dynamic content -->
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE STATUS MODAL -->
+<div class="modal-bg" id="changeStatusModal">
+  <div class="modal-box sm">
+    <div class="mhdr">
+      <div><h2>🔄 Cambiar Estado</h2><p id="csTicket">REP-0001</p></div>
+      <button class="mcl" onclick="closeModal('changeStatusModal')">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="status-stepper" id="statusStepper"></div>
+      <div class="fg" style="margin-top:14px">
+        <label>Nota de diagnóstico / actualización *</label>
+        <textarea id="csNote" placeholder="Describe qué se hizo, qué se encontró, qué falta..." style="min-height:90px"></textarea>
+      </div>
+      <div class="fg">
+        <label>Nuevo estado *</label>
+        <select id="csNewStatus">
+          <option value="Recibido">📥 Recibido</option>
+          <option value="Diagnóstico">🔍 Diagnóstico</option>
+          <option value="Reparando">🔧 Reparando</option>
+          <option value="Esperando">⏳ Esperando repuesto</option>
+          <option value="Listo">✅ Listo para entrega</option>
+          <option value="Entregado">📦 Entregado</option>
+        </select>
+      </div>
+    </div>
+    <div class="mftr">
+      <button class="btn-cancel" onclick="closeModal('changeStatusModal')">Cancelar</button>
+      <button class="btn-primary" onclick="saveStatusChange()">Guardar cambio</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD PARTS MODAL -->
+<div class="modal-bg" id="addPartsModal">
+  <div class="modal-box md">
+    <div class="mhdr">
+      <div><h2>🛒 Agregar Repuesto / Servicio</h2><p id="apTicket">REP-0001</p></div>
+      <button class="mcl" onclick="closeModal('addPartsModal')">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="sec-div">Repuestos y Servicios Aplicados</div>
+      <div style="overflow-x:auto">
+        <table class="parts-table" id="partsTable">
+          <thead>
+            <tr>
+              <th>Descripción</th>
+              <th>Tipo</th>
+              <th>Cant.</th>
+              <th>P. Unit ($)</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="partsTbody"></tbody>
+        </table>
+      </div>
+      <div class="add-part-row" style="margin-top:14px">
+        <input class="fg" style="flex:2;padding:9px 12px;background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:8px;color:var(--txt)" type="text" id="newPartDesc" placeholder="Descripción del repuesto o servicio">
+        <select id="newPartType" style="flex:1;padding:9px 10px;background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:8px;color:var(--txt)">
+          <option>Repuesto</option>
+          <option>Mano de obra</option>
+          <option>Diagnóstico</option>
+          <option>Servicio</option>
+          <option>Garantía</option>
+        </select>
+        <input style="width:60px;padding:9px 8px;background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:8px;color:var(--txt);text-align:center" type="number" id="newPartQty" value="1" min="1">
+        <input style="flex:1;padding:9px 12px;background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:8px;color:var(--txt)" type="number" id="newPartPrice" placeholder="Precio unitario">
+        <button class="tb-btn primary" onclick="addPart()" style="flex-shrink:0">+ Agregar</button>
+      </div>
+      <div class="parts-total" id="partsTotalRow">
+        <span>Total estimado</span>
+        <strong id="partsTotalAmt">$0</strong>
+      </div>
+      <div class="fg" style="margin-top:12px">
+        <label>Costo total acordado con cliente ($COP)</label>
+        <input type="number" id="apFinalCost" placeholder="0">
+      </div>
+    </div>
+    <div class="mftr">
+      <button class="btn-cancel" onclick="closeModal('addPartsModal')">Cancelar</button>
+      <button class="btn-primary" onclick="saveParts()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-bg" id="deleteModal">
+  <div class="modal-box sm">
+    <div class="mhdr">
+      <div><h2>🗑️ Eliminar Reparación</h2></div>
+      <button class="mcl" onclick="closeModal('deleteModal')">✕</button>
+    </div>
+    <div class="mbody">
+      <p style="font-size:14px;color:var(--txt);margin-bottom:10px">¿Estás seguro de eliminar <strong id="delTicket" style="color:var(--y)">REP-0001</strong>?</p>
+      <p style="font-size:13px;color:var(--muted)">Esta acción no se puede deshacer. Todos los datos del ticket serán eliminados permanentemente.</p>
+    </div>
+    <div class="mftr">
+      <button class="btn-cancel" onclick="closeModal('deleteModal')">Cancelar</button>
+      <button class="btn-danger" onclick="confirmDelete()">🗑️ Eliminar definitivamente</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   DATA & STATE
+═══════════════════════════════════════ */
+const TECHS = [
+  {id:'tech1',name:'Luis Ramírez',initials:'LR',role:'Técnico Senior',email:'luis.ramirez@celufenix.com',phone:'+57 310 456 7890',spec:'Smartphones Android · Apple iOS',pass:'123456'},
+  {id:'tech2',name:'Patricia Gómez',initials:'PG',role:'Técnico Especialista',email:'patricia.gomez@celufenix.com',phone:'+57 315 678 9012',spec:'Pantallas · Soldadura SMD',pass:'123456'},
+  {id:'admin1',name:'Administrador',initials:'AD',role:'Administrador',email:'admin@celufenix.com',phone:'+57 300 000 0001',spec:'Administración general',pass:'admin123'},
+];
+
+let REPAIRS = [
+  {id:'REP-0001',client:'Carlos Mendoza',clientPhone:'+57 311 234 5678',clientEmail:'carlos.m@email.com',
+   type:'Smartphone',brand:'Samsung',model:'Galaxy A54',imei:'357112345678901',color:'Negro',pin:'1234',
+   accessories:'Cargador, funda',condition:'Regular - Golpes visibles',problem:'La pantalla no enciende, se cayó al agua.',
+   techId:'tech1',techName:'Luis Ramírez',status:'Listo',priority:'Alta',
+   received:'2025-04-20',estCost:185000,advance:90000,finalCost:185000,
+   notes:'Revisar circuito de carga, posible daño por humedad.',
+   parts:[
+     {desc:'Pantalla AMOLED Samsung A54',type:'Repuesto',qty:1,price:150000},
+     {desc:'Mano de obra - cambio pantalla',type:'Mano de obra',qty:1,price:35000},
+   ],
+   timeline:[
+     {action:'Equipo recibido',date:'2025-04-20 09:15',note:'Cliente trae equipo sin cargador. Reporta que se cayó al agua.',status:'Recibido'},
+     {action:'Diagnóstico iniciado',date:'2025-04-21 10:30',note:'Se realizó diagnóstico completo. Pantalla dañada por humedad, tarjeta madre OK.',status:'Diagnóstico'},
+     {action:'En proceso de reparación',date:'2025-04-22 08:00',note:'Se procedió al cambio de pantalla y limpieza de placa con ultrasonido.',status:'Reparando'},
+     {action:'Equipo listo para entrega',date:'2025-04-22 16:45',note:'Reparación completada exitosamente. Pantalla nueva funcionando al 100%.',status:'Listo'},
+   ]},
+  {id:'REP-0002',client:'Andrea López',clientPhone:'+57 315 987 6543',clientEmail:'andrea.l@email.com',
+   type:'Smartphone',brand:'Apple',model:'iPhone 14',imei:'359123456789012',color:'Morado',pin:'',
+   accessories:'Solo el equipo',condition:'Bueno - Rayones leves',problem:'Batería dura muy poco, se apaga con el 20%.',
+   techId:'tech1',techName:'Luis Ramírez',status:'Reparando',priority:'Normal',
+   received:'2025-04-23',estCost:120000,advance:60000,finalCost:0,
+   notes:'Verificar estado de batería con diagnóstico Apple.',
+   parts:[
+     {desc:'Batería iPhone 14 3279mAh Original',type:'Repuesto',qty:1,price:95000},
+     {desc:'Mano de obra - cambio batería',type:'Mano de obra',qty:1,price:25000},
+   ],
+   timeline:[
+     {action:'Equipo recibido',date:'2025-04-23 14:00',note:'Cliente informa que la batería dura menos de 4 horas.',status:'Recibido'},
+     {action:'Diagnóstico completado',date:'2025-04-24 09:00',note:'Batería al 73% de salud. Se recomendó cambio. Cliente aprobó.',status:'Diagnóstico'},
+     {action:'En proceso de reparación',date:'2025-04-25 10:00',note:'Esperando batería. Mientras tanto se limpió conector de carga.',status:'Reparando'},
+   ]},
+  {id:'REP-0003',client:'Miguel Torres',clientPhone:'+57 318 456 7890',clientEmail:'',
+   type:'Smartphone',brand:'Xiaomi',model:'Redmi Note 12',imei:'358456789012345',color:'Azul',pin:'0000',
+   accessories:'Cargador USB-C',condition:'Dañado - Pantalla rota',problem:'Pantalla rota luego de caída. Touch no responde.',
+   techId:'tech2',techName:'Patricia Gómez',status:'Esperando',priority:'Urgente',
+   received:'2025-04-24',estCost:95000,advance:50000,finalCost:0,
+   notes:'Esperando pantalla de proveedor, llegará en 2-3 días.',
+   parts:[],
+   timeline:[
+     {action:'Equipo recibido',date:'2025-04-24 11:30',note:'Pantalla completamente rota, vidrio fragmentado. Touch no funciona.',status:'Recibido'},
+     {action:'Diagnóstico',date:'2025-04-24 13:00',note:'Solo daño en pantalla. Placa y demás componentes en perfecto estado.',status:'Diagnóstico'},
+     {action:'Esperando repuesto',date:'2025-04-25 08:00',note:'Pantalla pedida al proveedor. ETA 2-3 días hábiles. Cliente notificado.',status:'Esperando'},
+   ]},
+  {id:'REP-0004',client:'Carlos Mendoza',clientPhone:'+57 311 234 5678',clientEmail:'carlos.m@email.com',
+   type:'Tablet',brand:'Apple',model:'iPad Air 5',imei:'',color:'Plateado',pin:'',
+   accessories:'Cable Lightning, adaptador',condition:'Regular - Golpes visibles',problem:'No carga, conector dañado físicamente.',
+   techId:'',techName:'Sin asignar',status:'Recibido',priority:'Normal',
+   received:'2025-04-27',estCost:0,advance:0,finalCost:0,
+   notes:'',parts:[],
+   timeline:[
+     {action:'Equipo recibido',date:'2025-04-27 09:00',note:'iPad ingresó sin asignar. Pendiente de diagnóstico.',status:'Recibido'},
+   ]},
+];
+
+let currentUser = null;
+let currentRepairId = null;
+let currentFilter = {status:'all',search:'',tech:'all'};
+let myRepairFilter = {status:'all',search:''};
+let pendingDeleteId = null;
+let tempParts = [];
+
+/* ═══════════════════════
+   UTILS
+═══════════════════════ */
+function fmtCOP(n){return '$'+Number(n||0).toLocaleString('es-CO');}
+function fmtDate(d){if(!d)return '—';return new Date(d).toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'});}
+function fmtDateTime(d){if(!d)return '—';const dt=new Date(d);return dt.toLocaleDateString('es-CO',{day:'2-digit',month:'short'})+ ' '+dt.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});}
+function nextTicket(){
+  const nums=REPAIRS.map(r=>parseInt(r.id.replace('REP-',''))||0);
+  const next=(Math.max(0,...nums)+1).toString().padStart(4,'0');
+  return 'REP-'+next;
+}
+function statusClass(s){
+  const m={'Recibido':'recibido','Diagnóstico':'diagnostico','Reparando':'reparando','Esperando':'esperando','Listo':'listo','Entregado':'entregado'};
+  return 'st-'+(m[s]||'recibido');
+}
+function statusIcon(s){
+  const m={'Recibido':'📥','Diagnóstico':'🔍','Reparando':'🔧','Esperando':'⏳','Listo':'✅','Entregado':'📦'};
+  return m[s]||'📋';
+}
+function priorityBadge(p){
+  const m={Normal:'<span style="font-size:10px;padding:2px 7px;background:rgba(107,114,128,.15);color:#9ca3af;border-radius:4px;font-family:DM Mono,monospace;font-weight:700">NORMAL</span>',
+   Alta:'<span style="font-size:10px;padding:2px 7px;background:rgba(245,158,11,.15);color:#f59e0b;border-radius:4px;font-family:DM Mono,monospace;font-weight:700">ALTA</span>',
+   Urgente:'<span style="font-size:10px;padding:2px 7px;background:rgba(244,63,94,.15);color:#fb7185;border-radius:4px;font-family:DM Mono,monospace;font-weight:700">URGENTE</span>'};
+  return m[p]||m.Normal;
+}
+function statusProgress(s){
+  const order=['Recibido','Diagnóstico','Reparando','Esperando','Listo','Entregado'];
+  const i=order.indexOf(s);
+  return Math.round((i/5)*100);
+}
+function partsTotal(parts){return parts.reduce((s,p)=>s+p.qty*p.price,0);}
+
+/* ═══════════════════════
+   NOTIFICATIONS
+═══════════════════════ */
+function showNotif(msg,type='success',sub=''){
+  const c=document.getElementById('notifContainer');
+  const el=document.createElement('div');
+  el.className='notif-item'+(type==='warn'?' warn':type==='err'?' err':'');
+  el.innerHTML=`<span class="ni-icon">${type==='success'?'✅':type==='warn'?'⚠️':'❌'}</span>
+  <div class="ni-txt"><strong>${msg}</strong>${sub?`<span>${sub}</span>`:''}</div>`;
+  c.appendChild(el);
+  setTimeout(()=>{el.style.animation='none';el.style.opacity='0';el.style.transition='opacity .4s';setTimeout(()=>el.remove(),400);},3500);
+}
+
+/* ═══════════════════════
+   LOGIN
+═══════════════════════ */
+let loginRole='tecnico';
+function setLoginRole(role,el){
+  loginRole=role;
+  document.querySelectorAll('.lrt').forEach(x=>x.classList.remove('on'));
+  el.classList.add('on');
+  if(role==='admin'){
+    document.getElementById('loginUser').value='admin';
+    document.getElementById('loginPass').value='admin123';
+  } else {
+    document.getElementById('loginUser').value='luis.ramirez';
+    document.getElementById('loginPass').value='123456';
+  }
+}
+
+function doLogin(){
+  const u=document.getElementById('loginUser').value.trim().toLowerCase();
+  const p=document.getElementById('loginPass').value;
+  const err=document.getElementById('loginErr');
+  const found=TECHS.find(t=>t.email.split('@')[0].toLowerCase()===u && t.pass===p);
+  if(!found){err.classList.add('on');return;}
+  err.classList.remove('on');
+  currentUser=found;
+  document.getElementById('loginScreen').classList.add('hide');
+  document.getElementById('app').classList.add('on');
+  initApp();
+}
+
+function doLogout(){
+  currentUser=null;
+  document.getElementById('loginScreen').classList.remove('hide');
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('loginUser').value='luis.ramirez';
+  document.getElementById('loginPass').value='123456';
+}
+
+/* ═══════════════════════
+   APP INIT
+═══════════════════════ */
+function initApp(){
+  const isAdmin=currentUser.role==='Administrador';
+  // Sidebar user
+  document.getElementById('sbAv').textContent=currentUser.initials;
+  document.getElementById('sbName').textContent=currentUser.name;
+  document.getElementById('sbRole').textContent=currentUser.role;
+  // Show/hide admin links
+  document.getElementById('lnkAdmin').style.display=isAdmin?'flex':'none';
+  // Populate tech selects
+  const techSel=document.getElementById('nr_tech');
+  const techFlt=document.getElementById('techFilter');
+  techSel.innerHTML='<option value="">Sin asignar</option>'+
+    TECHS.filter(t=>t.role!=='Administrador').map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+  techFlt.innerHTML='<option value="all">Todos los técnicos</option>'+
+    TECHS.filter(t=>t.role!=='Administrador').map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+  // Profile
+  document.getElementById('profileAv').textContent=currentUser.initials;
+  document.getElementById('profileName').textContent=currentUser.name;
+  document.getElementById('profileRole').textContent=currentUser.role;
+  document.getElementById('pName').value=currentUser.name;
+  document.getElementById('pEmail').value=currentUser.email;
+  document.getElementById('pPhone').value=currentUser.phone;
+  document.getElementById('pSpec').value=currentUser.spec;
+  // If tech, pre-select in new repair
+  if(!isAdmin){
+    techSel.value=currentUser.id;
+  }
+  goPage('dashboard',document.querySelector('.sb-link'));
+  renderAll();
+  showNotif(`Bienvenido, ${currentUser.name}`,'success',`${currentUser.role} · CeluFénix`);
+}
+
+/* ═══════════════════════
+   NAVIGATION
+═══════════════════════ */
+function goPage(pageId,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('on'));
+  const pages={dashboard:'pageDashboard',repairs:'pageRepairs',myRepairs:'pageMyRepairs',admin:'pageAdmin',profile:'pageProfile'};
+  const titles={dashboard:['Dashboard','Resumen general del sistema'],repairs:['Reparaciones','Gestión de equipos en servicio'],myRepairs:['Mis Equipos','Equipos asignados a mí'],admin:['Admin Panel','Gestión general del sistema'],profile:['Mi Perfil','Configuración de cuenta']};
+  const pg=document.getElementById(pages[pageId]);
+  if(pg) pg.classList.add('on');
+  if(el) el.classList.add('on');
+  const t=titles[pageId]||['',''];
+  document.getElementById('topbarTitle').textContent=t[0];
+  document.getElementById('topbarSub').textContent=t[1];
+  if(pageId==='dashboard') renderDashboard();
+  if(pageId==='repairs') renderRepairsTable();
+  if(pageId==='myRepairs') renderMyRepairsTable();
+  if(pageId==='admin') renderAdminPage();
+}
+
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar');
+  const btn=document.getElementById('sbToggleBtn');
+  sb.classList.toggle('collapsed');
+  btn.textContent=sb.classList.contains('collapsed')?'▶ Expandir':'◀ Colapsar';
+}
+
+/* ═══════════════════════
+   THEME
+═══════════════════════ */
+function toggleTheme(){
+  const h=document.documentElement;
+  h.dataset.theme=h.dataset.theme==='dark'?'light':'dark';
+  localStorage.setItem('cf-theme',h.dataset.theme);
+}
+(()=>{const s=localStorage.getItem('cf-theme');if(s)document.documentElement.dataset.theme=s;})();
+
+/* ═══════════════════════
+   MODALS
+═══════════════════════ */
+function openModal(id){document.getElementById(id).classList.add('on');}
+function closeModal(id){document.getElementById(id).classList.remove('on');}
+document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',function(e){if(e.target===this)this.classList.remove('on');}));
+
+/* ═══════════════════════
+   RENDER ALL
+═══════════════════════ */
+function renderAll(){
+  // Badge counts
+  const myReps=REPAIRS.filter(r=>r.techId===currentUser?.id);
+  const activeReps=REPAIRS.filter(r=>r.status!=='Entregado');
+  document.getElementById('sbRepCount').textContent=activeReps.length;
+  document.getElementById('sbMyCount').textContent=myReps.filter(r=>r.status!=='Entregado').length;
+}
+
+/* ═══════════════════════
+   DASHBOARD
+═══════════════════════ */
+function renderDashboard(){
+  const isAdmin=currentUser?.role==='Administrador';
+  const myReps=isAdmin?REPAIRS:REPAIRS.filter(r=>r.techId===currentUser?.id);
+  const statuses=['Recibido','Diagnóstico','Reparando','Esperando','Listo','Entregado'];
+  // Stats
+  const statsData=[
+    {lbl:'Total',num:myReps.length,icon:'📋',sub:'Todos los tickets'},
+    {lbl:'Activos',num:myReps.filter(r=>r.status!=='Entregado').length,icon:'⚙️',sub:'En proceso'},
+    {lbl:'Listos',num:myReps.filter(r=>r.status==='Listo').length,icon:'✅',sub:'Para entrega'},
+    {lbl:'Urgentes',num:myReps.filter(r=>r.priority==='Urgente').length,icon:'🔴',sub:'Prioridad urgente'},
+  ];
+  document.getElementById('dashStats').innerHTML=statsData.map(s=>`
+    <div class="stat-card">
+      <div class="sc-icon">${s.icon}</div>
+      <div class="sc-lbl">${s.lbl}</div>
+      <div class="sc-num">${s.num}</div>
+      <div class="sc-sub">${s.sub}</div>
+    </div>`).join('');
+  // Recent repairs
+  const recent=myReps.slice().sort((a,b)=>b.timeline.length-a.timeline.length).slice(0,5);
+  document.getElementById('dashRecentList').innerHTML=recent.length?recent.map(r=>`
+    <div class="mini-repair" style="cursor:pointer" onclick="openDetail('${r.id}')">
+      <div style="font-size:20px">${statusIcon(r.status)}</div>
+      <div class="mr-info">
+        <div class="mr-ticket">${r.id} ${priorityBadge(r.priority)}</div>
+        <div class="mr-name">${r.client}</div>
+        <div class="mr-device">${r.brand} ${r.model}</div>
+      </div>
+      <span class="sbadge ${statusClass(r.status)}">${r.status}</span>
+    </div>`).join(''):'<p style="font-size:13px;color:var(--muted);padding:20px 0;text-align:center">Sin actividad reciente</p>';
+  // By status
+  document.getElementById('dashByStatus').innerHTML=statuses.map(s=>{
+    const ct=myReps.filter(r=>r.status===s).length;
+    const pct=myReps.length?Math.round((ct/myReps.length)*100):0;
+    return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bdr2)">
+      <span class="sbadge ${statusClass(s)}" style="min-width:110px;justify-content:center">${s}</span>
+      <div style="flex:1"><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div></div>
+      <span style="font-size:12px;font-weight:700;color:var(--white);min-width:16px;text-align:right;font-family:'DM Mono',monospace">${ct}</span>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════
+   REPAIRS TABLE
+═══════════════════════ */
+function filterRepairs(){
+  currentFilter.search=document.getElementById('repSearch').value.toLowerCase();
+  currentFilter.tech=document.getElementById('techFilter').value;
+  renderRepairsTable();
+}
+function setStatusTab(el){
+  document.querySelectorAll('#statusTabs .flt-tab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  currentFilter.status=el.dataset.st;
+  renderRepairsTable();
+}
+function renderRepairsTable(){
+  let repairs=REPAIRS;
+  const isAdmin=currentUser?.role==='Administrador';
+  if(!isAdmin) repairs=repairs.filter(r=>r.techId===currentUser?.id||r.techId==='');
+  if(currentFilter.status!=='all') repairs=repairs.filter(r=>r.status===currentFilter.status);
+  if(currentFilter.search) repairs=repairs.filter(r=>
+    r.id.toLowerCase().includes(currentFilter.search)||
+    r.client.toLowerCase().includes(currentFilter.search)||
+    r.model.toLowerCase().includes(currentFilter.search)||
+    r.imei.toLowerCase().includes(currentFilter.search)||
+    r.techName.toLowerCase().includes(currentFilter.search)
+  );
+  if(currentFilter.tech!=='all') repairs=repairs.filter(r=>r.techId===currentFilter.tech);
+  document.getElementById('repCount').textContent=repairs.length+' registro'+(repairs.length!==1?'s':'');
+  const tbody=document.getElementById('repairsTbody');
+  const empty=document.getElementById('repairsEmpty');
+  if(!repairs.length){tbody.innerHTML='';empty.style.display='flex';return;}
+  empty.style.display='none';
+  tbody.innerHTML=repairs.map(r=>`
+    <tr>
+      <td><span class="tbl-ticket">${r.id}</span><br>${priorityBadge(r.priority)}</td>
+      <td><div class="tbl-client">${r.client}</div><div class="tbl-device">${r.clientPhone}</div></td>
+      <td><div style="font-weight:600;color:var(--white)">${r.brand} ${r.model}</div><div class="tbl-device">${r.type}</div></td>
+      <td><span class="tbl-imei">${r.imei||'—'}</span></td>
+      <td><div class="tbl-tech"><div class="tech-av">${r.techId?TECHS.find(t=>t.id===r.techId)?.initials||'?':'—'}</div><span style="font-size:12px">${r.techName||'Sin asignar'}</span></div></td>
+      <td><span class="sbadge ${statusClass(r.status)}">${statusIcon(r.status)} ${r.status}</span></td>
+      <td style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace">${r.received}</td>
+      <td>
+        <div class="action-btns">
+          <button class="abtn" title="Ver detalle" onclick="openDetail('${r.id}')">👁</button>
+          <button class="abtn" title="Cambiar estado" onclick="openChangeStatus('${r.id}')">🔄</button>
+          <button class="abtn" title="Repuestos" onclick="openAddParts('${r.id}')">🛒</button>
+          <button class="abtn" title="PDF" onclick="currentRepairId='${r.id}';generatePDF()">📄</button>
+          ${isAdmin?`<button class="abtn danger" title="Eliminar" onclick="openDelete('${r.id}')">🗑</button>`:''}
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+/* ═══════════════════════
+   MY REPAIRS TABLE
+═══════════════════════ */
+function filterMyRepairs(){
+  myRepairFilter.search=document.getElementById('myRepSearch').value.toLowerCase();
+  renderMyRepairsTable();
+}
+function setMyStatusTab(el){
+  document.querySelectorAll('#myStatusTabs .flt-tab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  myRepairFilter.status=el.dataset.st;
+  renderMyRepairsTable();
+}
+function renderMyRepairsTable(){
+  let repairs=REPAIRS.filter(r=>r.techId===currentUser?.id);
+  if(myRepairFilter.status!=='all') repairs=repairs.filter(r=>r.status===myRepairFilter.status);
+  if(myRepairFilter.search) repairs=repairs.filter(r=>
+    r.id.toLowerCase().includes(myRepairFilter.search)||
+    r.client.toLowerCase().includes(myRepairFilter.search)||
+    r.model.toLowerCase().includes(myRepairFilter.search)||
+    r.imei.toLowerCase().includes(myRepairFilter.search)
+  );
+  document.getElementById('myRepCount').textContent=repairs.length+' equipo'+(repairs.length!==1?'s':'');
+  document.getElementById('myRepTitle').textContent='Mis Equipos — '+currentUser?.name;
+  const tbody=document.getElementById('myRepairsTbody');
+  const empty=document.getElementById('myRepairsEmpty');
+  if(!repairs.length){tbody.innerHTML='';empty.style.display='flex';return;}
+  empty.style.display='none';
+  tbody.innerHTML=repairs.map(r=>{
+    const pct=statusProgress(r.status);
+    return `<tr>
+      <td><span class="tbl-ticket">${r.id}</span><br>${priorityBadge(r.priority)}</td>
+      <td><div class="tbl-client">${r.client}</div><div class="tbl-device">${r.clientPhone}</div></td>
+      <td><div style="font-weight:600;color:var(--white)">${r.brand} ${r.model}</div><div class="tbl-device">${r.type} · ${r.color}</div></td>
+      <td><span class="tbl-imei">${r.imei||'—'}</span></td>
+      <td><span class="sbadge ${statusClass(r.status)}">${statusIcon(r.status)} ${r.status}</span></td>
+      <td style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace">${r.received}</td>
+      <td style="min-width:100px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div class="progress-bar" style="flex:1"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <span style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;min-width:28px">${pct}%</span>
+        </div>
+      </td>
+      <td>
+        <div class="action-btns">
+          <button class="abtn" title="Ver detalle" onclick="openDetail('${r.id}')">👁</button>
+          <button class="abtn" title="Cambiar estado" onclick="openChangeStatus('${r.id}')">🔄</button>
+          <button class="abtn" title="Repuestos" onclick="openAddParts('${r.id}')">🛒</button>
+          <button class="abtn" title="PDF" onclick="currentRepairId='${r.id}';generatePDF()">📄</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+/* ═══════════════════════
+   ADMIN PAGE
+═══════════════════════ */
+function renderAdminPage(){
+  const statuses=['Recibido','Diagnóstico','Reparando','Esperando','Listo','Entregado'];
+  const statsData=statuses.map(s=>({lbl:s,num:REPAIRS.filter(r=>r.status===s).length,icon:statusIcon(s)}));
+  document.getElementById('adminStats').innerHTML=statsData.map(s=>`
+    <div class="stat-card"><div class="sc-icon">${s.icon}</div><div class="sc-lbl">${s.lbl}</div><div class="sc-num">${s.num}</div></div>`).join('');
+  document.getElementById('adminRepairsTbody').innerHTML=REPAIRS.map(r=>`
+    <tr>
+      <td><span class="tbl-ticket">${r.id}</span></td>
+      <td><div class="tbl-client">${r.client}</div></td>
+      <td>${r.brand} ${r.model}</td>
+      <td><span class="tbl-imei">${r.imei||'—'}</span></td>
+      <td>${r.techName||'Sin asignar'}</td>
+      <td><span class="sbadge ${statusClass(r.status)}">${r.status}</span></td>
+      <td style="font-weight:700;color:var(--y)">${fmtCOP(r.finalCost||partsTotal(r.parts))}</td>
+      <td>
+        <div class="action-btns">
+          <button class="abtn" onclick="openDetail('${r.id}')">👁</button>
+          <button class="abtn" onclick="openChangeStatus('${r.id}')">🔄</button>
+          <button class="abtn" onclick="openAddParts('${r.id}')">🛒</button>
+          <button class="abtn" onclick="currentRepairId='${r.id}';generatePDF()">📄</button>
+          <button class="abtn danger" onclick="openDelete('${r.id}')">🗑</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+/* ═══════════════════════
+   REPAIR DETAIL
+═══════════════════════ */
+function openDetail(id){
+  currentRepairId=id;
+  const r=REPAIRS.find(x=>x.id===id);if(!r)return;
+  document.getElementById('detailTicket').textContent=r.id;
+  document.getElementById('detailSub').textContent=`${r.brand} ${r.model} · ${r.client}`;
+  const total=r.finalCost||partsTotal(r.parts);
+  const paid=r.advance||0;
+  const pending=total-paid;
+  document.getElementById('repairDetailBody').innerHTML=`
+    <div class="repair-detail-grid">
+      <!-- Client info -->
+      <div class="detail-section">
+        <div class="ds-title">👤 Cliente</div>
+        <div class="ds-row"><span class="ds-key">Nombre</span><span class="ds-val">${r.client}</span></div>
+        <div class="ds-row"><span class="ds-key">Teléfono</span><span class="ds-val"><a href="tel:${r.clientPhone}" style="color:var(--y)">${r.clientPhone}</a></span></div>
+        <div class="ds-row"><span class="ds-key">Email</span><span class="ds-val">${r.clientEmail||'—'}</span></div>
+      </div>
+      <!-- Device info -->
+      <div class="detail-section">
+        <div class="ds-title">📱 Equipo</div>
+        <div class="ds-row"><span class="ds-key">Tipo</span><span class="ds-val">${r.type}</span></div>
+        <div class="ds-row"><span class="ds-key">Marca / Modelo</span><span class="ds-val">${r.brand} ${r.model}</span></div>
+        <div class="ds-row"><span class="ds-key">IMEI / Serial</span><span class="ds-val" style="font-family:'DM Mono',monospace">${r.imei||'—'}</span></div>
+        <div class="ds-row"><span class="ds-key">Color</span><span class="ds-val">${r.color||'—'}</span></div>
+        <div class="ds-row"><span class="ds-key">Estado físico</span><span class="ds-val">${r.condition}</span></div>
+        <div class="ds-row"><span class="ds-key">Accesorios</span><span class="ds-val">${r.accessories||'—'}</span></div>
+        ${r.pin?`<div class="ds-row"><span class="ds-key">PIN / Clave</span><span class="ds-val" style="font-family:'DM Mono',monospace">${r.pin}</span></div>`:''}
+      </div>
+      <!-- Assignment -->
+      <div class="detail-section">
+        <div class="ds-title">🔧 Asignación</div>
+        <div class="ds-row"><span class="ds-key">Técnico</span><span class="ds-val">${r.techName||'Sin asignar'}</span></div>
+        <div class="ds-row"><span class="ds-key">Estado actual</span><span class="ds-val"><span class="sbadge ${statusClass(r.status)}">${statusIcon(r.status)} ${r.status}</span></span></div>
+        <div class="ds-row"><span class="ds-key">Prioridad</span><span class="ds-val">${priorityBadge(r.priority)}</span></div>
+        <div class="ds-row"><span class="ds-key">Recibido</span><span class="ds-val">${fmtDate(r.received)}</span></div>
+      </div>
+      <!-- Financial -->
+      <div class="detail-section">
+        <div class="ds-title">💰 Financiero</div>
+        <div class="ds-row"><span class="ds-key">Costo estimado</span><span class="ds-val">${fmtCOP(r.estCost)}</span></div>
+        <div class="ds-row"><span class="ds-key">Total repuestos</span><span class="ds-val">${fmtCOP(partsTotal(r.parts))}</span></div>
+        <div class="ds-row"><span class="ds-key">Total acordado</span><span class="ds-val" style="color:var(--y);font-weight:700">${fmtCOP(r.finalCost)}</span></div>
+        <div class="ds-row"><span class="ds-key">Anticipo</span><span class="ds-val" style="color:#34d399">${fmtCOP(paid)}</span></div>
+        <div class="ds-row"><span class="ds-key">Saldo pendiente</span><span class="ds-val" style="color:${pending>0?'#fb7185':'#34d399'};font-weight:700">${fmtCOP(pending)}</span></div>
+      </div>
+      <!-- Problem -->
+      <div class="detail-section full">
+        <div class="ds-title">⚠️ Problema Reportado</div>
+        <p style="font-size:13px;color:var(--txt);line-height:1.6">${r.problem}</p>
+        ${r.notes?`<div style="margin-top:10px;padding:10px;background:rgba(244,245,0,.05);border-left:3px solid var(--y);border-radius:0 8px 8px 0;font-size:12px;color:var(--muted)"><strong style="color:var(--y);display:block;margin-bottom:3px">📝 Notas internas</strong>${r.notes}</div>`:''}
+      </div>
+      <!-- Parts -->
+      ${r.parts.length?`<div class="detail-section full">
+        <div class="ds-title">🛒 Repuestos y Servicios</div>
+        <table class="parts-table">
+          <thead><tr><th>Descripción</th><th>Tipo</th><th>Cant.</th><th>P. Unit</th><th>Total</th></tr></thead>
+          <tbody>${r.parts.map(p=>`<tr>
+            <td style="font-weight:600">${p.desc}</td>
+            <td><span style="font-size:10px;padding:2px 7px;background:var(--surf);border-radius:4px;color:var(--muted);font-family:'DM Mono',monospace">${p.type}</span></td>
+            <td style="text-align:center">${p.qty}</td>
+            <td style="font-family:'DM Mono',monospace">${fmtCOP(p.price)}</td>
+            <td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--y)">${fmtCOP(p.qty*p.price)}</td>
+          </tr>`).join('')}</tbody>
+        </table>
+        <div class="parts-total"><span>Total repuestos</span><strong>${fmtCOP(partsTotal(r.parts))}</strong></div>
+      </div>`:''}
+      <!-- Timeline -->
+      <div class="detail-section full">
+        <div class="ds-title">📅 Historial de Cambios</div>
+        <div class="timeline">${r.timeline.map(t=>`
+          <div class="tl-item">
+            <div class="tl-dot"><div class="tl-circle">${statusIcon(t.status)}</div><div class="tl-line"></div></div>
+            <div class="tl-content">
+              <div class="tl-action">${t.action} <span class="sbadge ${statusClass(t.status)}" style="font-size:9px">${t.status}</span></div>
+              <div class="tl-date">🕐 ${fmtDateTime(t.date)}</div>
+              ${t.note?`<div class="tl-note">💬 ${t.note}</div>`:''}
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>
+    <!-- Quick actions -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:1px solid var(--bdr2)">
+      <button class="tb-btn primary" onclick="closeModal('repairDetailModal');openChangeStatus('${r.id}')">🔄 Cambiar Estado</button>
+      <button class="tb-btn" onclick="closeModal('repairDetailModal');openAddParts('${r.id}')">🛒 Gestionar Repuestos</button>
+      <button class="tb-btn" onclick="generatePDF()">📄 Exportar PDF</button>
+      ${r.clientPhone?`<a href="https://wa.me/${r.clientPhone.replace(/\D/g,'')}" target="_blank" class="tb-btn" style="color:#25d366;border-color:#25d366">💬 WhatsApp</a>`:''}
+    </div>`;
+  openModal('repairDetailModal');
+}
+
+/* ═══════════════════════
+   CHANGE STATUS
+═══════════════════════ */
+function openChangeStatus(id){
+  currentRepairId=id;
+  const r=REPAIRS.find(x=>x.id===id);if(!r)return;
+  document.getElementById('csTicket').textContent=`${r.id} · ${r.client} · ${r.brand} ${r.model}`;
+  document.getElementById('csNewStatus').value=r.status;
+  document.getElementById('csNote').value='';
+  // Stepper
+  const statuses=['Recibido','Diagnóstico','Reparando','Esperando','Listo','Entregado'];
+  const curIdx=statuses.indexOf(r.status);
+  document.getElementById('statusStepper').innerHTML=statuses.map((s,i)=>`
+    <div class="st-step ${i<curIdx?'done':''} ${i===curIdx?'active':''}" onclick="document.getElementById('csNewStatus').value='${s}'">
+      <div class="ss-circle">${statusIcon(s)}</div>
+      <div class="ss-label">${s}</div>
+    </div>`).join('');
+  openModal('changeStatusModal');
+}
+
+function saveStatusChange(){
+  const r=REPAIRS.find(x=>x.id===currentRepairId);if(!r)return;
+  const note=document.getElementById('csNote').value.trim();
+  const newStatus=document.getElementById('csNewStatus').value;
+  if(!note){showNotif('Agrega una nota de actualización','warn');return;}
+  const statusLabels={'Recibido':'Equipo recibido','Diagnóstico':'Diagnóstico iniciado','Reparando':'En proceso de reparación','Esperando':'Esperando repuesto/autorización','Listo':'Equipo listo para entrega','Entregado':'Equipo entregado al cliente'};
+  r.status=newStatus;
+  r.timeline.push({action:statusLabels[newStatus]||newStatus,date:new Date().toISOString().slice(0,16).replace('T',' '),note,status:newStatus});
+  closeModal('changeStatusModal');
+  renderAll();renderRepairsTable();renderMyRepairsTable();
+  showNotif(`Estado actualizado a ${newStatus}`,'success',r.id);
+}
+
+/* ═══════════════════════
+   PARTS MANAGEMENT
+═══════════════════════ */
+function openAddParts(id){
+  currentRepairId=id;
+  const r=REPAIRS.find(x=>x.id===id);if(!r)return;
+  document.getElementById('apTicket').textContent=`${r.id} · ${r.client} · ${r.brand} ${r.model}`;
+  document.getElementById('apFinalCost').value=r.finalCost||'';
+  tempParts=[...r.parts.map(p=>({...p}))];
+  renderPartsTable();
+  openModal('addPartsModal');
+}
+
+function renderPartsTable(){
+  const tbody=document.getElementById('partsTbody');
+  tbody.innerHTML=tempParts.map((p,i)=>`
+    <tr>
+      <td style="font-weight:600">${p.desc}</td>
+      <td><span style="font-size:10px;padding:1px 6px;background:var(--surf);border-radius:4px;color:var(--muted)">${p.type}</span></td>
+      <td style="text-align:center">
+        <div style="display:flex;align-items:center;gap:4px;justify-content:center">
+          <button style="width:22px;height:22px;border-radius:4px;background:var(--surf);color:var(--txt);border:1px solid var(--bdr2);cursor:pointer;font-size:12px" onclick="changePartQty(${i},-1)">−</button>
+          <span style="font-weight:700;min-width:16px;text-align:center">${p.qty}</span>
+          <button style="width:22px;height:22px;border-radius:4px;background:var(--surf);color:var(--txt);border:1px solid var(--bdr2);cursor:pointer;font-size:12px" onclick="changePartQty(${i},1)">+</button>
+        </div>
+      </td>
+      <td style="font-family:'DM Mono',monospace">${fmtCOP(p.price)}</td>
+      <td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--y)">${fmtCOP(p.qty*p.price)}</td>
+      <td><button class="abtn danger" onclick="removePart(${i})" style="width:24px;height:24px">✕</button></td>
+    </tr>`).join('');
+  document.getElementById('partsTotalAmt').textContent=fmtCOP(partsTotal(tempParts));
+}
+
+function changePartQty(idx,d){
+  tempParts[idx].qty=Math.max(1,tempParts[idx].qty+d);
+  renderPartsTable();
+}
+function removePart(idx){tempParts.splice(idx,1);renderPartsTable();}
+
+function addPart(){
+  const desc=document.getElementById('newPartDesc').value.trim();
+  const type=document.getElementById('newPartType').value;
+  const qty=parseInt(document.getElementById('newPartQty').value)||1;
+  const price=parseFloat(document.getElementById('newPartPrice').value)||0;
+  if(!desc){showNotif('Escribe la descripción del repuesto','warn');return;}
+  if(!price){showNotif('Ingresa el precio unitario','warn');return;}
+  tempParts.push({desc,type,qty,price});
+  document.getElementById('newPartDesc').value='';
+  document.getElementById('newPartPrice').value='';
+  document.getElementById('newPartQty').value='1';
+  renderPartsTable();
+  showNotif('Repuesto agregado','success');
+}
+
+function saveParts(){
+  const r=REPAIRS.find(x=>x.id===currentRepairId);if(!r)return;
+  r.parts=[...tempParts];
+  const fc=parseFloat(document.getElementById('apFinalCost').value)||0;
+  r.finalCost=fc;
+  closeModal('addPartsModal');
+  renderAll();renderRepairsTable();renderMyRepairsTable();
+  showNotif('Repuestos guardados','success',`Total: ${fmtCOP(partsTotal(r.parts))}`);
+}
+
+/* ═══════════════════════
+   NEW REPAIR
+═══════════════════════ */
+function saveNewRepair(){
+  const get=id=>document.getElementById(id).value.trim();
+  const client=get('nr_client'),phone=get('nr_phone'),type=get('nr_type'),brand=get('nr_brand'),model=get('nr_model'),problem=get('nr_problem'),condition=get('nr_condition');
+  if(!client||!phone||!type||!brand||!model||!problem||!condition){
+    showNotif('Completa todos los campos obligatorios (*)','warn');return;
+  }
+  const techId=get('nr_tech');
+  const tech=TECHS.find(t=>t.id===techId);
+  const newRep={
+    id:nextTicket(),client,clientPhone:phone,clientEmail:get('nr_email'),
+    type,brand,model,imei:get('nr_imei'),color:get('nr_color'),pin:get('nr_pin'),
+    accessories:get('nr_acc'),condition,problem,
+    techId:techId||'',techName:tech?tech.name:'Sin asignar',
+    status:'Recibido',priority:get('nr_priority'),
+    received:new Date().toISOString().split('T')[0],
+    estCost:parseFloat(document.getElementById('nr_estCost').value)||0,
+    advance:parseFloat(document.getElementById('nr_advance').value)||0,finalCost:0,
+    notes:get('nr_notes'),parts:[],
+    timeline:[{action:'Equipo recibido',date:new Date().toISOString().slice(0,16).replace('T',' '),
+      note:`Registrado por ${currentUser?.name}. ${problem}`,status:'Recibido'}],
+  };
+  REPAIRS.unshift(newRep);
+  ['nr_client','nr_phone','nr_email','nr_imei','nr_color','nr_pin','nr_acc','nr_problem','nr_notes','nr_estCost','nr_advance'].forEach(id=>{document.getElementById(id).value='';});
+  ['nr_type','nr_brand','nr_condition'].forEach(id=>{document.getElementById(id).value='';});
+  closeModal('newRepairModal');
+  renderAll();renderRepairsTable();renderMyRepairsTable();renderDashboard();
+  showNotif('Reparación registrada exitosamente','success',newRep.id);
+}
+
+/* ═══════════════════════
+   DELETE
+═══════════════════════ */
+function openDelete(id){
+  pendingDeleteId=id;
+  document.getElementById('delTicket').textContent=id;
+  openModal('deleteModal');
+}
+function confirmDelete(){
+  REPAIRS=REPAIRS.filter(r=>r.id!==pendingDeleteId);
+  closeModal('deleteModal');
+  renderAll();renderRepairsTable();renderAdminPage();
+  showNotif('Reparación eliminada','warn');
+  pendingDeleteId=null;
+}
+
+/* ═══════════════════════
+   PROFILE
+═══════════════════════ */
+function saveProfile(){
+  showNotif('Perfil actualizado correctamente','success');
+  const n=document.getElementById('pName').value;
+  if(currentUser&&n){
+    currentUser.name=n;
+    document.getElementById('sbName').textContent=n;
+    document.getElementById('profileName').textContent=n;
+  }
+}
+
+/* ═══════════════════════
+   PDF GENERATION
+═══════════════════════ */
+function generatePDF(){
+  const r=REPAIRS.find(x=>x.id===currentRepairId);if(!r)return;
+  const total=r.finalCost||partsTotal(r.parts);
+  const paid=r.advance||0;
+  const pending=total-paid;
+  const now=new Date();
+  const statusColors={'Recibido':'#818cf8','Diagnóstico':'#f59e0b','Reparando':'#60a5fa','Esperando':'#fb7185','Listo':'#34d399','Entregado':'#9ca3af'};
+  const sc=statusColors[r.status]||'#adad03';
+  const partsRows=r.parts.map(p=>`
+    <tr>
+      <td>${p.desc}</td>
+      <td style="text-align:center">${p.type}</td>
+      <td style="text-align:center">${p.qty}</td>
+      <td style="text-align:right;font-family:'DM Mono',monospace">${fmtCOP(p.price)}</td>
+      <td style="text-align:right;font-family:'DM Mono',monospace;font-weight:700">${fmtCOP(p.qty*p.price)}</td>
+    </tr>`).join('');
+  const timelineRows=r.timeline.map(t=>`
+    <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #f0f0f0">
+      <div style="font-size:16px;flex-shrink:0">${statusIcon(t.status)}</div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#000">${t.action}</div>
+        <div style="font-size:10px;color:#888;font-family:'DM Mono',monospace;margin:2px 0">${fmtDateTime(t.date)}</div>
+        ${t.note?`<div style="font-size:11px;color:#555;margin-top:4px;padding:6px 10px;background:#f9f9f9;border-left:3px solid #adad03;border-radius:0 6px 6px 0">${t.note}</div>`:''}
+      </div>
+    </div>`).join('');
+
+  const html=`<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=DM+Mono:wght@400;700&display=swap" rel="stylesheet">
+<title>Orden ${r.id} - CeluFénix</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:#fff;color:#000;font-size:13px}
+@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+.doc{max-width:800px;margin:0 auto;padding:40px}
+.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:30px;padding-bottom:20px;border-bottom:4px solid #adad03}
+.brand h1{font-size:26px;font-weight:900}
+.brand h1 em{color:#adad03;font-style:normal}
+.brand p{font-size:10px;color:#888;font-family:'DM Mono',monospace;letter-spacing:1.5px;text-transform:uppercase;margin-top:3px}
+.brand .contact{font-size:11px;color:#555;margin-top:8px;line-height:1.6}
+.ticket-info{text-align:right}
+.ticket-num{font-size:26px;font-weight:900;color:#adad03;font-family:'DM Mono',monospace}
+.ticket-date{font-size:11px;color:#888;margin-top:4px}
+.status-pill{display:inline-block;padding:4px 12px;border-radius:4px;font-size:11px;font-weight:700;font-family:'DM Mono',monospace;text-transform:uppercase;color:#fff;background:${sc};margin-top:8px}
+.section{margin-bottom:24px}
+.section h3{font-size:11px;font-weight:700;color:#adad03;text-transform:uppercase;letter-spacing:2px;border-bottom:1px solid #e0e0e0;padding-bottom:6px;margin-bottom:12px;font-family:'DM Mono',monospace}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.row{display:flex;padding:5px 0;border-bottom:1px solid #f5f5f5;gap:10px}
+.key{font-size:10px;color:#888;min-width:120px;font-family:'DM Mono',monospace;text-transform:uppercase;font-weight:600;padding-top:1px;flex-shrink:0}
+.val{font-size:12px;font-weight:600;color:#000;flex:1}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{background:#adad03;color:#000;padding:8px 10px;text-align:left;font-size:10px;font-weight:700;font-family:'DM Mono',monospace;text-transform:uppercase}
+.tbl td{padding:8px 10px;border-bottom:1px solid #f0f0f0;font-size:12px}
+.tbl tr:nth-child(even) td{background:#fafafa}
+.total-box{display:flex;flex-direction:column;align-items:flex-end;margin-top:10px;gap:3px}
+.total-row{display:flex;gap:20px;font-size:12px}
+.total-row.big{font-size:16px;font-weight:900;color:#000;border-top:2px solid #adad03;padding-top:6px;margin-top:3px}
+.total-key{color:#888;min-width:140px;text-align:right}
+.total-val{font-family:'DM Mono',monospace;min-width:100px;text-align:right;font-weight:700}
+.problem-box{background:#f9f9f9;border-left:4px solid #adad03;padding:12px 16px;border-radius:0 8px 8px 0;font-size:12px;line-height:1.6;color:#333}
+.signs{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:50px;padding-top:20px;border-top:2px solid #e0e0e0}
+.sign{text-align:center}
+.sign-line{height:50px;border-bottom:1px solid #000;margin-bottom:8px}
+.sign-lbl{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:1px;font-family:'DM Mono',monospace}
+.watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-size:110px;font-weight:900;color:rgba(173,173,3,.05);pointer-events:none;font-family:'DM Mono',monospace;z-index:0}
+.footer{margin-top:30px;padding-top:16px;border-top:1px solid #e0e0e0;display:flex;justify-content:space-between;font-size:10px;color:#aaa;font-family:'DM Mono',monospace}
+</style></head>
+<body>
+<div class="watermark">CELUFÉNIX</div>
+<div class="doc">
+  <div class="header">
+    <div class="brand">
+      <h1>CELU<em>FÉNIX</em></h1>
+      <p>Servicio Técnico Autorizado · ERP</p>
+      <div class="contact">📞 +57 300 123 4567 · 📧 soporte@celufenix.com<br>📍 Cúcuta, Colombia · celufenix.com</div>
+    </div>
+    <div class="ticket-info">
+      <div class="ticket-num">${r.id}</div>
+      <div class="ticket-date">Generado: ${now.toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'})}</div>
+      <div class="ticket-date">Recibido: ${fmtDate(r.received)}</div>
+      <div class="status-pill">${statusIcon(r.status)} ${r.status}</div>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="section">
+      <h3>👤 Datos del Cliente</h3>
+      <div class="row"><span class="key">Nombre</span><span class="val">${r.client}</span></div>
+      <div class="row"><span class="key">Teléfono</span><span class="val">${r.clientPhone}</span></div>
+      <div class="row"><span class="key">Email</span><span class="val">${r.clientEmail||'—'}</span></div>
+    </div>
+    <div class="section">
+      <h3>🔧 Técnico Asignado</h3>
+      <div class="row"><span class="key">Técnico</span><span class="val">${r.techName||'Sin asignar'}</span></div>
+      <div class="row"><span class="key">Prioridad</span><span class="val">${r.priority}</span></div>
+      <div class="row"><span class="key">Especialidad</span><span class="val">${TECHS.find(t=>t.id===r.techId)?.spec||'—'}</span></div>
+    </div>
+  </div>
+  <div class="section">
+    <h3>📱 Información del Equipo</h3>
+    <div class="grid2">
+      <div>
+        <div class="row"><span class="key">Tipo</span><span class="val">${r.type}</span></div>
+        <div class="row"><span class="key">Marca</span><span class="val">${r.brand}</span></div>
+        <div class="row"><span class="key">Modelo</span><span class="val">${r.model}</span></div>
+        <div class="row"><span class="key">Color</span><span class="val">${r.color||'—'}</span></div>
+      </div>
+      <div>
+        <div class="row"><span class="key">IMEI / Serial</span><span class="val" style="font-family:'DM Mono',monospace">${r.imei||'—'}</span></div>
+        <div class="row"><span class="key">Estado físico</span><span class="val">${r.condition}</span></div>
+        <div class="row"><span class="key">Accesorios</span><span class="val">${r.accessories||'—'}</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <h3>⚠️ Problema Reportado</h3>
+    <div class="problem-box">${r.problem}</div>
+    ${r.notes?`<div class="problem-box" style="margin-top:8px;border-left-color:#6366f1"><strong style="display:block;margin-bottom:4px;color:#6366f1">📝 Notas internas del técnico</strong>${r.notes}</div>`:''}
+  </div>
+  ${r.parts.length?`<div class="section">
+    <h3>🛒 Repuestos y Servicios Aplicados</h3>
+    <table class="tbl">
+      <thead><tr><th>Descripción</th><th>Tipo</th><th style="text-align:center">Cant.</th><th style="text-align:right">P. Unit</th><th style="text-align:right">Total</th></tr></thead>
+      <tbody>${partsRows}</tbody>
+    </table>
+    <div class="total-box">
+      <div class="total-row"><span class="total-key">Subtotal repuestos:</span><span class="total-val">${fmtCOP(partsTotal(r.parts))}</span></div>
+      <div class="total-row"><span class="total-key">Anticipo recibido:</span><span class="total-val" style="color:#10b981">(${fmtCOP(paid)})</span></div>
+      <div class="total-row big"><span class="total-key">TOTAL A PAGAR:</span><span class="total-val" style="color:#adad03">${fmtCOP(pending)}</span></div>
+    </div>
+  </div>`:''}
+  <div class="section">
+    <h3>📅 Historial de Proceso</h3>
+    ${timelineRows}
+  </div>
+  <div class="signs">
+    <div class="sign"><div class="sign-line"></div><div class="sign-lbl">Firma del Cliente</div><div style="font-size:11px;color:#888;margin-top:4px">${r.client}</div></div>
+    <div class="sign"><div class="sign-line"></div><div class="sign-lbl">Firma del Técnico</div><div style="font-size:11px;color:#888;margin-top:4px">${r.techName||'—'}</div></div>
+  </div>
+  <div class="footer">
+    <span>CeluFénix · Servicio Técnico Autorizado</span>
+    <span>${r.id} · ${now.toLocaleDateString('es-CO')}</span>
+    <span>Este documento es válido sin sellos adicionales</span>
+  </div>
+</div>
+<script>window.onload=function(){window.print();}<\/script>
+</body></html>`;
+  const w=window.open('','_blank','width=900,height=700');
+  w.document.write(html);
+  w.document.close();
+  showNotif('PDF generado correctamente','success','Ventana de impresión abierta');
+}
+
+/* ═══════════════════════
+   KEYBOARD SHORTCUTS
+═══════════════════════ */
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){document.querySelectorAll('.modal-bg.on').forEach(m=>m.classList.remove('on'));}
+  if(e.key==='Enter'&&document.getElementById('loginScreen')&&!document.getElementById('loginScreen').classList.contains('hide')===false){doLogin();}
+});
+document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+</script>
+</body>
+</html>
