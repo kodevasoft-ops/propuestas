@@ -171,6 +171,12 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 .sb-section{border-bottom:1px solid var(--bdr2)}
 .sb-section:last-child{border-bottom:none}
 .sb-head{font-size:10px;font-weight:700;color:var(--y);text-transform:uppercase;letter-spacing:2px;padding:14px 16px 8px;font-family:'DM Mono',monospace}
+.sb-head-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:none;cursor:pointer;text-align:left;transition:var(--tr)}
+.sb-head-toggle:hover{color:var(--white)}
+.sb-chevron{font-size:11px;transition:transform .25s ease}
+.sb-chevron.open{transform:rotate(180deg)}
+.price-collapse{display:none}
+.price-collapse.on{display:block}
 .sb-body{padding:8px 10px 14px}
 /* Category pills */
 .cat-pills{display:flex;flex-direction:column;gap:2px}
@@ -190,8 +196,16 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 .subcat-pill-ct{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace}
 /* Price filter */
 .price-range{display:flex;flex-direction:column;gap:8px}
-.price-inputs{display:flex;gap:6px;align-items:center}
-.price-inp{flex:1;background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:7px;padding:7px 9px;color:var(--txt);font-size:12px;font-family:'DM Mono',monospace;transition:border-color var(--tr)}
+.price-presets{display:flex;flex-direction:column;gap:5px}
+.price-pill{padding:9px 10px;border-radius:9px;font-size:12px;font-weight:600;color:var(--txt);background:var(--surf);border:1.5px solid transparent;cursor:pointer;transition:var(--tr)}
+.price-pill:hover{border-color:var(--y)}
+.price-pill.active{background:var(--y);color:#000;font-weight:800;border-color:var(--y)}
+.price-custom-toggle{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;padding:9px 2px 2px;background:none}
+.price-custom-toggle:hover{color:var(--y)}
+.price-custom{margin-top:8px;display:none;flex-direction:column;gap:8px}
+.price-custom.on{display:flex}
+.price-inputs{display:flex;gap:6px;align-items:center;min-width:0}
+.price-inp{flex:1;min-width:0;width:0;background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:7px;padding:8px;color:var(--txt);font-size:12px;font-family:'DM Mono',monospace;transition:border-color var(--tr)}
 .price-inp:focus{outline:none;border-color:var(--y)}
 .price-sep{font-size:11px;color:var(--muted);flex-shrink:0}
 .price-apply{width:100%;padding:8px;background:var(--y);color:#000;border-radius:7px;font-size:12px;font-weight:700;margin-top:4px;transition:var(--tr)}
@@ -586,15 +600,32 @@ footer{background:var(--footer-bg);border-top:1px solid var(--bdr)}
       </div>
       <!-- Price -->
       <div class="sb-section">
-        <div class="sb-head">Precio</div>
-        <div class="sb-body">
-          <div class="price-range">
+        <button type="button" class="sb-head sb-head-toggle" onclick="togglePriceSection('')">
+          <span>Filtrar por precio</span>
+          <span class="sb-chevron" id="priceChevron">▾</span>
+        </button>
+        <div class="sb-body price-collapse" id="priceBody">
+          <div class="price-presets" id="pricePresets"></div>
+          <button type="button" class="price-custom-toggle" id="priceCustomToggle" onclick="togglePriceCustom('')">✎ Rango personalizado</button>
+          <div class="price-custom" id="priceCustom">
             <div class="price-inputs">
-              <input class="price-inp" type="number" id="priceMin" placeholder="Mín" min="0">
+              <input class="price-inp" type="text" inputmode="numeric" autocomplete="off" id="priceMin" placeholder="Mín" oninput="sanitizePriceInput(this)">
               <span class="price-sep">—</span>
-              <input class="price-inp" type="number" id="priceMax" placeholder="Máx" min="0">
+              <input class="price-inp" type="text" inputmode="numeric" autocomplete="off" id="priceMax" placeholder="Máx" oninput="sanitizePriceInput(this)">
             </div>
-            <button class="price-apply" onclick="applyFilters()">Aplicar</button>
+            <button class="price-apply" onclick="applyCustomPrice('')">Aplicar</button>
+          </div>
+        </div>
+      </div>
+      <!-- Offers & Promotions -->
+      <div class="sb-section">
+        <div class="sb-head">🏷️ Ofertas y Promociones</div>
+        <div class="sb-body">
+          <div class="star-filters">
+            <label class="star-flt"><input type="checkbox" id="dealsOnlyChk" onchange="toggleDealsOnly(this.checked)"><span>💸 Solo con descuento</span></label>
+            <label class="star-flt"><input type="checkbox" class="badgeChk" value="hot" onchange="toggleBadge('hot',this.checked)"><span>🔥 Hot</span></label>
+            <label class="star-flt"><input type="checkbox" class="badgeChk" value="new" onchange="toggleBadge('new',this.checked)"><span>🆕 Nuevo</span></label>
+            <label class="star-flt"><input type="checkbox" class="badgeChk" value="sale" onchange="toggleBadge('sale',this.checked)"><span>🏷️ Oferta especial</span></label>
           </div>
         </div>
       </div>
@@ -947,6 +978,14 @@ CATS.forEach(c=>{
   });
 });
 
+const PRICE_PRESETS=[
+  {label:'Menos de $200.000',min:0,max:200000},
+  {label:'$200.000 – $500.000',min:200000,max:500000},
+  {label:'$500.000 – $1.500.000',min:500000,max:1500000},
+  {label:'$1.500.000 – $3.000.000',min:1500000,max:3000000},
+  {label:'Más de $3.000.000',min:3000000,max:null},
+];
+
 /* ══════════════════════
    STATE
 ══════════════════════ */
@@ -956,6 +995,9 @@ let state = {
   search: '',
   priceMin: null,
   priceMax: null,
+  pricePreset: null,
+  dealsOnly: false,
+  badges: new Set(),
   stars: 0,
   brands: new Set(),
   guarantee: 0,
@@ -1132,8 +1174,68 @@ function renderSubcatPills(){
   `).join('');
 }
 
+function togglePriceSection(suffix){
+  const body=document.getElementById('priceBody'+suffix);
+  const chev=document.getElementById('priceChevron'+suffix);
+  if(!body)return;
+  body.classList.toggle('on');
+  if(chev)chev.classList.toggle('open');
+}
+function sanitizePriceInput(el){
+  const digitsOnly=el.value.replace(/[^0-9]/g,'');
+  el.value=digitsOnly;
+}
+function renderPricePresets(){
+  const html=PRICE_PRESETS.map((r,i)=>`<div class="price-pill ${state.pricePreset===i?'active':''}" onclick="selectPricePreset(${i})">${r.label}</div>`).join('');
+  ['pricePresets','pricePresetsM'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.innerHTML=html;
+  });
+  const active=state.pricePreset!==null||state.priceMin||state.priceMax;
+  ['','M'].forEach(suffix=>{
+    const body=document.getElementById('priceBody'+suffix);
+    const chev=document.getElementById('priceChevron'+suffix);
+    if(body) body.classList.toggle('on',!!active);
+    if(chev) chev.classList.toggle('open',!!active);
+  });
+}
+function selectPricePreset(i){
+  const r=PRICE_PRESETS[i];
+  state.pricePreset = state.pricePreset===i ? null : i;
+  if(state.pricePreset===null){
+    state.priceMin=null;state.priceMax=null;
+  } else {
+    state.priceMin=r.min||null;
+    state.priceMax=r.max||null;
+  }
+  ['priceMin','priceMinM','priceMax','priceMaxM'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  ['priceCustom','priceCustomM'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.classList.remove('on');
+  });
+  renderPricePresets();
+  state.page=1;
+  renderProducts();renderBreadcrumb();renderActiveFilters();
+}
+function togglePriceCustom(suffix){
+  const el=document.getElementById('priceCustom'+suffix);
+  if(el) el.classList.toggle('on');
+}
+function applyCustomPrice(suffix){
+  const min=document.getElementById('priceMin'+suffix).value.replace(/\D/g,'');
+  const max=document.getElementById('priceMax'+suffix).value.replace(/\D/g,'');
+  state.priceMin=min||null;
+  state.priceMax=max||null;
+  state.pricePreset=null;
+  ['priceMin','priceMinM'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=min||'';});
+  ['priceMax','priceMaxM'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=max||'';});
+  renderPricePresets();
+  state.page=1;
+  renderProducts();renderBreadcrumb();renderActiveFilters();
+}
+
 function renderBrandChecks(){
-  const el=document.getElementById('brandChecks');
   // Get brands from filtered results (before brand filter)
   const prods=PRODS.filter(p=>{
     if(state.cat&&p.cat!==state.cat)return false;
@@ -1141,7 +1243,7 @@ function renderBrandChecks(){
     return true;
   });
   const brands=[...new Set(prods.map(p=>p.brand))].sort();
-  el.innerHTML=brands.map(b=>{
+  const html=brands.map(b=>{
     const ct=prods.filter(p=>p.brand===b).length;
     return `<label class="brand-chk">
       <input type="checkbox" ${state.brands.has(b)?'checked':''} onchange="toggleBrand('${b}',this.checked)">
@@ -1149,6 +1251,10 @@ function renderBrandChecks(){
       <span class="brand-chk-ct">${ct}</span>
     </label>`;
   }).join('');
+  ['brandChecks','brandChecksM'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.innerHTML=html;
+  });
 }
 
 function selectCat(id){
@@ -1165,6 +1271,20 @@ function selectSub(id){
 function toggleBrand(b,checked){
   if(checked) state.brands.add(b);
   else state.brands.delete(b);
+  renderBrandChecks();
+  state.page=1;
+  applyFilters();
+}
+function toggleDealsOnly(checked){
+  state.dealsOnly=checked;
+  document.querySelectorAll('#dealsOnlyChk,#dealsOnlyChkM').forEach(el=>el.checked=checked);
+  state.page=1;
+  applyFilters();
+}
+function toggleBadge(b,checked){
+  if(checked) state.badges.add(b);
+  else state.badges.delete(b);
+  document.querySelectorAll(`.badgeChk[value="${b}"]`).forEach(el=>el.checked=checked);
   state.page=1;
   applyFilters();
 }
@@ -1192,6 +1312,9 @@ function getFiltered(){
   // Price
   if(state.priceMin) prods=prods.filter(p=>p.price>=Number(state.priceMin));
   if(state.priceMax) prods=prods.filter(p=>p.price<=Number(state.priceMax));
+  // Offers & Promotions
+  if(state.dealsOnly) prods=prods.filter(p=>p.price<p.old);
+  if(state.badges.size>0) prods=prods.filter(p=>state.badges.has(p.badge));
   // Stars
   if(state.stars>0) prods=prods.filter(p=>p.stars>=Number(state.stars));
   // Brands
@@ -1211,8 +1334,6 @@ function applyFilters(){
   state.sort=document.getElementById('sortSelect').value;
   state.stars=document.querySelector('input[name="stars"]:checked')?.value||0;
   state.guarantee=document.querySelector('input[name="guar"]:checked')?.value||0;
-  state.priceMin=document.getElementById('priceMin').value||null;
-  state.priceMax=document.getElementById('priceMax').value||null;
   state.page=1;
   renderProducts();
   renderBreadcrumb();
@@ -1220,13 +1341,19 @@ function applyFilters(){
 }
 
 function resetAllFilters(){
-  state={...state,cat:null,sub:null,search:'',priceMin:null,priceMax:null,stars:0,brands:new Set(),guarantee:0,sort:'featured',page:1};
+  state={...state,cat:null,sub:null,search:'',priceMin:null,priceMax:null,pricePreset:null,stars:0,brands:new Set(),guarantee:0,dealsOnly:false,badges:new Set(),sort:'featured',page:1};
   document.getElementById('mainSearch').value='';
   const ms=document.getElementById('mobSearch');if(ms)ms.value='';
   document.getElementById('priceMin').value='';
   document.getElementById('priceMax').value='';
+  const pmM=document.getElementById('priceMinM');if(pmM)pmM.value='';
+  const pxM=document.getElementById('priceMaxM');if(pxM)pxM.value='';
+  document.querySelectorAll('.price-custom').forEach(el=>el.classList.remove('on'));
+  renderPricePresets();
   document.querySelector('input[name="stars"][value="0"]').checked=true;
   document.querySelector('input[name="guar"][value="0"]').checked=true;
+  document.querySelectorAll('#dealsOnlyChk,#dealsOnlyChkM').forEach(el=>el.checked=false);
+  document.querySelectorAll('.badgeChk').forEach(el=>el.checked=false);
   document.getElementById('sortSelect').value='featured';
   updateAll();
 }
@@ -1442,11 +1569,16 @@ function renderActiveFilters(){
   const af=document.getElementById('activeFilters');
   let tags=[];
   if(state.search) tags.push(`🔍 "${state.search}"`);
-  if(state.priceMin) tags.push(`Desde ${fmtP(state.priceMin)}`);
-  if(state.priceMax) tags.push(`Hasta ${fmtP(state.priceMax)}`);
+  if(state.pricePreset!==null) tags.push(`💰 ${PRICE_PRESETS[state.pricePreset].label}`);
+  else if(state.priceMin&&state.priceMax) tags.push(`💰 ${fmtP(state.priceMin)} – ${fmtP(state.priceMax)}`);
+  else if(state.priceMin) tags.push(`💰 Desde ${fmtP(state.priceMin)}`);
+  else if(state.priceMax) tags.push(`💰 Hasta ${fmtP(state.priceMax)}`);
   if(state.stars>0) tags.push(`★ ${state.stars}+`);
   state.brands.forEach(b=>tags.push(`Marca: ${b}`));
-  if(state.guarantee>0) tags.push(`Garantía: ${state.guarantee>=365?'12':'state.guarantee>=180?6:3'} meses+`);
+  if(state.guarantee>0) tags.push(`Garantía: ${state.guarantee>=365?'12':state.guarantee>=180?'6':'3'} meses+`);
+  if(state.dealsOnly) tags.push('💸 Solo con descuento');
+  const badgeLbl={hot:'🔥 Hot',new:'🆕 Nuevo',sale:'🏷️ Oferta especial'};
+  state.badges.forEach(b=>tags.push(badgeLbl[b]||b));
   if(!tags.length){af.style.display='none';return;}
   af.style.display='flex';
   af.innerHTML=`<span class="af-lbl">Filtros activos:</span>`+
@@ -1644,8 +1776,59 @@ function buildFilterDrawer(){
       <option value="discount" ${state.sort==='discount'?'selected':''}>Mayor descuento</option>
     </select>
   </div>`;
+  html+=`<div style="margin-bottom:20px">
+    <button type="button" class="sb-head sb-head-toggle" onclick="togglePriceSection('M')">
+      <span>Filtrar por precio</span>
+      <span class="sb-chevron" id="priceChevronM">▾</span>
+    </button>
+    <div class="price-collapse" id="priceBodyM">
+      <div class="price-presets" id="pricePresetsM"></div>
+      <button type="button" class="price-custom-toggle" id="priceCustomToggleM" onclick="togglePriceCustom('M')">✎ Rango personalizado</button>
+      <div class="price-custom" id="priceCustomM">
+        <div class="price-inputs">
+          <input class="price-inp" type="text" inputmode="numeric" autocomplete="off" id="priceMinM" placeholder="Mín" value="${state.priceMin||''}" oninput="sanitizePriceInput(this)">
+          <span class="price-sep">—</span>
+          <input class="price-inp" type="text" inputmode="numeric" autocomplete="off" id="priceMaxM" placeholder="Máx" value="${state.priceMax||''}" oninput="sanitizePriceInput(this)">
+        </div>
+        <button class="price-apply" onclick="applyCustomPrice('M')">Aplicar</button>
+      </div>
+    </div>
+  </div>`;
+  html+=`<div style="margin-bottom:20px">
+    <div class="sb-head">🏷️ Ofertas y Promociones</div>
+    <div class="star-filters">
+      <label class="star-flt"><input type="checkbox" id="dealsOnlyChkM" ${state.dealsOnly?'checked':''} onchange="toggleDealsOnly(this.checked)"><span>💸 Solo con descuento</span></label>
+      <label class="star-flt"><input type="checkbox" class="badgeChk" value="hot" ${state.badges.has('hot')?'checked':''} onchange="toggleBadge('hot',this.checked)"><span>🔥 Hot</span></label>
+      <label class="star-flt"><input type="checkbox" class="badgeChk" value="new" ${state.badges.has('new')?'checked':''} onchange="toggleBadge('new',this.checked)"><span>🆕 Nuevo</span></label>
+      <label class="star-flt"><input type="checkbox" class="badgeChk" value="sale" ${state.badges.has('sale')?'checked':''} onchange="toggleBadge('sale',this.checked)"><span>🏷️ Oferta especial</span></label>
+    </div>
+  </div>`;
+  html+=`<div style="margin-bottom:20px">
+    <div class="sb-head">Valoración</div>
+    <div class="star-filters">
+      <label class="star-flt"><input type="radio" name="stars" value="0" ${Number(state.stars)===0?'checked':''} onchange="applyFilters()"> <span class="s">★★★★★</span><span>Todas</span></label>
+      <label class="star-flt"><input type="radio" name="stars" value="5" ${Number(state.stars)===5?'checked':''} onchange="applyFilters()"> <span class="s">★★★★★</span><span>5 estrellas</span></label>
+      <label class="star-flt"><input type="radio" name="stars" value="4" ${Number(state.stars)===4?'checked':''} onchange="applyFilters()"> <span class="s">★★★★</span><span>4+ estrellas</span></label>
+      <label class="star-flt"><input type="radio" name="stars" value="3" ${Number(state.stars)===3?'checked':''} onchange="applyFilters()"> <span class="s">★★★</span><span>3+ estrellas</span></label>
+    </div>
+  </div>`;
+  html+=`<div style="margin-bottom:20px">
+    <div class="sb-head">Marca</div>
+    <div class="brand-checks" id="brandChecksM"></div>
+  </div>`;
+  html+=`<div style="margin-bottom:20px">
+    <div class="sb-head">Garantía</div>
+    <div class="guar-options">
+      <label class="guar-opt"><input type="radio" name="guar" value="0" ${Number(state.guarantee)===0?'checked':''} onchange="applyFilters()"><span class="guar-opt-lbl">Todas</span></label>
+      <label class="guar-opt"><input type="radio" name="guar" value="365" ${Number(state.guarantee)===365?'checked':''} onchange="applyFilters()"><span class="guar-opt-lbl">12 meses o más</span></label>
+      <label class="guar-opt"><input type="radio" name="guar" value="180" ${Number(state.guarantee)===180?'checked':''} onchange="applyFilters()"><span class="guar-opt-lbl">6 meses o más</span></label>
+      <label class="guar-opt"><input type="radio" name="guar" value="90" ${Number(state.guarantee)===90?'checked':''} onchange="applyFilters()"><span class="guar-opt-lbl">3 meses o más</span></label>
+    </div>
+  </div>`;
   html+=`<button class="sb-reset" onclick="resetAllFilters();closeFilterDrawer()" style="width:100%;margin:0;display:block">↺ Limpiar todo</button>`;
   document.getElementById('filterDrawerBody').innerHTML=html;
+  renderBrandChecks();
+  renderPricePresets();
 }
 function applyMobFilters(){
   const s=document.getElementById('mobSortSel');
@@ -1674,6 +1857,7 @@ function updateAll(){
   renderCatPills();
   renderSubcatPills();
   renderBrandChecks();
+  renderPricePresets();
   renderProducts();
   renderBreadcrumb();
   renderActiveFilters();
