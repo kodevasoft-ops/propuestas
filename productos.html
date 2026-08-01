@@ -80,6 +80,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 .ci-info{flex:1;min-width:0}
 .ci-cat{font-size:9px;color:var(--y);font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:'DM Mono',monospace}
 .ci-name{font-size:12px;font-weight:700;color:var(--white);margin:3px 0 8px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ci-variant{font-size:10.5px;font-weight:700;color:var(--y);background:rgba(244,245,0,.1);display:inline-block;padding:2px 7px;border-radius:5px;margin-bottom:8px}
 .ci-bot{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .ci-price{font-size:14px;font-weight:800;color:var(--y)}
 .qrow{display:flex;align-items:center;gap:5px}
@@ -331,6 +332,17 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 .pp-price{font-size:28px;font-weight:900;color:var(--y);line-height:1}
 .pp-old-price{font-size:14px;color:var(--muted);text-decoration:line-through;margin:3px 0}
 .pp-discount-badge{display:inline-block;background:var(--y);color:#000;font-size:10px;font-weight:800;padding:2px 8px;border-radius:5px;font-family:'DM Mono',monospace}
+.pp-variants{display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
+.pp-vgroup-lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px;display:flex;gap:6px}
+.pp-vgroup-lbl b{color:var(--txt);font-weight:800;text-transform:none;letter-spacing:0}
+.pp-color-row{display:flex;flex-wrap:wrap;gap:10px}
+.pp-color-swatch{width:34px;height:34px;border-radius:50%;cursor:pointer;border:2px solid var(--bdr2);position:relative;transition:var(--tr);box-shadow:inset 0 0 0 2px var(--card)}
+.pp-color-swatch:hover{transform:scale(1.08)}
+.pp-color-swatch.active{border-color:var(--y);box-shadow:0 0 0 2px var(--y),inset 0 0 0 2px var(--card)}
+.pp-config-row{display:flex;flex-wrap:wrap;gap:8px}
+.pp-config-pill{padding:8px 14px;border-radius:9px;background:var(--surf);border:1.5px solid var(--bdr2);font-size:12px;font-weight:700;color:var(--txt);transition:var(--tr);cursor:pointer}
+.pp-config-pill:hover{border-color:var(--y)}
+.pp-config-pill.active{background:var(--y);color:#000;border-color:var(--y)}
 .pp-specs{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
 .pp-spec-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--bdr2)}
 .pp-spec-row:last-child{border-bottom:none}
@@ -377,7 +389,7 @@ footer{background:var(--footer-bg);border-top:1px solid var(--bdr)}
 .pay-b{background:rgba(255,255,255,.07);padding:3px 9px;border-radius:5px;font-size:11px;font-weight:700;color:#8888aa}
 
 /* ══ MOBILE SEARCH BAR ══ */
-.mob-search-bar{padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--bdr2)}
+.mob-search-bar{display:none;padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--bdr2)}
 .mob-search-bar .srch-box{display:flex;background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:10px;overflow:hidden;transition:border-color var(--tr)}
 
 /* ══ RESPONSIVE ══ */
@@ -391,6 +403,7 @@ footer{background:var(--footer-bg);border-top:1px solid var(--bdr)}
   .mob-filter-btn{display:flex}
   .htop,.hmain{display:none}
   .mob-header{display:block}
+  .mob-search-bar{display:block}
   .bnav{display:block}
   body{padding-bottom:68px}
   .pgrid.grid3,.pgrid.grid4{grid-template-columns:repeat(2,1fr)}
@@ -774,38 +787,70 @@ const PRODS = [
   {id:1,cat:'telefonos',sub:'iphone',brand:'Apple',name:'iPhone 16 Pro Max 256GB Titanio Negro',ref:'APL-IP16PM-256-TN',price:5890000,old:6200000,warranty:365,guarantee:12,stars:5,rev:42,badge:'new',
    imgs:['https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&h=600&fit=crop&q=80'],
    specs:{Almacenamiento:'256 GB',RAM:'8 GB',Procesador:'Apple A18 Pro',Pantalla:'6.9" OLED Super Retina',Cámara:'48MP Triple',Batería:'4422 mAh',OS:'iOS 18',Red:'5G',Color:'Titanio Negro'},
-   tags:['5G','OLED','Titanio','Face ID']},
+   tags:['5G','OLED','Titanio','Face ID'],
+   variants:{
+     colors:[{name:'Titanio Negro',hex:'#2b2b2c',img:0},{name:'Titanio Blanco',hex:'#e6e2d6',img:1}],
+     configs:[{ram:'8 GB',rom:'256 GB',priceDiff:0},{ram:'8 GB',rom:'512 GB',priceDiff:1200000},{ram:'8 GB',rom:'1 TB',priceDiff:2400000}]
+   }},
   {id:2,cat:'telefonos',sub:'iphone',brand:'Apple',name:'iPhone 16 Pro 128GB Titanio Blanco',ref:'APL-IP16P-128-TW',price:5290000,old:5700000,warranty:365,guarantee:12,stars:5,rev:28,badge:'new',
    imgs:['https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=600&h=600&fit=crop&q=80'],
    specs:{Almacenamiento:'128 GB',RAM:'8 GB',Procesador:'Apple A18 Pro',Pantalla:'6.3" OLED ProMotion',Cámara:'48MP Triple',Batería:'3274 mAh',OS:'iOS 18',Red:'5G',Color:'Titanio Blanco'},
-   tags:['5G','ProMotion','120Hz']},
+   tags:['5G','ProMotion','120Hz'],
+   variants:{
+     colors:[{name:'Titanio Blanco',hex:'#e6e2d6',img:0},{name:'Titanio Negro',hex:'#2b2b2c',img:1}],
+     configs:[{ram:'8 GB',rom:'128 GB',priceDiff:0},{ram:'8 GB',rom:'256 GB',priceDiff:600000},{ram:'8 GB',rom:'512 GB',priceDiff:1500000}]
+   }},
   {id:3,cat:'telefonos',sub:'iphone',brand:'Apple',name:'iPhone 15 Plus 256GB Azul',ref:'APL-IP15PL-256-AZ',price:4190000,old:4800000,warranty:365,guarantee:12,stars:4,rev:64,badge:'sale',
    imgs:['https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=600&h=600&fit=crop&q=80'],
    specs:{Almacenamiento:'256 GB',RAM:'6 GB',Procesador:'Apple A16 Bionic',Pantalla:'6.7" OLED Super Retina',Cámara:'48MP Dual',Batería:'4383 mAh',OS:'iOS 17',Red:'5G',Color:'Azul'},
-   tags:['5G','Dynamic Island']},
+   tags:['5G','Dynamic Island'],
+   variants:{
+     colors:[{name:'Azul',hex:'#4a5b7a',img:0},{name:'Negro',hex:'#1c1c22',img:1}],
+     configs:[{ram:'6 GB',rom:'128 GB',priceDiff:-450000},{ram:'6 GB',rom:'256 GB',priceDiff:0},{ram:'6 GB',rom:'512 GB',priceDiff:900000}]
+   }},
   // TELÉFONOS - Samsung
   {id:4,cat:'telefonos',sub:'samsung',brand:'Samsung',name:'Galaxy S25 Ultra 512GB Phantom Black',ref:'SAM-S25U-512-PB',price:4990000,old:5400000,warranty:365,guarantee:12,stars:5,rev:33,badge:'hot',
    imgs:['https://images.unsplash.com/photo-1678685888221-cda773a3dcdb?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=600&h=600&fit=crop&q=80'],
    specs:{Almacenamiento:'512 GB',RAM:'12 GB',Procesador:'Snapdragon 8 Elite',Pantalla:'6.9" AMOLED 2X',Cámara:'200MP Cuádruple',Batería:'5000 mAh',OS:'Android 15',Red:'5G',Color:'Phantom Black'},
-   tags:['5G','S-Pen','200MP','AI']},
+   tags:['5G','S-Pen','200MP','AI'],
+   variants:{
+     colors:[{name:'Phantom Black',hex:'#1a1a1c',img:0},{name:'Titanium Gray',hex:'#8a8a8f',img:1}],
+     configs:[{ram:'12 GB',rom:'256 GB',priceDiff:-500000},{ram:'12 GB',rom:'512 GB',priceDiff:0},{ram:'16 GB',rom:'1 TB',priceDiff:1300000}]
+   }},
   {id:5,cat:'telefonos',sub:'samsung',brand:'Samsung',name:'Galaxy A55 5G 256GB Azul Oscuro',ref:'SAM-A55-256-AO',price:1590000,old:1890000,warranty:180,guarantee:6,stars:4,rev:88,badge:'sale',
    imgs:['https://images.unsplash.com/photo-1546054454-aa26e2b734c7?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1678685888221-cda773a3dcdb?w=600&h=600&fit=crop&q=80'],
    specs:{Almacenamiento:'256 GB',RAM:'8 GB',Procesador:'Exynos 1480',Pantalla:'6.6" AMOLED 120Hz',Cámara:'50MP Triple',Batería:'5000 mAh',OS:'Android 14',Red:'5G',Color:'Azul Oscuro'},
-   tags:['5G','120Hz','IP67']},
+   tags:['5G','120Hz','IP67'],
+   variants:{
+     colors:[{name:'Azul Oscuro',hex:'#274060',img:0},{name:'Lima',hex:'#c8e05a',img:1},{name:'Negro',hex:'#1c1c22',img:0}],
+     configs:[{ram:'8 GB',rom:'128 GB',priceDiff:-250000},{ram:'8 GB',rom:'256 GB',priceDiff:0},{ram:'12 GB',rom:'256 GB',priceDiff:280000}]
+   }},
   // TELÉFONOS - Xiaomi
   {id:6,cat:'telefonos',sub:'xiaomi',brand:'Xiaomi',name:'Redmi Note 14 Pro 5G 256GB',ref:'XMI-RN14P-256',price:1590000,old:1890000,warranty:180,guarantee:6,stars:5,rev:67,badge:'hot',
    imgs:['https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=600&fit=crop&q=80'],
    specs:{Almacenamiento:'256 GB',RAM:'8 GB',Procesador:'Snapdragon 7s Gen 3',Pantalla:'6.67" AMOLED 120Hz',Cámara:'200MP Triple',Batería:'5500 mAh',OS:'Android 14',Red:'5G',Color:'Midnight Black'},
-   tags:['5G','200MP','120Hz','67W']},
+   tags:['5G','200MP','120Hz','67W'],
+   variants:{
+     colors:[{name:'Midnight Black',hex:'#1a1a1e',img:0},{name:'Lavender Purple',hex:'#b7a6dd',img:1}],
+     configs:[{ram:'8 GB',rom:'128 GB',priceDiff:-200000},{ram:'8 GB',rom:'256 GB',priceDiff:0},{ram:'12 GB',rom:'256 GB',priceDiff:250000}]
+   }},
   {id:7,cat:'telefonos',sub:'xiaomi',brand:'Xiaomi',name:'Xiaomi 14 Pro 5G 256GB',ref:'XMI-14P-256',price:3490000,old:3900000,warranty:365,guarantee:12,stars:5,rev:22,badge:'new',
    imgs:['https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&h=600&fit=crop&q=80'],
    specs:{Almacenamiento:'256 GB',RAM:'12 GB',Procesador:'Snapdragon 8 Gen 3',Pantalla:'6.73" AMOLED 120Hz',Cámara:'50MP Leica Triple',Batería:'4880 mAh',OS:'MIUI 15',Red:'5G',Color:'Titanio'},
-   tags:['Leica','5G','120W']},
+   tags:['Leica','5G','120W'],
+   variants:{
+     colors:[{name:'Titanio',hex:'#8a8580',img:0},{name:'Negro',hex:'#1c1c22',img:1}],
+     configs:[{ram:'12 GB',rom:'256 GB',priceDiff:0},{ram:'16 GB',rom:'512 GB',priceDiff:700000}]
+   }},
   // TELÉFONOS - Motorola
   {id:8,cat:'telefonos',sub:'motorola',brand:'Motorola',name:'Moto G85 5G 256GB Azul Zafiro',ref:'MOT-G85-256-AZ',price:1190000,old:1390000,warranty:180,guarantee:6,stars:4,rev:19,badge:'',
    imgs:['https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=600&fit=crop&q=80'],
    specs:{Almacenamiento:'256 GB',RAM:'8 GB',Procesador:'Snapdragon 6s Gen 3',Pantalla:'6.67" POLED 120Hz',Cámara:'50MP Dual',Batería:'5000 mAh',OS:'Android 14',Red:'5G',Color:'Azul Zafiro'},
-   tags:['5G','120Hz','Dolby Atmos']},
+   tags:['5G','120Hz','Dolby Atmos'],
+   variants:{
+     colors:[{name:'Azul Zafiro',hex:'#2f4d8a',img:0},{name:'Gris Urbano',hex:'#57585e',img:1}],
+     configs:[{ram:'8 GB',rom:'128 GB',priceDiff:-150000},{ram:'8 GB',rom:'256 GB',priceDiff:0},{ram:'12 GB',rom:'256 GB',priceDiff:180000}]
+   }},
   // PC & Tablets
   {id:9,cat:'pc',sub:'laptops',brand:'Lenovo',name:'Lenovo IdeaPad 5 Pro 16" Intel i7',ref:'LNV-IP5P-I7-16',price:3890000,old:4500000,warranty:365,guarantee:12,stars:5,rev:15,badge:'sale',
    imgs:['https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600&h=600&fit=crop&q=80'],
@@ -819,23 +864,28 @@ const PRODS = [
   {id:11,cat:'hogar',sub:'bafles',brand:'JBL',name:'Bafle JBL Charge 5 Bluetooth',ref:'JBL-CHG5-BT',price:479000,old:599000,warranty:365,guarantee:12,stars:5,rev:88,badge:'hot',
    imgs:['https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop&q=80'],
    specs:{Potencia:'30W RMS',Conectividad:'Bluetooth 5.1',Batería:'20 horas',Resistencia:'IP67',Dimensiones:'22 x 9.5 cm',Peso:'960g',Color:'Negro',Extras:'PartyBoost'},
-   tags:['IP67','20h','PartyBoost']},
+   tags:['IP67','20h','PartyBoost'],
+   variants:{colors:[{name:'Negro',hex:'#1c1c22',img:0},{name:'Azul',hex:'#2c5a8f',img:1},{name:'Rojo',hex:'#a4302e',img:0}]}},
   {id:12,cat:'hogar',sub:'bafles',brand:'Sony',name:'Sony SRS-XB43 Extra Bass Bluetooth',ref:'SNY-SRSXB43',price:389000,old:520000,warranty:365,guarantee:12,stars:5,rev:54,badge:'sale',
    imgs:['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&h=600&fit=crop&q=80'],
    specs:{Potencia:'24W RMS',Conectividad:'Bluetooth 5.0',Batería:'24 horas',Resistencia:'IP67',Dimensiones:'28 x 10 cm',Peso:'1.4 kg',Color:'Negro',Extras:'Extra Bass, Party Connect'},
-   tags:['Extra Bass','IP67','24h']},
+   tags:['Extra Bass','IP67','24h'],
+   variants:{colors:[{name:'Negro',hex:'#1c1c22',img:0},{name:'Gris',hex:'#8a8a8f',img:1}]}},
   {id:13,cat:'hogar',sub:'secadores',brand:'Dyson',name:'Secador Dyson Supersonic HD15',ref:'DYS-SPHD15',price:890000,old:1050000,warranty:365,guarantee:12,stars:5,rev:34,badge:'new',
    imgs:['https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=600&h=600&fit=crop&q=80'],
    specs:{Motor:'Dyson V9 Digital',Velocidad:'110.000 RPM',Temperatura:'Control magnético',Extras:'3 velocidades, 4 temperaturas',Voltaje:'110V-240V',Peso:'641g',Color:'Negro/Níquel',Garantía:'12 meses'},
-   tags:['110.000 RPM','Temperatura digital','Ligero']},
+   tags:['110.000 RPM','Temperatura digital','Ligero'],
+   variants:{colors:[{name:'Negro/Níquel',hex:'#2a2a2e',img:0},{name:'Fucsia/Cobre',hex:'#b23a68',img:1},{name:'Azul/Plata',hex:'#3a5a8a',img:0}]}},
   {id:14,cat:'hogar',sub:'afeitadoras',brand:'Philips',name:'Afeitadora Philips Series 7000',ref:'PHI-AF7000',price:320000,old:420000,warranty:365,guarantee:12,stars:4,rev:56,badge:'sale',
    imgs:['https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=600&h=600&fit=crop&q=80'],
    specs:{Cabezales:'3 cabezales auto-ajustables',Batería:'50 minutos',Carga:'1 hora',Resistencia:'Apta para ducha',Extras:'Recortador lateral',Voltaje:'110V-240V',Color:'Negro/Azul',Garantía:'12 meses'},
-   tags:['IP67','50 min','Auto-ajuste']},
+   tags:['IP67','50 min','Auto-ajuste'],
+   variants:{colors:[{name:'Negro/Azul',hex:'#243a5e',img:0},{name:'Negro/Plata',hex:'#3a3a3e',img:1}]}},
   {id:15,cat:'hogar',sub:'planchas',brand:'Remington',name:'Plancha Remington Cerámica Pro',ref:'RMG-PCR-PRO',price:145000,old:195000,warranty:180,guarantee:6,stars:4,rev:41,badge:'',
    imgs:['https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=600&fit=crop&q=80'],
    specs:{Temperatura:'150-230°C',Placas:'Cerámica flotante',Calentamiento:'30 segundos',Extras:'Indicador temp., Auto-off 60min',Voltaje:'110V-240V',Cable:'3 metros giratorio',Color:'Negro Rosa',Garantía:'6 meses'},
-   tags:['Cerámica','Auto-off','Dual voltage']},
+   tags:['Cerámica','Auto-off','Dual voltage'],
+   variants:{colors:[{name:'Negro Rosa',hex:'#5e2a3e',img:0},{name:'Negro',hex:'#1c1c22',img:1}]}},
   // REPUESTOS
   {id:16,cat:'repuestos',sub:'pantallas',brand:'Original',name:'Pantalla AMOLED Samsung Galaxy A55 Original',ref:'REP-PNT-A55-AMOLED',price:185000,old:240000,warranty:90,guarantee:3,stars:5,rev:22,badge:'',
    imgs:['https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600&h=600&fit=crop&q=80','https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&h=600&fit=crop&q=80'],
@@ -955,6 +1005,7 @@ function updateCartUI(){
       <div class="ci-info">
         <div class="ci-cat">${it.cat}</div>
         <div class="ci-name">${it.name}</div>
+        ${it.variant?`<div class="ci-variant">${it.variant}</div>`:''}
         <div class="ci-bot">
           <span class="ci-price">${fmtP(it.price)}</span>
           <div class="qrow">
@@ -977,15 +1028,18 @@ function chQty(id,d){
 }
 function rmItem(id){delete cart[id];updateCartUI();rerenderCardControl(id);}
 function getQty(id){return cart[id]?cart[id].qty:0;}
+function getQtyTotal(id){return Object.values(cart).reduce((s,it)=>s+(it.id===id?it.qty:0),0);}
 function addCart(id){
   const p=PRODS.find(x=>x.id==id);if(!p)return;
-  cart[id]={name:p.name,price:p.price,img:p.imgs[0],cat:p.brand,qty:1};
+  if(p.variants){openProductPopup(id);return;}
+  cart[id]={id:p.id,name:p.name,price:p.price,img:p.imgs[0],cat:p.brand,qty:1};
   updateCartUI();rerenderCardControl(id);
   setTimeout(openCart,250);
 }
 function cardPlus(id){
   const p=PRODS.find(x=>x.id==id);if(!p)return;
-  cart[id]?cart[id].qty++:(cart[id]={name:p.name,price:p.price,img:p.imgs[0],cat:p.brand,qty:1});
+  if(p.variants){openProductPopup(id);return;}
+  cart[id]?cart[id].qty++:(cart[id]={id:p.id,name:p.name,price:p.price,img:p.imgs[0],cat:p.brand,qty:1});
   rerenderCardControl(id);updateCartUI();
 }
 function cardMinus(id){
@@ -994,25 +1048,35 @@ function cardMinus(id){
   if(cart[id].qty<=0) delete cart[id];
   rerenderCardControl(id);updateCartUI();
 }
-function ppQtyPlus(id){
-  const p=PRODS.find(x=>x.id==id);if(!p)return;
-  cart[id]?cart[id].qty++:(cart[id]={name:p.name,price:p.price,img:p.imgs[0],cat:p.brand,qty:1});
-  updateCartUI();rerenderCardControl(id);
-  const pp=document.getElementById('ppQtyNum');if(pp)pp.textContent=getQty(id);
+function ppQtyPlus(){
+  const p=PP.product;if(!p)return;
+  const key=currentVariantKey();
+  const {price}=currentVariantPrice();
+  cart[key]?cart[key].qty++:(cart[key]={id:p.id,name:p.name,price,img:currentVariantImg(),cat:p.brand,qty:1,variant:currentVariantLabel()});
+  updateCartUI();rerenderCardControl(p.id);
+  const el=document.getElementById('ppQtyNum');if(el)el.textContent=getQty(key);
   renderPopupActions(p);
 }
-function ppQtyMinus(id){
-  if(!cart[id])return;
-  cart[id].qty--;
-  if(cart[id].qty<=0)delete cart[id];
-  updateCartUI();rerenderCardControl(id);
-  const pp=document.getElementById('ppQtyNum');if(pp)pp.textContent=getQty(id)||0;
-  const p=PRODS.find(x=>x.id==id);if(p)renderPopupActions(p);
+function ppQtyMinus(){
+  const p=PP.product;if(!p)return;
+  const key=currentVariantKey();
+  if(!cart[key])return;
+  cart[key].qty--;
+  if(cart[key].qty<=0)delete cart[key];
+  updateCartUI();rerenderCardControl(p.id);
+  const el=document.getElementById('ppQtyNum');if(el)el.textContent=getQty(key)||0;
+  renderPopupActions(p);
 }
 
 function rerenderCardControl(id){
   const wrap=document.querySelector(`.pcard[data-id="${id}"] .pc-add-wrap`);
   if(!wrap) return;
+  const p=PRODS.find(x=>x.id==id);
+  if(p?.variants){
+    const total=getQtyTotal(id);
+    wrap.innerHTML=`<button class="pc-add-btn" onclick="event.stopPropagation();openProductPopup(${id})">🎛️ Elegir opciones${total>0?` (${total})`:''}</button>`;
+    return;
+  }
   const qty=getQty(id);
   if(qty===0){
     wrap.innerHTML=`<button class="pc-add-btn" onclick="addCart(${id})">🛒 Agregar</button>`;
@@ -1289,7 +1353,10 @@ function renderProducts(){
   grid.innerHTML=paginated.map(p=>{
     const disc=Math.round((1-p.price/p.old)*100);
     const qty=getQty(p.id);
-    const qtyHtml=qty>0?
+    const totalQty=getQtyTotal(p.id);
+    const qtyHtml=p.variants?
+      `<button class="pc-add-btn" onclick="event.stopPropagation();openProductPopup(${p.id})">🎛️ Elegir opciones${totalQty>0?` (${totalQty})`:''}</button>`:
+      qty>0?
       `<div class="pc-qty-ctrl">
         <button class="pc-qb minus" onclick="cardMinus(${p.id})">−</button>
         <span class="pc-qnum">${qty}</span>
@@ -1390,25 +1457,85 @@ function renderActiveFilters(){
 /* ══════════════════════
    PRODUCT POPUP
 ══════════════════════ */
+let PP={product:null,colorIdx:0,configIdx:0};
+
+function variantKey(id,ci,si){return `${id}::${ci==null?'x':ci}::${si==null?'x':si}`;}
+function ppHasColors(){return !!PP.product?.variants?.colors;}
+function ppHasConfigs(){return !!PP.product?.variants?.configs;}
+function currentVariantKey(){
+  if(!PP.product)return null;
+  return variantKey(PP.product.id,ppHasColors()?PP.colorIdx:null,ppHasConfigs()?PP.configIdx:null);
+}
+function currentVariantPrice(){
+  const p=PP.product;if(!p)return{price:0,old:0};
+  const diff=ppHasConfigs()?(p.variants.configs[PP.configIdx].priceDiff||0):0;
+  return{price:p.price+diff,old:p.old+diff};
+}
+function currentVariantLabel(){
+  const p=PP.product;if(!p)return'';
+  const parts=[];
+  if(ppHasColors())parts.push(p.variants.colors[PP.colorIdx].name);
+  if(ppHasConfigs()){const c=p.variants.configs[PP.configIdx];parts.push(`${c.ram} + ${c.rom}`);}
+  return parts.join(' · ');
+}
+function currentVariantImg(){
+  const p=PP.product;if(!p)return null;
+  if(ppHasColors()){const ci=p.variants.colors[PP.colorIdx].img;return p.imgs[ci]||p.imgs[0];}
+  return p.imgs[0];
+}
+
 function openProductPopup(id){
   const p=PRODS.find(x=>x.id==id);if(!p)return;
-  // Gallery
-  let activeImg=0;
-  function updateMain(idx){
-    activeImg=idx;
-    document.getElementById('ppMainImgEl').src=p.imgs[idx];
-    document.querySelectorAll('.pp-thumb').forEach((t,i)=>t.classList.toggle('active',i===idx));
-  }
-  document.getElementById('ppMainImgEl').src=p.imgs[0];
+  PP={product:p,colorIdx:0,configIdx:0};
+  renderPPGallery();
+  renderPPInfo();
+  document.getElementById('productPopup').classList.add('on');
+  document.body.style.overflow='hidden';
+}
+
+function renderPPGallery(){
+  const p=PP.product;if(!p)return;
+  const mainSrc=currentVariantImg()||p.imgs[0];
+  document.getElementById('ppMainImgEl').src=mainSrc;
   document.getElementById('ppThumbs').innerHTML=p.imgs.map((img,i)=>`
-    <div class="pp-thumb ${i===0?'active':''}" onclick="document.getElementById('ppMainImgEl').src='${img}';document.querySelectorAll('.pp-thumb').forEach((t,j)=>t.classList.toggle('active',j===${i}))">
+    <div class="pp-thumb ${img===mainSrc?'active':''}" onclick="document.getElementById('ppMainImgEl').src='${img}';document.querySelectorAll('.pp-thumb').forEach((t,j)=>t.classList.toggle('active',j===${i}))">
       <img src="${img}" alt="">
     </div>
   `).join('');
-  // Info
-  const disc=Math.round((1-p.price/p.old)*100);
+}
+
+function renderPPVariants(){
+  const p=PP.product;if(!p||!p.variants)return'';
+  let html='<div class="pp-variants">';
+  if(ppHasColors()){
+    html+=`<div><div class="pp-vgroup-lbl">Color: <b>${p.variants.colors[PP.colorIdx].name}</b></div>
+      <div class="pp-color-row">${p.variants.colors.map((c,i)=>`
+        <div class="pp-color-swatch ${i===PP.colorIdx?'active':''}" style="background:${c.hex}" title="${c.name}" onclick="selectPPColor(${i})"></div>
+      `).join('')}</div></div>`;
+  }
+  if(ppHasConfigs()){
+    const cur=p.variants.configs[PP.configIdx];
+    html+=`<div><div class="pp-vgroup-lbl">RAM + Almacenamiento: <b>${cur.ram} + ${cur.rom}</b></div>
+      <div class="pp-config-row">${p.variants.configs.map((c,i)=>`
+        <div class="pp-config-pill ${i===PP.configIdx?'active':''}" onclick="selectPPConfig(${i})">${c.ram} + ${c.rom}</div>
+      `).join('')}</div></div>`;
+  }
+  html+='</div>';
+  return html;
+}
+
+function selectPPColor(i){PP.colorIdx=i;renderPPGallery();renderPPInfo();}
+function selectPPConfig(i){PP.configIdx=i;renderPPInfo();}
+
+function renderPPInfo(){
+  const p=PP.product;if(!p)return;
+  const {price,old}=currentVariantPrice();
+  const disc=Math.round((1-price/old)*100);
   const catObj=CATS.find(c=>c.id===p.cat);
   const subObj=catObj?.subs.find(s=>s.id===p.sub);
+  const specs={...p.specs};
+  if(ppHasColors())specs.Color=p.variants.colors[PP.colorIdx].name;
+  if(ppHasConfigs()){const c=p.variants.configs[PP.configIdx];specs.RAM=c.ram;specs.Almacenamiento=c.rom;}
   document.getElementById('ppInfo').innerHTML=`
     <div class="pp-cat">${catObj?.icon||''} ${catObj?.name.replace(catObj?.icon,'').trim()||p.cat} › ${subObj?.name||''}</div>
     <div class="pp-name">${p.name}</div>
@@ -1421,12 +1548,13 @@ function openProductPopup(id){
       <span class="pp-rev-ct">${p.rev} reseñas</span>
     </div>
     <div class="pp-price-block">
-      <div class="pp-price">${fmtP(p.price)}</div>
-      <div class="pp-old-price">${fmtP(p.old)}</div>
+      <div class="pp-price">${fmtP(price)}</div>
+      <div class="pp-old-price">${fmtP(old)}</div>
       ${disc>0?`<span class="pp-discount-badge">-${disc}% OFF</span>`:''}
     </div>
+    ${renderPPVariants()}
     <div class="pp-specs">
-      ${Object.entries(p.specs).map(([k,v])=>`
+      ${Object.entries(specs).map(([k,v])=>`
         <div class="pp-spec-row">
           <span class="pp-spec-key">${k}</span>
           <span class="pp-spec-val ${k==='Garantía'?'highlight':''}">${v}</span>
@@ -1441,30 +1569,31 @@ function openProductPopup(id){
     <div class="pp-tags">${p.tags.map(t=>`<span class="pp-tag">${t}</span>`).join('')}</div>
   `;
   renderPopupActions(p);
-  document.getElementById('productPopup').classList.add('on');
-  document.body.style.overflow='hidden';
 }
 
 function renderPopupActions(p){
   const box=document.getElementById('ppActionsBox');if(!box)return;
-  const qty=getQty(p.id);
+  const key=currentVariantKey();
+  const qty=getQty(key);
   if(qty===0){
-    box.innerHTML=`<button class="pp-add-btn" onclick="ppAddToCart(${p.id})">🛒 Agregar al carrito</button>`;
+    box.innerHTML=`<button class="pp-add-btn" onclick="ppAddToCart()">🛒 Agregar al carrito</button>`;
   } else {
     box.innerHTML=`
       <div class="pp-qty-ctrl">
-        <button class="pp-qb" onclick="ppQtyMinus(${p.id})">−</button>
+        <button class="pp-qb" onclick="ppQtyMinus()">−</button>
         <span class="pp-qnum" id="ppQtyNum">${qty}</span>
-        <button class="pp-qb" onclick="ppQtyPlus(${p.id})">+</button>
+        <button class="pp-qb" onclick="ppQtyPlus()">+</button>
       </div>
       <button class="pp-add-btn" style="background:var(--surf);color:var(--txt);border:1px solid var(--bdr2)" onclick="closePopup();openCart()">Ver carrito (${qty})</button>`;
   }
 }
 
-function ppAddToCart(id){
-  const p=PRODS.find(x=>x.id==id);if(!p)return;
-  cart[id]={name:p.name,price:p.price,img:p.imgs[0],cat:p.brand,qty:1};
-  updateCartUI();rerenderCardControl(id);
+function ppAddToCart(){
+  const p=PP.product;if(!p)return;
+  const key=currentVariantKey();
+  const {price}=currentVariantPrice();
+  cart[key]={id:p.id,name:p.name,price,img:currentVariantImg(),cat:p.brand,qty:1,variant:currentVariantLabel()};
+  updateCartUI();rerenderCardControl(p.id);
   renderPopupActions(p);
 }
 
