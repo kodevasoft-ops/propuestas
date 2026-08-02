@@ -76,6 +76,31 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 .fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--y);box-shadow:0 0 0 3px rgba(244,245,0,.08)}
 .fg textarea{resize:vertical;min-height:80px}
 .fg select{cursor:pointer}
+
+/* ═══════════════════════════
+   CUSTOM SELECT DROPDOWN
+═══════════════════════════ */
+.csel{position:relative}
+.csel select{display:none}
+.csel-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;
+  background:var(--input-bg);border:1.5px solid var(--input-bdr);border-radius:9px;
+  padding:10px 13px;color:var(--txt);font-size:14px;cursor:pointer;transition:border-color var(--tr);user-select:none}
+.csel-btn:hover{border-color:var(--bdr)}
+.csel.disabled .csel-btn{opacity:.55;cursor:not-allowed}
+.csel-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.csel-btn .fa-chevron-down{font-size:12px;color:var(--muted);transition:transform .2s;flex-shrink:0}
+.csel.open .csel-btn{border-color:var(--y);box-shadow:0 0 0 3px rgba(244,245,0,.08)}
+.csel.open .csel-btn .fa-chevron-down{transform:rotate(180deg)}
+.csel-menu{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--card);
+  border:1px solid var(--bdr2);border-radius:11px;box-shadow:var(--sh2);z-index:250;
+  max-height:240px;overflow-y:auto;padding:6px;opacity:0;visibility:hidden;
+  transform:translateY(-6px);transition:opacity .15s,transform .15s}
+.csel.open .csel-menu{opacity:1;visibility:visible;transform:none}
+.csel-opt{padding:9px 11px;border-radius:7px;font-size:13.5px;color:var(--txt);cursor:pointer;
+  transition:background .12s;display:flex;align-items:center;gap:8px}
+.csel-opt:hover{background:var(--surf)}
+.csel-opt.sel{background:rgba(244,245,0,.12);color:var(--y);font-weight:700}
+.flt-select.csel .csel-btn{padding:8px 12px;font-size:12.5px}
 .login-submit{width:100%;padding:12px;background:var(--y);color:#000;border-radius:9px;font-size:15px;font-weight:800;margin-top:8px;transition:var(--tr)}
 .login-submit:hover{background:var(--yd);transform:translateY(-1px)}
 .login-err{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.3);color:#fb7185;border-radius:8px;padding:10px 14px;font-size:13px;margin-top:10px;display:none}
@@ -541,11 +566,27 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 
 /* ══ RESPONSIVE ══ */
 @media(max-width:900px){
-  .sidebar{display:none}
+  .sidebar{
+    position:fixed;left:0;top:0;bottom:0;display:flex;
+    transform:translateX(-100%);transition:transform .28s cubic-bezier(.16,1,.3,1);
+    z-index:600;box-shadow:0 0 40px rgba(0,0,0,.5);
+  }
+  .sidebar.mobile-open{transform:translateX(0)}
+  .sidebar.collapsed{width:240px;min-width:240px}
+  .sidebar.collapsed .sb-brand,.sidebar.collapsed .sb-uinfo,.sidebar.collapsed .sb-nav-lbl,
+  .sidebar.collapsed .sb-link .sl,.sidebar.collapsed .sb-link .sbdg,.sidebar.collapsed .logout-txt,
+  .sidebar.collapsed .sb-toggle .stxt{display:revert}
+  .sb-toggle{display:none}
+  .mob-menu-btn{display:flex}
+  .sidebar-backdrop.on{display:block}
   .repair-detail-grid{grid-template-columns:1fr}
   .form-grid{grid-template-columns:1fr}
   .form-grid .full{grid-column:1}
 }
+.sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:550;backdrop-filter:blur(2px)}
+.mob-menu-btn{display:none;align-items:center;justify-content:center;width:38px;height:38px;border-radius:9px;background:var(--surf);border:1px solid var(--bdr2);color:var(--txt);font-size:16px;flex-shrink:0}
+.mob-menu-btn:hover{color:var(--y);border-color:var(--y)}
+.topbar-left{display:flex;align-items:center;gap:12px;min-width:0}
 @media(max-width:600px){
   .stats-grid{grid-template-columns:repeat(2,1fr)}
   .tbl th:nth-child(4),.tbl td:nth-child(4),
@@ -604,7 +645,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
       </svg>
     </div>
     <div class="login-hero-content">
-      <div class="hero-badge">🔧 ERP · Módulo de Servicio Técnico</div>
+      <div class="hero-badge"><i class="fa-solid fa-wrench"></i> ERP · Módulo de Servicio Técnico</div>
       <h1 class="hero-title">INGRESO TÉCNICOS<br><em>CELUFÉNIX</em></h1>
       <p class="hero-sub">Gestiona reparaciones, clientes y equipos técnicos desde una sola plataforma. Acceso exclusivo para personal autorizado.</p>
       <div class="hero-stats">
@@ -625,27 +666,27 @@ input,select,textarea{font-family:'Outfit',sans-serif}
         <h2>Bienvenido de nuevo</h2>
         <p>Ingresa con tu cuenta de técnico o administrador</p>
         <div class="login-rol-tabs">
-          <div class="lrt on" onclick="setLoginRole('tecnico',this)">🔧 Técnico</div>
-          <div class="lrt" onclick="setLoginRole('admin',this)">👑 Administrador</div>
+          <div class="lrt on" onclick="setLoginRole('tecnico',this)"><i class="fa-solid fa-wrench"></i> Técnico</div>
+          <div class="lrt" onclick="setLoginRole('admin',this)"><i class="fa-solid fa-crown"></i> Administrador</div>
         </div>
         <div class="fg fg-icon">
           <label>Usuario / Email</label>
           <input type="text" id="loginUser" placeholder="usuario@celufenix.com" value="luis.ramirez">
-        <span class="fgi">👤</span>
+        <span class="fgi"><i class="fa-solid fa-user"></i></span>
       </div>
       <div class="fg fg-icon">
         <label>Contraseña</label>
         <input type="password" id="loginPass" placeholder="••••••••" value="123456">
-        <span class="fgi">🔒</span>
-        <button type="button" class="pass-eye" onclick="toggleLoginPass(this)">👁️</button>
+        <span class="fgi"><i class="fa-solid fa-lock"></i></span>
+        <button type="button" class="pass-eye" onclick="toggleLoginPass(this)"><i class="fa-solid fa-eye"></i></button>
       </div>
       <div id="loginErr" class="login-err">Usuario o contraseña incorrectos</div>
-      <button class="login-submit" onclick="doLogin()">🔑 Ingresar al sistema</button>
+      <button class="login-submit" onclick="doLogin()"><i class="fa-solid fa-key"></i> Ingresar al sistema</button>
       <div class="demo-box" style="margin-top:16px">
-        <strong>👤 Cuentas de prueba</strong>
-        <div class="demo-row"><span>🔧 Luis Ramírez</span><span>luis.ramirez / 123456</span></div>
-        <div class="demo-row"><span>🔧 Patricia Gómez</span><span>patricia.gomez / 123456</span></div>
-        <div class="demo-row"><span>👑 Administrador</span><span>admin / admin123</span></div>
+        <strong><i class="fa-solid fa-user"></i> Cuentas de prueba</strong>
+        <div class="demo-row"><span><i class="fa-solid fa-wrench"></i> Luis Ramírez</span><span>luis.ramirez / 123456</span></div>
+        <div class="demo-row"><span><i class="fa-solid fa-wrench"></i> Patricia Gómez</span><span>patricia.gomez / 123456</span></div>
+        <div class="demo-row"><span><i class="fa-solid fa-crown"></i> Administrador</span><span>admin / admin123</span></div>
       </div>
       <div class="login-foot"><span class="dotc"></span>Sistema operativo · Conexión segura</div>
     </div>
@@ -655,6 +696,8 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 
 <!-- ═══════════ APP ═══════════ -->
 <div id="app">
+
+  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleMobileSidebar()"></div>
 
   <!-- ══ SIDEBAR ══ -->
   <nav class="sidebar" id="sidebar">
@@ -674,17 +717,17 @@ input,select,textarea{font-family:'Outfit',sans-serif}
     </div>
     <div class="sb-nav">
       <div class="sb-nav-lbl">Principal</div>
-      <div class="sb-link on" onclick="goPage('dashboard',this)"><span class="si">📊</span><span class="sl">Dashboard</span></div>
-      <div class="sb-link" onclick="goPage('repairs',this)"><span class="si">🔧</span><span class="sl">Reparaciones</span><span class="sbdg" id="sbRepCount">0</span></div>
-      <div class="sb-link" id="lnkAdmin" onclick="goPage('admin',this)"><span class="si">👑</span><span class="sl">Admin Panel</span></div>
-      <div class="sb-link" id="lnkTecnicos" onclick="goPage('tecnicos',this)"><span class="si">👷</span><span class="sl">Técnicos</span></div>
+      <div class="sb-link on" onclick="goPage('dashboard',this)"><span class="si"><i class="fa-solid fa-chart-column"></i></span><span class="sl">Dashboard</span></div>
+      <div class="sb-link" onclick="goPage('repairs',this)"><span class="si"><i class="fa-solid fa-wrench"></i></span><span class="sl">Reparaciones</span><span class="sbdg" id="sbRepCount">0</span></div>
+      <div class="sb-link" id="lnkAdmin" onclick="goPage('admin',this)"><span class="si"><i class="fa-solid fa-crown"></i></span><span class="sl">Admin Panel</span></div>
+      <div class="sb-link" id="lnkTecnicos" onclick="goPage('tecnicos',this)"><span class="si"><i class="fa-solid fa-helmet-safety"></i></span><span class="sl">Técnicos</span></div>
       <div class="sb-nav-lbl" style="margin-top:6px">Mi cuenta</div>
-      <div class="sb-link" onclick="goPage('myRepairs',this)" id="lnkMyRep"><span class="si">📋</span><span class="sl">Mis Equipos</span><span class="sbdg" id="sbMyCount">0</span></div>
-      <div class="sb-link" onclick="goPage('profile',this)"><span class="si">👤</span><span class="sl">Mi Perfil</span></div>
+      <div class="sb-link" onclick="goPage('myRepairs',this)" id="lnkMyRep"><span class="si"><i class="fa-solid fa-clipboard-list"></i></span><span class="sl">Mis Equipos</span><span class="sbdg" id="sbMyCount">0</span></div>
+      <div class="sb-link" onclick="goPage('profile',this)"><span class="si"><i class="fa-solid fa-user"></i></span><span class="sl">Mi Perfil</span></div>
     </div>
     <div class="sb-bottom">
-      <button class="tb-btn" id="logoutBtn" onclick="doLogout()" style="width:100%;justify-content:center;margin-bottom:6px">🚪 <span class="logout-txt">Cerrar sesión</span></button>
-      <button class="sb-toggle" onclick="toggleSidebar()" id="sbToggleBtn"><span class="stog-icon">◀</span> <span class="stxt">Colapsar</span></button>
+      <button class="tb-btn" id="logoutBtn" onclick="doLogout()" style="width:100%;justify-content:center;margin-bottom:6px"><i class="fa-solid fa-right-from-bracket"></i> <span class="logout-txt">Cerrar sesión</span></button>
+      <button class="sb-toggle" onclick="toggleSidebar()" id="sbToggleBtn"><span class="stog-icon"><i class="fa-solid fa-chevron-left"></i></span> <span class="stxt">Colapsar</span></button>
     </div>
   </nav>
 
@@ -692,15 +735,18 @@ input,select,textarea{font-family:'Outfit',sans-serif}
   <div class="main-area">
     <!-- TOPBAR -->
     <div class="topbar">
-      <div>
-        <div class="topbar-title" id="topbarTitle">Dashboard</div>
-        <div class="topbar-sub" id="topbarSub">Bienvenido al sistema de gestión</div>
+      <div class="topbar-left">
+        <button class="mob-menu-btn" onclick="toggleMobileSidebar()"><i class="fa-solid fa-bars"></i></button>
+        <div>
+          <div class="topbar-title" id="topbarTitle">Dashboard</div>
+          <div class="topbar-sub" id="topbarSub">Bienvenido al sistema de gestión</div>
+        </div>
       </div>
       <div class="topbar-right">
-        <button class="tb-btn" onclick="openNewRepairModal()">➕ Nueva Reparación</button>
-        <button class="tb-btn" onclick="openCarnet()">🪪 Mi Carnet</button>
+        <button class="tb-btn" onclick="openNewRepairModal()"><i class="fa-solid fa-plus"></i> Nueva Reparación</button>
+        <button class="tb-btn" onclick="openCarnet()"><i class="fa-solid fa-id-card"></i> Mi Carnet</button>
         <button class="theme-btn" onclick="toggleTheme()">
-          <span class="ico-sun">☀️</span><span class="ico-moon">🌙</span>
+          <span class="ico-sun"><i class="fa-solid fa-sun"></i></span><span class="ico-moon"><i class="fa-solid fa-moon"></i></span>
         </button>
       </div>
     </div>
@@ -714,11 +760,11 @@ input,select,textarea{font-family:'Outfit',sans-serif}
         <div class="dash-grid" id="dashCards"></div>
         <div class="dash-grid">
           <div class="dash-card" id="dashRecent">
-            <h3>🕐 Actividad Reciente</h3>
+            <h3><i class="fa-solid fa-clock"></i> Actividad Reciente</h3>
             <div id="dashRecentList"></div>
           </div>
           <div class="dash-card">
-            <h3>📈 Por Estado</h3>
+            <h3><i class="fa-solid fa-arrow-trend-up"></i> Por Estado</h3>
             <div id="dashByStatus"></div>
           </div>
         </div>
@@ -729,7 +775,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
         <div class="filter-bar">
           <div class="srch-box">
             <input class="srch-inp" type="search" id="repSearch" placeholder="Buscar IMEI, cliente, ticket…" oninput="filterRepairs()">
-            <button class="srch-btn">🔍</button>
+            <button class="srch-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
           </div>
           <div class="flt-tabs" id="statusTabs">
             <div class="flt-tab on" data-st="all" onclick="setStatusTab(this)">Todas</div>
@@ -743,7 +789,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
           <select class="flt-select" id="techFilter" onchange="filterRepairs()">
             <option value="all">Todos los técnicos</option>
           </select>
-          <button class="tb-btn primary" onclick="openNewRepairModal()">➕ Nueva</button>
+          <button class="tb-btn primary" onclick="openNewRepairModal()"><i class="fa-solid fa-plus"></i> Nueva</button>
         </div>
         <div class="table-wrap">
           <div class="table-head">
@@ -771,7 +817,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
             </table>
           </div>
           <div id="repairsEmpty" class="empty-state" style="display:none">
-            <div class="ei">🔍</div>
+            <div class="ei"><i class="fa-solid fa-magnifying-glass"></i></div>
             <h3>Sin resultados</h3>
             <p>Prueba con otros filtros o crea una nueva reparación</p>
           </div>
@@ -783,7 +829,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
         <div class="filter-bar">
           <div class="srch-box">
             <input class="srch-inp" type="search" id="myRepSearch" placeholder="Buscar en mis equipos…" oninput="filterMyRepairs()">
-            <button class="srch-btn">🔍</button>
+            <button class="srch-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
           </div>
           <div class="flt-tabs" id="myStatusTabs">
             <div class="flt-tab on" data-st="all" onclick="setMyStatusTab(this)">Todos</div>
@@ -818,7 +864,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
             </table>
           </div>
           <div id="myRepairsEmpty" class="empty-state" style="display:none">
-            <div class="ei">🛠️</div>
+            <div class="ei"><i class="fa-solid fa-screwdriver-wrench"></i></div>
             <h3>Sin equipos asignados</h3>
             <p>No tienes equipos asignados actualmente</p>
           </div>
@@ -834,8 +880,8 @@ input,select,textarea{font-family:'Outfit',sans-serif}
         <div class="stats-grid" id="adminStats"></div>
         <div class="table-wrap" style="margin-top:18px">
           <div class="table-head">
-            <h3>📋 Todas las Reparaciones</h3>
-            <button class="tb-btn primary" onclick="openNewRepairModal()">➕ Nueva reparación</button>
+            <h3><i class="fa-solid fa-clipboard-list"></i> Todas las Reparaciones</h3>
+            <button class="tb-btn primary" onclick="openNewRepairModal()"><i class="fa-solid fa-plus"></i> Nueva reparación</button>
           </div>
           <div style="overflow-x:auto">
             <table class="tbl">
@@ -861,13 +907,13 @@ input,select,textarea{font-family:'Outfit',sans-serif}
               <div class="profile-avatar-big" id="profileAv">LR</div>
               <div class="profile-side-name">
                 <span id="profileName">Luis Ramírez</span>
-                <span class="profile-verified" title="Cuenta verificada">✔️</span>
+                <span class="profile-verified" title="Cuenta verificada"><i class="fa-solid fa-check"></i></span>
               </div>
-              <div class="profile-role-chip" id="profileRole">🔧 Técnico Senior</div>
+              <div class="profile-role-chip" id="profileRole"><i class="fa-solid fa-wrench"></i> Técnico Senior</div>
               <div class="profile-contact-list">
-                <div class="pcl-row"><span class="pcl-ic">✉️</span><div class="pcl-txt"><div class="pcl-label">Email</div><div class="pcl-val" id="profileEmail">—</div></div></div>
-                <div class="pcl-row"><span class="pcl-ic">📞</span><div class="pcl-txt"><div class="pcl-label">Teléfono</div><div class="pcl-val" id="profilePhoneDisp">—</div></div></div>
-                <div class="pcl-row"><span class="pcl-ic">🛠️</span><div class="pcl-txt"><div class="pcl-label">Especialidad</div><div class="pcl-val" id="profileSpecDisp">—</div></div></div>
+                <div class="pcl-row"><span class="pcl-ic"><i class="fa-solid fa-envelope"></i></span><div class="pcl-txt"><div class="pcl-label">Email</div><div class="pcl-val" id="profileEmail">—</div></div></div>
+                <div class="pcl-row"><span class="pcl-ic"><i class="fa-solid fa-phone"></i></span><div class="pcl-txt"><div class="pcl-label">Teléfono</div><div class="pcl-val" id="profilePhoneDisp">—</div></div></div>
+                <div class="pcl-row"><span class="pcl-ic"><i class="fa-solid fa-screwdriver-wrench"></i></span><div class="pcl-txt"><div class="pcl-label">Especialidad</div><div class="pcl-val" id="profileSpecDisp">—</div></div></div>
               </div>
               <div class="profile-stats-row">
                 <div class="pstat"><strong id="pStat1v">0</strong><span id="pStat1l">Activas</span></div>
@@ -879,18 +925,18 @@ input,select,textarea{font-family:'Outfit',sans-serif}
           <!-- RIGHT: editable info -->
           <div class="profile-main">
             <div class="dash-card">
-              <h3>👤 Información Personal</h3>
+              <h3><i class="fa-solid fa-user"></i> Información Personal</h3>
               <div class="form-grid">
-                <div class="fg fg-icon"><label>Nombre completo</label><input type="text" id="pName"><span class="fgi">👤</span></div>
-                <div class="fg fg-icon"><label>Teléfono</label><input type="tel" id="pPhone"><span class="fgi">📞</span></div>
-                <div class="fg fg-icon"><label>Email</label><input type="email" id="pEmail"><span class="fgi">✉️</span></div>
-                <div class="fg fg-icon"><label>Especialidad</label><input type="text" id="pSpec"><span class="fgi">🛠️</span></div>
+                <div class="fg fg-icon"><label>Nombre completo</label><input type="text" id="pName"><span class="fgi"><i class="fa-solid fa-user"></i></span></div>
+                <div class="fg fg-icon"><label>Teléfono</label><input type="tel" id="pPhone"><span class="fgi"><i class="fa-solid fa-phone"></i></span></div>
+                <div class="fg fg-icon"><label>Email</label><input type="email" id="pEmail"><span class="fgi"><i class="fa-solid fa-envelope"></i></span></div>
+                <div class="fg fg-icon"><label>Especialidad</label><input type="text" id="pSpec"><span class="fgi"><i class="fa-solid fa-screwdriver-wrench"></i></span></div>
               </div>
-              <button class="tb-btn primary" onclick="saveProfile()" style="margin-top:4px">💾 Guardar cambios</button>
+              <button class="tb-btn primary" onclick="saveProfile()" style="margin-top:4px"><i class="fa-solid fa-floppy-disk"></i> Guardar cambios</button>
             </div>
             <!-- Solo admin puede cambiar contraseña desde su perfil -->
             <div class="dash-card" id="passCard">
-              <h3>🔒 Seguridad</h3>
+              <h3><i class="fa-solid fa-lock"></i> Seguridad</h3>
               <div id="passCardContent"></div>
             </div>
           </div>
@@ -902,18 +948,18 @@ input,select,textarea{font-family:'Outfit',sans-serif}
         <div class="filter-bar" style="margin-bottom:18px">
           <div class="srch-box">
             <input class="srch-inp" type="search" id="techSearch" placeholder="Buscar técnico…" oninput="renderTechsTable()">
-            <button class="srch-btn">🔍</button>
+            <button class="srch-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
           </div>
           <div class="flt-tabs">
             <div class="flt-tab on" data-ta="all" onclick="setTechTab(this)">Todos</div>
             <div class="flt-tab" data-ta="active" onclick="setTechTab(this)">Activos</div>
             <div class="flt-tab" data-ta="inactive" onclick="setTechTab(this)">Inactivos</div>
           </div>
-          <button class="tb-btn primary" onclick="openNewTechModal()">➕ Nuevo Técnico</button>
+          <button class="tb-btn primary" onclick="openNewTechModal()"><i class="fa-solid fa-plus"></i> Nuevo Técnico</button>
         </div>
         <div class="table-wrap">
           <div class="table-head">
-            <h3>👷 Gestión de Técnicos</h3>
+            <h3><i class="fa-solid fa-helmet-safety"></i> Gestión de Técnicos</h3>
             <div style="font-size:12px;color:var(--muted)" id="techCount">—</div>
           </div>
           <div style="overflow-x:auto">
@@ -933,7 +979,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
             </table>
           </div>
           <div id="techsEmpty" class="empty-state" style="display:none">
-            <div class="ei">👷</div>
+            <div class="ei"><i class="fa-solid fa-helmet-safety"></i></div>
             <h3>Sin técnicos</h3>
             <p>Agrega el primer técnico al equipo</p>
           </div>
@@ -952,14 +998,14 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 <div class="modal-bg" id="newRepairModal">
   <div class="modal-box lg">
     <div class="mhdr">
-      <div><h2>➕ Nueva Reparación</h2><p>Registrar equipo en servicio</p></div>
-      <button class="mcl" onclick="closeModal('newRepairModal')">✕</button>
+      <div><h2><i class="fa-solid fa-plus"></i> Nueva Reparación</h2><p>Registrar equipo en servicio</p></div>
+      <button class="mcl" onclick="closeModal('newRepairModal')"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="mbody">
       <div class="sec-div">Datos del Cliente</div>
       <div class="mode-tabs">
-        <div class="mode-tab on" id="nrModeNewTab" onclick="setClientMode('new')">🆕 Cliente nuevo</div>
-        <div class="mode-tab" id="nrModeRegTab" onclick="setClientMode('reg')">🔎 Cliente ya registrado</div>
+        <div class="mode-tab on" id="nrModeNewTab" onclick="setClientMode('new')"><i class="fa-solid fa-star"></i> Cliente nuevo</div>
+        <div class="mode-tab" id="nrModeRegTab" onclick="setClientMode('reg')"><i class="fa-solid fa-magnifying-glass"></i> Cliente ya registrado</div>
       </div>
 
       <!-- Panel: cliente nuevo -->
@@ -986,16 +1032,16 @@ input,select,textarea{font-family:'Outfit',sans-serif}
             <label>Número de documento</label>
             <input type="text" id="nr_doc_number" placeholder="Ej: 1091678234" oninput="clearClientLookup()">
           </div>
-          <button type="button" class="btn-search-client" onclick="searchClient()">🔍 Buscar</button>
+          <button type="button" class="btn-search-client" onclick="searchClient()"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
         </div>
         <div class="client-found-card" id="clientFoundCard">
-          <div class="cfc-title">✅ Cliente encontrado</div>
+          <div class="cfc-title"><i class="fa-solid fa-circle-check"></i> Cliente encontrado</div>
           <div class="cfc-row"><span class="cfc-key">Nombre</span><span class="cfc-val" id="cfcName">—</span></div>
           <div class="cfc-row"><span class="cfc-key">Teléfono</span><span class="cfc-val" id="cfcPhone">—</span></div>
           <div class="cfc-row"><span class="cfc-key">Email</span><span class="cfc-val" id="cfcEmail">—</span></div>
         </div>
         <div class="client-err-card" id="clientErrCard">
-          ⚠️ No se encontró ningún cliente con ese documento. Verifica el número o regístralo como "Cliente nuevo".
+          <i class="fa-solid fa-triangle-exclamation"></i> No se encontró ningún cliente con ese documento. Verifica el número o regístralo como "Cliente nuevo".
         </div>
       </div>
 
@@ -1035,17 +1081,17 @@ input,select,textarea{font-family:'Outfit',sans-serif}
         </div>
       </div>
 
-      <div class="sec-div">🔐 Seguridad del Equipo</div>
+      <div class="sec-div"><i class="fa-solid fa-shield-halved"></i> Seguridad del Equipo</div>
       <div class="sec-type-row">
-        <button type="button" class="part-type-btn on" id="stb_none" onclick="setSecurityType('none')">🚫 <span>Sin seguridad</span></button>
-        <button type="button" class="part-type-btn" id="stb_pattern" onclick="setSecurityType('pattern')">🔗 <span>Patrón</span></button>
-        <button type="button" class="part-type-btn" id="stb_pin" onclick="setSecurityType('pin')">🔢 <span>PIN</span></button>
-        <button type="button" class="part-type-btn" id="stb_password" onclick="setSecurityType('password')">🔑 <span>Contraseña</span></button>
+        <button type="button" class="part-type-btn on" id="stb_none" onclick="setSecurityType('none')"><i class="fa-solid fa-ban"></i> <span>Sin seguridad</span></button>
+        <button type="button" class="part-type-btn" id="stb_pattern" onclick="setSecurityType('pattern')"><i class="fa-solid fa-link"></i> <span>Patrón</span></button>
+        <button type="button" class="part-type-btn" id="stb_pin" onclick="setSecurityType('pin')"><i class="fa-solid fa-hashtag"></i> <span>PIN</span></button>
+        <button type="button" class="part-type-btn" id="stb_password" onclick="setSecurityType('password')"><i class="fa-solid fa-key"></i> <span>Contraseña</span></button>
       </div>
 
       <!-- Panel: sin seguridad -->
       <div id="secPanel_none" class="sec-panel none-panel">
-        🔓 El equipo no tiene ningún bloqueo de seguridad.
+        <i class="fa-solid fa-lock-open"></i> El equipo no tiene ningún bloqueo de seguridad.
       </div>
 
       <!-- Panel: patrón -->
@@ -1056,7 +1102,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
         </svg>
         <div class="sec-readout" id="patternReadout">Toca los puntos en orden…</div>
         <div class="sec-actions">
-          <button type="button" class="sec-mini-btn" onclick="clearPattern()">🔄 Reiniciar</button>
+          <button type="button" class="sec-mini-btn" onclick="clearPattern()"><i class="fa-solid fa-arrows-rotate"></i> Reiniciar</button>
         </div>
       </div>
 
@@ -1076,7 +1122,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
           <button type="button" class="pin-key" onclick="pinPress('9')">9</button>
           <button type="button" class="pin-key fn" onclick="pinClear()">C</button>
           <button type="button" class="pin-key" onclick="pinPress('0')">0</button>
-          <button type="button" class="pin-key fn" onclick="pinBackspace()">⌫</button>
+          <button type="button" class="pin-key fn" onclick="pinBackspace()"><i class="fa-solid fa-delete-left"></i></button>
         </div>
       </div>
 
@@ -1085,8 +1131,8 @@ input,select,textarea{font-family:'Outfit',sans-serif}
         <div class="pass-panel-inner fg fg-icon" style="margin-bottom:0">
           <label>Contraseña de desbloqueo</label>
           <input type="password" id="nr_pass_value" placeholder="Solo si el cliente autoriza">
-          <span class="fgi">🔑</span>
-          <button type="button" class="pass-eye" onclick="toggleNrPass(this)">👁️</button>
+          <span class="fgi"><i class="fa-solid fa-key"></i></span>
+          <button type="button" class="pass-eye" onclick="toggleNrPass(this)"><i class="fa-solid fa-eye"></i></button>
         </div>
       </div>
 
@@ -1113,7 +1159,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
     </div>
     <div class="mftr">
       <button class="btn-cancel" onclick="closeModal('newRepairModal')">Cancelar</button>
-      <button class="btn-primary" onclick="saveNewRepair()">✅ Registrar Reparación</button>
+      <button class="btn-primary" onclick="saveNewRepair()"><i class="fa-solid fa-circle-check"></i> Registrar Reparación</button>
     </div>
   </div>
 </div>
@@ -1127,8 +1173,8 @@ input,select,textarea{font-family:'Outfit',sans-serif}
         <p id="detailSub">Detalle completo de la reparación</p>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
-        <button class="tb-btn" onclick="generatePDF()">📄 Exportar PDF</button>
-        <button class="mcl" onclick="closeModal('repairDetailModal')">✕</button>
+        <button class="tb-btn" onclick="generatePDF()"><i class="fa-solid fa-file-lines"></i> Exportar PDF</button>
+        <button class="mcl" onclick="closeModal('repairDetailModal')"><i class="fa-solid fa-xmark"></i></button>
       </div>
     </div>
     <div class="mbody" id="repairDetailBody">
@@ -1141,8 +1187,8 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 <div class="modal-bg" id="changeStatusModal">
   <div class="modal-box sm">
     <div class="mhdr">
-      <div><h2>🔄 Cambiar Estado</h2><p id="csTicket">REP-0001</p></div>
-      <button class="mcl" onclick="closeModal('changeStatusModal')">✕</button>
+      <div><h2><i class="fa-solid fa-arrows-rotate"></i> Cambiar Estado</h2><p id="csTicket">REP-0001</p></div>
+      <button class="mcl" onclick="closeModal('changeStatusModal')"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="mbody">
       <div class="status-stepper" id="statusStepper"></div>
@@ -1153,12 +1199,12 @@ input,select,textarea{font-family:'Outfit',sans-serif}
       <div class="fg">
         <label>Nuevo estado *</label>
         <select id="csNewStatus">
-          <option value="Recibido">📥 Recibido</option>
-          <option value="Diagnóstico">🔍 Diagnóstico</option>
-          <option value="Reparando">🔧 Reparando</option>
-          <option value="Esperando">⏳ Esperando repuesto</option>
-          <option value="Listo">✅ Listo para entrega</option>
-          <option value="Entregado">📦 Entregado</option>
+          <option value="Recibido"><i class="fa-solid fa-inbox"></i> Recibido</option>
+          <option value="Diagnóstico"><i class="fa-solid fa-magnifying-glass"></i> Diagnóstico</option>
+          <option value="Reparando"><i class="fa-solid fa-wrench"></i> Reparando</option>
+          <option value="Esperando"><i class="fa-solid fa-hourglass-half"></i> Esperando repuesto</option>
+          <option value="Listo"><i class="fa-solid fa-circle-check"></i> Listo para entrega</option>
+          <option value="Entregado"><i class="fa-solid fa-box"></i> Entregado</option>
         </select>
       </div>
     </div>
@@ -1173,8 +1219,8 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 <div class="modal-bg" id="addPartsModal">
   <div class="modal-box lg">
     <div class="mhdr">
-      <div><h2>🛒 Repuestos y Servicios</h2><p id="apTicket">REP-0001</p></div>
-      <button class="mcl" onclick="closeModal('addPartsModal')">✕</button>
+      <div><h2><i class="fa-solid fa-cart-shopping"></i> Repuestos y Servicios</h2><p id="apTicket">REP-0001</p></div>
+      <button class="mcl" onclick="closeModal('addPartsModal')"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="mbody">
 
@@ -1182,19 +1228,19 @@ input,select,textarea{font-family:'Outfit',sans-serif}
       <div class="sec-div" style="margin-top:0">① Selecciona el tipo de ítem a agregar</div>
       <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
         <button class="part-type-btn on" id="ptb_repuesto" onclick="selectPartType('Repuesto')">
-          🔩 <span>Repuesto del stock</span>
+          <i class="fa-solid fa-screwdriver-wrench"></i> <span>Repuesto del stock</span>
         </button>
         <button class="part-type-btn" id="ptb_externo" onclick="selectPartType('Externo')">
-          🛍️ <span>Repuesto externo</span>
+          <i class="fa-solid fa-bag-shopping"></i> <span>Repuesto externo</span>
         </button>
         <button class="part-type-btn" id="ptb_cliente" onclick="selectPartType('Cliente')">
-          📦 <span>Traído por cliente</span>
+          <i class="fa-solid fa-box"></i> <span>Traído por cliente</span>
         </button>
         <button class="part-type-btn" id="ptb_mdo" onclick="selectPartType('Mano de obra')">
-          🔧 <span>Mano de obra</span>
+          <i class="fa-solid fa-wrench"></i> <span>Mano de obra</span>
         </button>
         <button class="part-type-btn" id="ptb_servicio" onclick="selectPartType('Servicio')">
-          ⚙️ <span>Servicio / Diagnóstico</span>
+          <i class="fa-solid fa-gear"></i> <span>Servicio / Diagnóstico</span>
         </button>
       </div>
 
@@ -1204,7 +1250,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
         <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
           <div class="srch-box" style="flex:1;min-width:200px">
             <input class="srch-inp" type="search" id="stockSearch" placeholder="Buscar por nombre, referencia, marca…" oninput="filterStock()">
-            <span class="srch-btn" style="background:var(--surf);cursor:default;color:var(--muted)">🔍</span>
+            <span class="srch-btn" style="background:var(--surf);cursor:default;color:var(--muted)"><i class="fa-solid fa-magnifying-glass"></i></span>
           </div>
           <select class="flt-select" id="stockCatFilter" onchange="filterStock()">
             <option value="">Todas las categorías</option>
@@ -1216,7 +1262,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
         <div id="stockList" style="display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;padding-right:4px"></div>
         <!-- Selected from stock -->
         <div id="stockSelected" style="display:none;margin-top:12px;background:rgba(244,245,0,.06);border:1px solid var(--bdr);border-radius:10px;padding:12px">
-          <div style="font-size:10px;font-weight:700;color:var(--y);font-family:'DM Mono',monospace;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">✅ Repuesto seleccionado</div>
+          <div style="font-size:10px;font-weight:700;color:var(--y);font-family:'DM Mono',monospace;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px"><i class="fa-solid fa-circle-check"></i> Repuesto seleccionado</div>
           <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
             <div>
               <div style="font-weight:700;color:var(--white)" id="selStockName">—</div>
@@ -1230,7 +1276,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
                 <button onclick="adjStockQty(1)" style="width:28px;height:28px;border-radius:6px;background:var(--surf);color:var(--txt);border:1px solid var(--bdr2);cursor:pointer;font-size:15px;font-weight:700">+</button>
               </div>
               <button class="tb-btn primary" onclick="addFromStock()">+ Agregar</button>
-              <button class="tb-btn" onclick="clearStockSel()">✕ Quitar</button>
+              <button class="tb-btn" onclick="clearStockSel()"><i class="fa-solid fa-xmark"></i> Quitar</button>
             </div>
           </div>
         </div>
@@ -1275,7 +1321,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
             <input type="number" id="cli_price" placeholder="0 si es sin costo extra"></div>
         </div>
         <div style="background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);border-radius:8px;padding:10px 13px;font-size:12px;color:#818cf8;margin-bottom:12px">
-          ℹ️ Este repuesto fue suministrado por el cliente. Solo se cobra la mano de obra de instalación si aplica.
+          <i class="fa-solid fa-circle-info"></i> Este repuesto fue suministrado por el cliente. Solo se cobra la mano de obra de instalación si aplica.
         </div>
         <button class="tb-btn primary" onclick="addExternal('Cliente')">+ Agregar repuesto del cliente</button>
       </div>
@@ -1328,7 +1374,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
     </div>
     <div class="mftr">
       <button class="btn-cancel" onclick="closeModal('addPartsModal')">Cancelar</button>
-      <button class="btn-primary" onclick="saveParts()">💾 Guardar todo</button>
+      <button class="btn-primary" onclick="saveParts()"><i class="fa-solid fa-floppy-disk"></i> Guardar todo</button>
     </div>
   </div>
 </div>
@@ -1337,8 +1383,8 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 <div class="modal-bg" id="editRepairModal">
   <div class="modal-box lg">
     <div class="mhdr">
-      <div><h2>✏️ Editar Reparación</h2><p id="er_ticket">REP-0001</p></div>
-      <button class="mcl" onclick="closeModal('editRepairModal')">✕</button>
+      <div><h2><i class="fa-solid fa-pen"></i> Editar Reparación</h2><p id="er_ticket">REP-0001</p></div>
+      <button class="mcl" onclick="closeModal('editRepairModal')"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="mbody">
       <div class="sec-div">Datos del Cliente</div>
@@ -1402,7 +1448,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
     </div>
     <div class="mftr">
       <button class="btn-cancel" onclick="closeModal('editRepairModal')">Cancelar</button>
-      <button class="btn-primary" onclick="saveEditRepair()">💾 Guardar cambios</button>
+      <button class="btn-primary" onclick="saveEditRepair()"><i class="fa-solid fa-floppy-disk"></i> Guardar cambios</button>
     </div>
   </div>
 </div>
@@ -1411,8 +1457,8 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 <div class="modal-bg" id="carnetModal">
   <div class="modal-box" style="max-width:380px">
     <div class="mhdr">
-      <div><h2>🪪 Mi Carnet</h2><p>Identificación oficial del empleado</p></div>
-      <button class="mcl" onclick="closeModal('carnetModal')">✕</button>
+      <div><h2><i class="fa-solid fa-id-card"></i> Mi Carnet</h2><p>Identificación oficial del empleado</p></div>
+      <button class="mcl" onclick="closeModal('carnetModal')"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="mbody" style="display:flex;flex-direction:column;align-items:center">
       <div class="carnet-card">
@@ -1422,23 +1468,23 @@ input,select,textarea{font-family:'Outfit',sans-serif}
         </div>
         <div class="carnet-photo-wrap"><div class="carnet-photo" id="carnetPhoto">LR</div></div>
         <div class="carnet-name" id="carnetName">Luis Ramírez</div>
-        <div class="carnet-role"><span class="profile-role-chip" id="carnetRole">🔧 Técnico Senior</span></div>
+        <div class="carnet-role"><span class="profile-role-chip" id="carnetRole"><i class="fa-solid fa-wrench"></i> Técnico Senior</span></div>
         <div class="carnet-idcode" id="carnetIdCode">ID: TECH1</div>
         <div class="carnet-divider"></div>
         <div class="carnet-body">
-          <div class="carnet-row"><span class="cic">🪪</span><div class="ctxt"><div class="clbl">Cédula</div><div class="cval" id="carnetDoc">—</div></div></div>
-          <div class="carnet-row"><span class="cic">📞</span><div class="ctxt"><div class="clbl">Teléfono</div><div class="cval" id="carnetPhone">—</div></div></div>
-          <div class="carnet-row"><span class="cic">✉️</span><div class="ctxt"><div class="clbl">Email</div><div class="cval" id="carnetEmail">—</div></div></div>
-          <div class="carnet-row"><span class="cic">🛠️</span><div class="ctxt"><div class="clbl">Especialidad</div><div class="cval" id="carnetSpec">—</div></div></div>
-          <div class="carnet-row"><span class="cic">📅</span><div class="ctxt"><div class="clbl">Ingreso</div><div class="cval" id="carnetJoin">—</div></div></div>
-          <div class="carnet-row"><span class="cic">🩸</span><div class="ctxt"><div class="clbl">Tipo de sangre</div></div><span class="carnet-blood-badge" id="carnetBlood">O+</span></div>
+          <div class="carnet-row"><span class="cic"><i class="fa-solid fa-id-card"></i></span><div class="ctxt"><div class="clbl">Cédula</div><div class="cval" id="carnetDoc">—</div></div></div>
+          <div class="carnet-row"><span class="cic"><i class="fa-solid fa-phone"></i></span><div class="ctxt"><div class="clbl">Teléfono</div><div class="cval" id="carnetPhone">—</div></div></div>
+          <div class="carnet-row"><span class="cic"><i class="fa-solid fa-envelope"></i></span><div class="ctxt"><div class="clbl">Email</div><div class="cval" id="carnetEmail">—</div></div></div>
+          <div class="carnet-row"><span class="cic"><i class="fa-solid fa-screwdriver-wrench"></i></span><div class="ctxt"><div class="clbl">Especialidad</div><div class="cval" id="carnetSpec">—</div></div></div>
+          <div class="carnet-row"><span class="cic"><i class="fa-solid fa-calendar-days"></i></span><div class="ctxt"><div class="clbl">Ingreso</div><div class="cval" id="carnetJoin">—</div></div></div>
+          <div class="carnet-row"><span class="cic"><i class="fa-solid fa-droplet"></i></span><div class="ctxt"><div class="clbl">Tipo de sangre</div></div><span class="carnet-blood-badge" id="carnetBlood">O+</span></div>
         </div>
         <div class="carnet-footer">
           <div class="carnet-barcode"></div>
           <div class="carnet-valid" id="carnetValid">Válido mientras esté activo · CeluFénix ERP</div>
         </div>
       </div>
-      <button class="tb-btn primary" style="margin-top:18px;width:100%;justify-content:center" onclick="printCarnet()">🖨️ Imprimir / Descargar carnet</button>
+      <button class="tb-btn primary" style="margin-top:18px;width:100%;justify-content:center" onclick="printCarnet()"><i class="fa-solid fa-print"></i> Imprimir / Descargar carnet</button>
     </div>
   </div>
 </div>
@@ -1447,8 +1493,8 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 <div class="modal-bg" id="techModal">
   <div class="modal-box md">
     <div class="mhdr">
-      <div><h2 id="techModalTitle">➕ Nuevo Técnico</h2><p id="techModalSub">Crear cuenta de técnico</p></div>
-      <button class="mcl" onclick="closeModal('techModal')">✕</button>
+      <div><h2 id="techModalTitle"><i class="fa-solid fa-plus"></i> Nuevo Técnico</h2><p id="techModalSub">Crear cuenta de técnico</p></div>
+      <button class="mcl" onclick="closeModal('techModal')"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="mbody">
       <div class="sec-div">Información Personal</div>
@@ -1457,6 +1503,23 @@ input,select,textarea{font-family:'Outfit',sans-serif}
         <div class="fg"><label>Teléfono *</label><input type="tel" id="tm_phone" placeholder="+57 300 000 0000"></div>
         <div class="fg full"><label>Email (usado como usuario) *</label><input type="email" id="tm_email" placeholder="juan.perez@celufenix.com"></div>
         <div class="fg full"><label>Especialidad</label><input type="text" id="tm_spec" placeholder="Ej: Smartphones Android · Pantallas OLED"></div>
+      </div>
+      <div class="sec-div">Identificación</div>
+      <div class="form-grid">
+        <div class="fg"><label>Cédula</label><input type="text" id="tm_doc" placeholder="Ej: 1098234567"></div>
+        <div class="fg"><label>Tipo de sangre (RH)</label>
+          <select id="tm_blood">
+            <option value="">Sin especificar</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+          </select>
+        </div>
       </div>
       <div class="sec-div">Acceso al Sistema</div>
       <div class="form-grid">
@@ -1471,15 +1534,15 @@ input,select,textarea{font-family:'Outfit',sans-serif}
         </div>
         <div class="fg"><label>Estado inicial</label>
           <select id="tm_active">
-            <option value="true">✅ Activo</option>
-            <option value="false">🔴 Inactivo</option>
+            <option value="true"><i class="fa-solid fa-circle-check"></i> Activo</option>
+            <option value="false"><i class="fa-solid fa-circle"></i> Inactivo</option>
           </select>
         </div>
       </div>
     </div>
     <div class="mftr">
       <button class="btn-cancel" onclick="closeModal('techModal')">Cancelar</button>
-      <button class="btn-primary" id="techModalSaveBtn" onclick="saveTech()">✅ Crear Técnico</button>
+      <button class="btn-primary" id="techModalSaveBtn" onclick="saveTech()"><i class="fa-solid fa-circle-check"></i> Crear Técnico</button>
     </div>
   </div>
 </div>
@@ -1488,19 +1551,19 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 <div class="modal-bg" id="resetPassModal">
   <div class="modal-box sm">
     <div class="mhdr">
-      <div><h2>🔑 Restablecer Contraseña</h2><p id="rp_techName">—</p></div>
-      <button class="mcl" onclick="closeModal('resetPassModal')">✕</button>
+      <div><h2><i class="fa-solid fa-key"></i> Restablecer Contraseña</h2><p id="rp_techName">—</p></div>
+      <button class="mcl" onclick="closeModal('resetPassModal')"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="mbody">
       <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:#f59e0b">
-        ⚠️ Esta acción reemplazará la contraseña actual del técnico. El técnico deberá usar la nueva contraseña en su próximo ingreso.
+        <i class="fa-solid fa-triangle-exclamation"></i> Esta acción reemplazará la contraseña actual del técnico. El técnico deberá usar la nueva contraseña en su próximo ingreso.
       </div>
       <div class="fg"><label>Nueva contraseña *</label><input type="password" id="rp_newPass" placeholder="Mínimo 6 caracteres"></div>
       <div class="fg"><label>Confirmar nueva contraseña *</label><input type="password" id="rp_newPass2" placeholder="Repetir nueva contraseña"></div>
     </div>
     <div class="mftr">
       <button class="btn-cancel" onclick="closeModal('resetPassModal')">Cancelar</button>
-      <button class="btn-primary" onclick="saveResetPass()">🔑 Restablecer</button>
+      <button class="btn-primary" onclick="saveResetPass()"><i class="fa-solid fa-key"></i> Restablecer</button>
     </div>
   </div>
 </div>
@@ -1509,8 +1572,8 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 <div class="modal-bg" id="toggleActiveModal">
   <div class="modal-box sm">
     <div class="mhdr">
-      <div><h2 id="taTitle">🔴 Inactivar Técnico</h2></div>
-      <button class="mcl" onclick="closeModal('toggleActiveModal')">✕</button>
+      <div><h2 id="taTitle"><i class="fa-solid fa-circle"></i> Inactivar Técnico</h2></div>
+      <button class="mcl" onclick="closeModal('toggleActiveModal')"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="mbody">
       <p style="font-size:14px;color:var(--txt);margin-bottom:8px" id="taMsg">¿Estás seguro de inactivar a <strong id="taTechName" style="color:var(--y)">—</strong>?</p>
@@ -1527,18 +1590,18 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 <div class="modal-bg" id="deleteTechModal">
   <div class="modal-box sm">
     <div class="mhdr">
-      <div><h2>🗑️ Eliminar Técnico</h2></div>
-      <button class="mcl" onclick="closeModal('deleteTechModal')">✕</button>
+      <div><h2><i class="fa-solid fa-trash-can"></i> Eliminar Técnico</h2></div>
+      <button class="mcl" onclick="closeModal('deleteTechModal')"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="mbody">
       <p style="font-size:14px;color:var(--txt);margin-bottom:8px">¿Eliminar permanentemente a <strong id="delTechName" style="color:var(--y)">—</strong>?</p>
       <div style="background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.25);border-radius:10px;padding:12px 14px;font-size:12px;color:#fb7185">
-        🚨 Esta acción no se puede deshacer. El técnico perderá acceso inmediatamente. Las reparaciones asignadas quedarán sin técnico asignado.
+        <i class="fa-solid fa-circle-exclamation"></i> Esta acción no se puede deshacer. El técnico perderá acceso inmediatamente. Las reparaciones asignadas quedarán sin técnico asignado.
       </div>
     </div>
     <div class="mftr">
       <button class="btn-cancel" onclick="closeModal('deleteTechModal')">Cancelar</button>
-      <button class="btn-danger" onclick="confirmDeleteTech()">🗑️ Eliminar definitivamente</button>
+      <button class="btn-danger" onclick="confirmDeleteTech()"><i class="fa-solid fa-trash-can"></i> Eliminar definitivamente</button>
     </div>
   </div>
 </div>
@@ -1547,8 +1610,8 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 <div class="modal-bg" id="deleteModal">
   <div class="modal-box sm">
     <div class="mhdr">
-      <div><h2>🗑️ Eliminar Reparación</h2></div>
-      <button class="mcl" onclick="closeModal('deleteModal')">✕</button>
+      <div><h2><i class="fa-solid fa-trash-can"></i> Eliminar Reparación</h2></div>
+      <button class="mcl" onclick="closeModal('deleteModal')"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="mbody">
       <p style="font-size:14px;color:var(--txt);margin-bottom:10px">¿Estás seguro de eliminar <strong id="delTicket" style="color:var(--y)">REP-0001</strong>?</p>
@@ -1556,7 +1619,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
     </div>
     <div class="mftr">
       <button class="btn-cancel" onclick="closeModal('deleteModal')">Cancelar</button>
-      <button class="btn-danger" onclick="confirmDelete()">🗑️ Eliminar definitivamente</button>
+      <button class="btn-danger" onclick="confirmDelete()"><i class="fa-solid fa-trash-can"></i> Eliminar definitivamente</button>
     </div>
   </div>
 </div>
@@ -1662,8 +1725,8 @@ function statusClass(s){
   return 'st-'+(m[s]||'recibido');
 }
 function statusIcon(s){
-  const m={'Recibido':'📥','Diagnóstico':'🔍','Reparando':'🔧','Esperando':'⏳','Listo':'✅','Entregado':'📦'};
-  return m[s]||'📋';
+  const m={'Recibido':'<i class="fa-solid fa-inbox"></i>','Diagnóstico':'<i class="fa-solid fa-magnifying-glass"></i>','Reparando':'<i class="fa-solid fa-wrench"></i>','Esperando':'<i class="fa-solid fa-hourglass-half"></i>','Listo':'<i class="fa-solid fa-circle-check"></i>','Entregado':'<i class="fa-solid fa-box"></i>'};
+  return m[s]||'<i class="fa-solid fa-clipboard-list"></i>';
 }
 function priorityBadge(p){
   const m={Normal:'<span style="font-size:10px;padding:2px 7px;background:rgba(107,114,128,.15);color:#9ca3af;border-radius:4px;font-family:DM Mono,monospace;font-weight:700">NORMAL</span>',
@@ -1678,10 +1741,10 @@ function statusProgress(s){
 }
 function partsTotal(parts){return parts.reduce((s,p)=>s+p.qty*p.price,0);}
 function securityLabel(r){
-  if(r.securityType==='pattern')return{icon:'🔗',label:'Patrón de desbloqueo',value:r.securityValue};
-  if(r.securityType==='pin')return{icon:'🔢',label:'PIN de desbloqueo',value:r.securityValue};
-  if(r.securityType==='password')return{icon:'🔑',label:'Contraseña de desbloqueo',value:r.securityValue};
-  if(r.pin)return{icon:'🔢',label:'PIN / Clave',value:r.pin};
+  if(r.securityType==='pattern')return{icon:'<i class="fa-solid fa-link"></i>',label:'Patrón de desbloqueo',value:r.securityValue};
+  if(r.securityType==='pin')return{icon:'<i class="fa-solid fa-hashtag"></i>',label:'PIN de desbloqueo',value:r.securityValue};
+  if(r.securityType==='password')return{icon:'<i class="fa-solid fa-key"></i>',label:'Contraseña de desbloqueo',value:r.securityValue};
+  if(r.pin)return{icon:'<i class="fa-solid fa-hashtag"></i>',label:'PIN / Clave',value:r.pin};
   return null;
 }
 
@@ -1692,7 +1755,7 @@ function showNotif(msg,type='success',sub=''){
   const c=document.getElementById('notifContainer');
   const el=document.createElement('div');
   el.className='notif-item'+(type==='warn'?' warn':type==='err'?' err':'');
-  el.innerHTML=`<span class="ni-icon">${type==='success'?'✅':type==='warn'?'⚠️':'❌'}</span>
+  el.innerHTML=`<span class="ni-icon">${type==='success'?'<i class="fa-solid fa-circle-check"></i>':type==='warn'?'<i class="fa-solid fa-triangle-exclamation"></i>':'<i class="fa-solid fa-xmark"></i>'}</span>
   <div class="ni-txt"><strong>${msg}</strong>${sub?`<span>${sub}</span>`:''}</div>`;
   c.appendChild(el);
   setTimeout(()=>{el.style.animation='none';el.style.opacity='0';el.style.transition='opacity .4s';setTimeout(()=>el.remove(),400);},3500);
@@ -1719,7 +1782,7 @@ function toggleLoginPass(btn){
   const inp=document.getElementById('loginPass');
   const show=inp.type==='password';
   inp.type=show?'text':'password';
-  btn.textContent=show?'🙈':'👁️';
+  btn.innerHTML=show?'<i class="fa-solid fa-eye-slash"></i>':'<i class="fa-solid fa-eye"></i>';
 }
 function doLogin(){
   const u=document.getElementById('loginUser').value.trim().toLowerCase();
@@ -1761,7 +1824,7 @@ function initApp(){
   // Profile
   document.getElementById('profileAv').textContent=currentUser.initials;
   document.getElementById('profileName').textContent=currentUser.name;
-  document.getElementById('profileRole').textContent=(isAdmin?'👑 ':'🔧 ')+currentUser.role;
+  document.getElementById('profileRole').innerHTML=(isAdmin?'<i class="fa-solid fa-crown"></i> ':'<i class="fa-solid fa-wrench"></i> ')+currentUser.role;
   document.getElementById('profileEmail').textContent=currentUser.email;
   document.getElementById('profilePhoneDisp').textContent=currentUser.phone||'—';
   document.getElementById('profileSpecDisp').textContent=currentUser.spec||'—';
@@ -1778,11 +1841,11 @@ function initApp(){
       <div class="fg"><label>Contraseña actual *</label><input type="password" id="pCurrPass" placeholder="••••••••"></div>
       <div class="fg"><label>Nueva contraseña *</label><input type="password" id="pNewPass" placeholder="Mínimo 6 caracteres"></div>
       <div class="fg"><label>Confirmar nueva contraseña *</label><input type="password" id="pNewPass2" placeholder="Repetir nueva contraseña"></div>
-      <button class="tb-btn primary" style="margin-top:4px" onclick="saveAdminPassword()">🔒 Cambiar contraseña</button>`;
+      <button class="tb-btn primary" style="margin-top:4px" onclick="saveAdminPassword()"><i class="fa-solid fa-lock"></i> Cambiar contraseña</button>`;
   } else {
     passContent.innerHTML=`
       <div class="pass-restricted">
-        <span class="pri">🔒</span>
+        <span class="pri"><i class="fa-solid fa-lock"></i></span>
         <div>
           <div class="prt">Cambio de contraseña restringido</div>
           <div class="prd">Solo el administrador puede restablecer tu contraseña. Contáctalo si necesitas cambiarla.</div>
@@ -1792,7 +1855,7 @@ function initApp(){
   // If tech, pre-select in new repair
   if(!isAdmin){
     const techSel=document.getElementById('nr_tech');
-    if(techSel) techSel.value=currentUser.id;
+    if(techSel){techSel.value=currentUser.id;refreshCustomSelect('nr_tech');}
   }
   goPage('dashboard',document.querySelector('.sb-link:not([style*="none"])'));
   renderAll();
@@ -1803,8 +1866,8 @@ function refreshTechSelects(){
   const active=TECHS.filter(t=>t.role!=='Administrador'&&t.active);
   const techSel=document.getElementById('nr_tech');
   const techFlt=document.getElementById('techFilter');
-  if(techSel) techSel.innerHTML='<option value="">Sin asignar</option>'+active.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
-  if(techFlt) techFlt.innerHTML='<option value="all">Todos los técnicos</option>'+active.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+  if(techSel){techSel.innerHTML='<option value="">Sin asignar</option>'+active.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');refreshCustomSelect('nr_tech');}
+  if(techFlt){techFlt.innerHTML='<option value="all">Todos los técnicos</option>'+active.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');refreshCustomSelect('techFilter');}
 }
 
 /* ═══════════════════════
@@ -1829,12 +1892,16 @@ function goPage(pageId,el){
   if(pageId==='profile') updateProfileStats();
 }
 
+function toggleMobileSidebar(){
+  document.getElementById('sidebar').classList.toggle('mobile-open');
+  document.getElementById('sidebarBackdrop').classList.toggle('on');
+}
 function toggleSidebar(){
   const sb=document.getElementById('sidebar');
   const btn=document.getElementById('sbToggleBtn');
   sb.classList.toggle('collapsed');
   const collapsed=sb.classList.contains('collapsed');
-  btn.querySelector('.stog-icon').textContent=collapsed?'▶':'◀';
+  btn.querySelector('.stog-icon').innerHTML=collapsed?'<i class="fa-solid fa-chevron-right"></i>':'<i class="fa-solid fa-chevron-left"></i>';
   btn.querySelector('.stxt').textContent=collapsed?'Expandir':'Colapsar';
 }
 
@@ -1853,6 +1920,62 @@ function toggleTheme(){
 ═══════════════════════ */
 function openModal(id){document.getElementById(id).classList.add('on');}
 function closeModal(id){document.getElementById(id).classList.remove('on');}
+
+/* ═══════════════════════
+   CUSTOM SELECT DROPDOWN
+═══════════════════════ */
+function buildCustomSelect(sel){
+  if(sel.dataset.enhanced)return;
+  sel.dataset.enhanced='1';
+  const wrap=document.createElement('div');
+  wrap.className='csel'+(sel.classList.contains('flt-select')?' flt-select':'');
+  const btn=document.createElement('div');
+  btn.className='csel-btn';
+  btn.tabIndex=0;
+  btn.innerHTML='<span class="csel-label"></span><i class="fa-solid fa-chevron-down"></i>';
+  const menu=document.createElement('div');
+  menu.className='csel-menu';
+  wrap.appendChild(btn);
+  wrap.appendChild(menu);
+  sel.insertAdjacentElement('afterend',wrap);
+  function rebuild(){
+    const label=wrap.querySelector('.csel-label');
+    label.innerHTML=sel.options[sel.selectedIndex]?sel.options[sel.selectedIndex].innerHTML:'';
+    menu.innerHTML='';
+    Array.from(sel.options).forEach(opt=>{
+      const o=document.createElement('div');
+      o.className='csel-opt'+(opt.value===sel.value?' sel':'');
+      o.innerHTML=opt.innerHTML;
+      o.addEventListener('click',e=>{
+        e.stopPropagation();
+        sel.value=opt.value;
+        sel.dispatchEvent(new Event('change',{bubbles:true}));
+        rebuild();
+        wrap.classList.remove('open');
+      });
+      menu.appendChild(o);
+    });
+  }
+  rebuild();
+  btn.addEventListener('click',e=>{
+    e.stopPropagation();
+    if(sel.disabled)return;
+    document.querySelectorAll('.csel.open').forEach(w=>{if(w!==wrap)w.classList.remove('open');});
+    wrap.classList.toggle('open');
+  });
+  sel._cselRebuild=rebuild;
+  sel._cselWrap=wrap;
+}
+function enhanceAllSelects(){
+  document.querySelectorAll('select').forEach(buildCustomSelect);
+}
+function refreshCustomSelect(id){
+  const sel=document.getElementById(id);
+  if(sel&&sel._cselRebuild)sel._cselRebuild();
+}
+document.addEventListener('click',()=>{document.querySelectorAll('.csel.open').forEach(w=>w.classList.remove('open'));});
+document.addEventListener('DOMContentLoaded',enhanceAllSelects);
+enhanceAllSelects();
 document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',function(e){if(e.target===this)this.classList.remove('on');}));
 
 /* ═══════════════════════
@@ -1875,10 +1998,10 @@ function renderDashboard(){
   const statuses=['Recibido','Diagnóstico','Reparando','Esperando','Listo','Entregado'];
   // Stats
   const statsData=[
-    {lbl:'Total',num:myReps.length,icon:'📋',sub:'Todos los tickets'},
-    {lbl:'Activos',num:myReps.filter(r=>r.status!=='Entregado').length,icon:'⚙️',sub:'En proceso'},
-    {lbl:'Listos',num:myReps.filter(r=>r.status==='Listo').length,icon:'✅',sub:'Para entrega'},
-    {lbl:'Urgentes',num:myReps.filter(r=>r.priority==='Urgente').length,icon:'🔴',sub:'Prioridad urgente'},
+    {lbl:'Total',num:myReps.length,icon:'<i class="fa-solid fa-clipboard-list"></i>',sub:'Todos los tickets'},
+    {lbl:'Activos',num:myReps.filter(r=>r.status!=='Entregado').length,icon:'<i class="fa-solid fa-gear"></i>',sub:'En proceso'},
+    {lbl:'Listos',num:myReps.filter(r=>r.status==='Listo').length,icon:'<i class="fa-solid fa-circle-check"></i>',sub:'Para entrega'},
+    {lbl:'Urgentes',num:myReps.filter(r=>r.priority==='Urgente').length,icon:'<i class="fa-solid fa-circle"></i>',sub:'Prioridad urgente'},
   ];
   document.getElementById('dashStats').innerHTML=statsData.map(s=>`
     <div class="stat-card">
@@ -1954,12 +2077,12 @@ function renderRepairsTable(){
       <td style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace">${r.received}</td>
       <td>
         <div class="action-btns">
-          <button class="abtn" title="Ver detalle" onclick="openDetail('${r.id}')">👁</button>
-          <button class="abtn" title="Editar reparación" onclick="openEditRepair('${r.id}')">✏️</button>
-          <button class="abtn" title="Cambiar estado" onclick="openChangeStatus('${r.id}')">🔄</button>
-          <button class="abtn" title="Repuestos" onclick="openAddParts('${r.id}')">🛒</button>
-          <button class="abtn" title="PDF" onclick="currentRepairId='${r.id}';generatePDF()">📄</button>
-          ${isAdmin?`<button class="abtn danger" title="Eliminar" onclick="openDelete('${r.id}')">🗑</button>`:''}
+          <button class="abtn" title="Ver detalle" onclick="openDetail('${r.id}')"><i class="fa-solid fa-eye"></i></button>
+          <button class="abtn" title="Editar reparación" onclick="openEditRepair('${r.id}')"><i class="fa-solid fa-pen"></i></button>
+          <button class="abtn" title="Cambiar estado" onclick="openChangeStatus('${r.id}')"><i class="fa-solid fa-arrows-rotate"></i></button>
+          <button class="abtn" title="Repuestos" onclick="openAddParts('${r.id}')"><i class="fa-solid fa-cart-shopping"></i></button>
+          <button class="abtn" title="PDF" onclick="currentRepairId='${r.id}';generatePDF()"><i class="fa-solid fa-file-lines"></i></button>
+          ${isAdmin?`<button class="abtn danger" title="Eliminar" onclick="openDelete('${r.id}')"><i class="fa-solid fa-trash-can"></i></button>`:''}
         </div>
       </td>
     </tr>`).join('');
@@ -2010,11 +2133,11 @@ function renderMyRepairsTable(){
       </td>
       <td>
         <div class="action-btns">
-          <button class="abtn" title="Ver detalle" onclick="openDetail('${r.id}')">👁</button>
-          <button class="abtn" title="Editar reparación" onclick="openEditRepair('${r.id}')">✏️</button>
-          <button class="abtn" title="Cambiar estado" onclick="openChangeStatus('${r.id}')">🔄</button>
-          <button class="abtn" title="Repuestos" onclick="openAddParts('${r.id}')">🛒</button>
-          <button class="abtn" title="PDF" onclick="currentRepairId='${r.id}';generatePDF()">📄</button>
+          <button class="abtn" title="Ver detalle" onclick="openDetail('${r.id}')"><i class="fa-solid fa-eye"></i></button>
+          <button class="abtn" title="Editar reparación" onclick="openEditRepair('${r.id}')"><i class="fa-solid fa-pen"></i></button>
+          <button class="abtn" title="Cambiar estado" onclick="openChangeStatus('${r.id}')"><i class="fa-solid fa-arrows-rotate"></i></button>
+          <button class="abtn" title="Repuestos" onclick="openAddParts('${r.id}')"><i class="fa-solid fa-cart-shopping"></i></button>
+          <button class="abtn" title="PDF" onclick="currentRepairId='${r.id}';generatePDF()"><i class="fa-solid fa-file-lines"></i></button>
         </div>
       </td>
     </tr>`;
@@ -2040,12 +2163,12 @@ function renderAdminPage(){
       <td style="font-weight:700;color:var(--y)">${fmtCOP(r.finalCost||partsTotal(r.parts))}</td>
       <td>
         <div class="action-btns">
-          <button class="abtn" onclick="openDetail('${r.id}')">👁</button>
-          <button class="abtn" onclick="openEditRepair('${r.id}')">✏️</button>
-          <button class="abtn" onclick="openChangeStatus('${r.id}')">🔄</button>
-          <button class="abtn" onclick="openAddParts('${r.id}')">🛒</button>
-          <button class="abtn" onclick="currentRepairId='${r.id}';generatePDF()">📄</button>
-          <button class="abtn danger" onclick="openDelete('${r.id}')">🗑</button>
+          <button class="abtn" onclick="openDetail('${r.id}')"><i class="fa-solid fa-eye"></i></button>
+          <button class="abtn" onclick="openEditRepair('${r.id}')"><i class="fa-solid fa-pen"></i></button>
+          <button class="abtn" onclick="openChangeStatus('${r.id}')"><i class="fa-solid fa-arrows-rotate"></i></button>
+          <button class="abtn" onclick="openAddParts('${r.id}')"><i class="fa-solid fa-cart-shopping"></i></button>
+          <button class="abtn" onclick="currentRepairId='${r.id}';generatePDF()"><i class="fa-solid fa-file-lines"></i></button>
+          <button class="abtn danger" onclick="openDelete('${r.id}')"><i class="fa-solid fa-trash-can"></i></button>
         </div>
       </td>
     </tr>`).join('');
@@ -2066,14 +2189,14 @@ function openDetail(id){
     <div class="repair-detail-grid">
       <!-- Client info -->
       <div class="detail-section">
-        <div class="ds-title">👤 Cliente</div>
+        <div class="ds-title"><i class="fa-solid fa-user"></i> Cliente</div>
         <div class="ds-row"><span class="ds-key">Nombre</span><span class="ds-val">${r.client}</span></div>
         <div class="ds-row"><span class="ds-key">Teléfono</span><span class="ds-val"><a href="tel:${r.clientPhone}" style="color:var(--y)">${r.clientPhone}</a></span></div>
         <div class="ds-row"><span class="ds-key">Email</span><span class="ds-val">${r.clientEmail||'—'}</span></div>
       </div>
       <!-- Device info -->
       <div class="detail-section">
-        <div class="ds-title">📱 Equipo</div>
+        <div class="ds-title"><i class="fa-solid fa-mobile-screen"></i> Equipo</div>
         <div class="ds-row"><span class="ds-key">Tipo</span><span class="ds-val">${r.type}</span></div>
         <div class="ds-row"><span class="ds-key">Marca / Modelo</span><span class="ds-val">${r.brand} ${r.model}</span></div>
         <div class="ds-row"><span class="ds-key">IMEI / Serial</span><span class="ds-val" style="font-family:'DM Mono',monospace">${r.imei||'—'}</span></div>
@@ -2084,7 +2207,7 @@ function openDetail(id){
       </div>
       <!-- Assignment -->
       <div class="detail-section">
-        <div class="ds-title">🔧 Asignación</div>
+        <div class="ds-title"><i class="fa-solid fa-wrench"></i> Asignación</div>
         <div class="ds-row"><span class="ds-key">Técnico</span><span class="ds-val">${r.techName||'Sin asignar'}</span></div>
         <div class="ds-row"><span class="ds-key">Estado actual</span><span class="ds-val"><span class="sbadge ${statusClass(r.status)}">${statusIcon(r.status)} ${r.status}</span></span></div>
         <div class="ds-row"><span class="ds-key">Prioridad</span><span class="ds-val">${priorityBadge(r.priority)}</span></div>
@@ -2092,7 +2215,7 @@ function openDetail(id){
       </div>
       <!-- Financial -->
       <div class="detail-section">
-        <div class="ds-title">💰 Financiero</div>
+        <div class="ds-title"><i class="fa-solid fa-sack-dollar"></i> Financiero</div>
         <div class="ds-row"><span class="ds-key">Costo estimado</span><span class="ds-val">${fmtCOP(r.estCost)}</span></div>
         <div class="ds-row"><span class="ds-key">Total repuestos</span><span class="ds-val">${fmtCOP(partsTotal(r.parts))}</span></div>
         <div class="ds-row"><span class="ds-key">Total acordado</span><span class="ds-val" style="color:var(--y);font-weight:700">${fmtCOP(r.finalCost)}</span></div>
@@ -2101,13 +2224,13 @@ function openDetail(id){
       </div>
       <!-- Problem -->
       <div class="detail-section full">
-        <div class="ds-title">⚠️ Problema Reportado</div>
+        <div class="ds-title"><i class="fa-solid fa-triangle-exclamation"></i> Problema Reportado</div>
         <p style="font-size:13px;color:var(--txt);line-height:1.6">${r.problem}</p>
-        ${r.notes?`<div style="margin-top:10px;padding:10px;background:rgba(244,245,0,.05);border-left:3px solid var(--y);border-radius:0 8px 8px 0;font-size:12px;color:var(--muted)"><strong style="color:var(--y);display:block;margin-bottom:3px">📝 Notas internas</strong>${r.notes}</div>`:''}
+        ${r.notes?`<div style="margin-top:10px;padding:10px;background:rgba(244,245,0,.05);border-left:3px solid var(--y);border-radius:0 8px 8px 0;font-size:12px;color:var(--muted)"><strong style="color:var(--y);display:block;margin-bottom:3px"><i class="fa-solid fa-note-sticky"></i> Notas internas</strong>${r.notes}</div>`:''}
       </div>
       <!-- Parts -->
       ${r.parts.length?`<div class="detail-section full">
-        <div class="ds-title">🛒 Repuestos y Servicios</div>
+        <div class="ds-title"><i class="fa-solid fa-cart-shopping"></i> Repuestos y Servicios</div>
         <table class="parts-table">
           <thead><tr><th>Descripción</th><th>Tipo</th><th>Cant.</th><th>P. Unit</th><th>Total</th></tr></thead>
           <tbody>${r.parts.map(p=>`<tr>
@@ -2122,14 +2245,14 @@ function openDetail(id){
       </div>`:''}
       <!-- Timeline -->
       <div class="detail-section full">
-        <div class="ds-title">📅 Historial de Cambios</div>
+        <div class="ds-title"><i class="fa-solid fa-calendar-days"></i> Historial de Cambios</div>
         <div class="timeline">${r.timeline.map(t=>`
           <div class="tl-item">
             <div class="tl-dot"><div class="tl-circle">${statusIcon(t.status)}</div><div class="tl-line"></div></div>
             <div class="tl-content">
               <div class="tl-action">${t.action} <span class="sbadge ${statusClass(t.status)}" style="font-size:9px">${t.status}</span></div>
-              <div class="tl-date">🕐 ${fmtDateTime(t.date)}</div>
-              ${t.note?`<div class="tl-note">💬 ${t.note}</div>`:''}
+              <div class="tl-date"><i class="fa-solid fa-clock"></i> ${fmtDateTime(t.date)}</div>
+              ${t.note?`<div class="tl-note"><i class="fa-solid fa-comment"></i> ${t.note}</div>`:''}
             </div>
           </div>`).join('')}
         </div>
@@ -2137,11 +2260,11 @@ function openDetail(id){
     </div>
     <!-- Quick actions -->
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:1px solid var(--bdr2)">
-      <button class="tb-btn primary" onclick="closeModal('repairDetailModal');openChangeStatus('${r.id}')">🔄 Cambiar Estado</button>
-      <button class="tb-btn" onclick="closeModal('repairDetailModal');openEditRepair('${r.id}')">✏️ Editar</button>
-      <button class="tb-btn" onclick="closeModal('repairDetailModal');openAddParts('${r.id}')">🛒 Repuestos</button>
-      <button class="tb-btn" onclick="generatePDF()">📄 Exportar PDF</button>
-      ${r.clientPhone?`<a href="https://wa.me/${r.clientPhone.replace(/\D/g,'')}" target="_blank" class="tb-btn" style="color:#25d366;border-color:#25d366">💬 WhatsApp</a>`:''}
+      <button class="tb-btn primary" onclick="closeModal('repairDetailModal');openChangeStatus('${r.id}')"><i class="fa-solid fa-arrows-rotate"></i> Cambiar Estado</button>
+      <button class="tb-btn" onclick="closeModal('repairDetailModal');openEditRepair('${r.id}')"><i class="fa-solid fa-pen"></i> Editar</button>
+      <button class="tb-btn" onclick="closeModal('repairDetailModal');openAddParts('${r.id}')"><i class="fa-solid fa-cart-shopping"></i> Repuestos</button>
+      <button class="tb-btn" onclick="generatePDF()"><i class="fa-solid fa-file-lines"></i> Exportar PDF</button>
+      ${r.clientPhone?`<a href="https://wa.me/${r.clientPhone.replace(/\D/g,'')}" target="_blank" class="tb-btn" style="color:#25d366;border-color:#25d366"><i class="fa-solid fa-comment"></i> WhatsApp</a>`:''}
     </div>`;
   openModal('repairDetailModal');
 }
@@ -2154,12 +2277,13 @@ function openChangeStatus(id){
   const r=REPAIRS.find(x=>x.id===id);if(!r)return;
   document.getElementById('csTicket').textContent=`${r.id} · ${r.client} · ${r.brand} ${r.model}`;
   document.getElementById('csNewStatus').value=r.status;
+  refreshCustomSelect('csNewStatus');
   document.getElementById('csNote').value='';
   // Stepper
   const statuses=['Recibido','Diagnóstico','Reparando','Esperando','Listo','Entregado'];
   const curIdx=statuses.indexOf(r.status);
   document.getElementById('statusStepper').innerHTML=statuses.map((s,i)=>`
-    <div class="st-step ${i<curIdx?'done':''} ${i===curIdx?'active':''}" onclick="document.getElementById('csNewStatus').value='${s}'">
+    <div class="st-step ${i<curIdx?'done':''} ${i===curIdx?'active':''}" onclick="document.getElementById('csNewStatus').value='${s}';refreshCustomSelect('csNewStatus')">
       <div class="ss-circle">${statusIcon(s)}</div>
       <div class="ss-label">${s}</div>
     </div>`).join('');
@@ -2361,7 +2485,7 @@ function renderPartsTable(){
       </td>
       <td style="font-family:'DM Mono',monospace;text-align:right">${fmtCOP(p.price)}</td>
       <td style="font-family:'DM Mono',monospace;font-weight:800;color:var(--y);text-align:right">${fmtCOP(p.qty*p.price)}</td>
-      <td><button class="abtn danger" onclick="removePart(${i})" style="width:26px;height:26px;font-size:13px">✕</button></td>
+      <td><button class="abtn danger" onclick="removePart(${i})" style="width:26px;height:26px;font-size:13px"><i class="fa-solid fa-xmark"></i></button></td>
     </tr>`;
   }).join('');
   document.getElementById('partsTotalAmt').textContent=fmtCOP(partsTotal(tempParts));
@@ -2391,7 +2515,7 @@ function openEditRepair(id){
   const r=REPAIRS.find(x=>x.id===id);if(!r)return;
   document.getElementById('er_ticket').textContent=`${r.id} · ${r.client} · ${r.brand} ${r.model}`;
   // Fill fields
-  const set=(fid,val)=>{const el=document.getElementById(fid);if(el)el.value=val||'';};
+  const set=(fid,val)=>{const el=document.getElementById(fid);if(el){el.value=val||'';if(el.tagName==='SELECT')refreshCustomSelect(fid);}};
   set('er_client',r.client);set('er_phone',r.clientPhone);set('er_email',r.clientEmail);
   set('er_type',r.type);set('er_brand',r.brand);set('er_model',r.model);
   set('er_imei',r.imei);set('er_color',r.color);set('er_pin',r.pin);
@@ -2403,6 +2527,7 @@ function openEditRepair(id){
   ts.innerHTML='<option value="">Sin asignar</option>'+
     TECHS.filter(t=>t.role!=='Administrador'&&t.active).map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
   ts.value=r.techId||'';
+  refreshCustomSelect('er_tech');
   openModal('editRepairModal');
 }
 
@@ -2553,7 +2678,7 @@ function toggleNrPass(btn){
   const inp=document.getElementById('nr_pass_value');
   const show=inp.type==='password';
   inp.type=show?'text':'password';
-  btn.textContent=show?'🙈':'👁️';
+  btn.innerHTML=show?'<i class="fa-solid fa-eye-slash"></i>':'<i class="fa-solid fa-eye"></i>';
 }
 
 let nrSecurityType='none';
@@ -2570,6 +2695,7 @@ function openNewRepairModal(){
   setClientMode('new');
   document.getElementById('nr_doc_number').value='';
   document.getElementById('nr_doc_type').value='CC';
+  refreshCustomSelect('nr_doc_type');
   setSecurityType('none');
   clearPattern();
   pinClear();
@@ -2609,7 +2735,7 @@ function saveNewRepair(){
   };
   REPAIRS.unshift(newRep);
   ['nr_client','nr_phone','nr_email','nr_imei','nr_color','nr_acc','nr_problem','nr_notes','nr_estCost','nr_advance','nr_doc_number'].forEach(id=>{document.getElementById(id).value='';});
-  ['nr_type','nr_brand','nr_condition'].forEach(id=>{document.getElementById(id).value='';});
+  ['nr_type','nr_brand','nr_condition'].forEach(id=>{document.getElementById(id).value='';refreshCustomSelect(id);});
   document.getElementById('nr_pass_value').value='';
   setClientMode('new');
   setSecurityType('none');
@@ -2644,7 +2770,7 @@ function renderCarnetData(u){
   const isAdmin=u.role==='Administrador';
   return{
     photo:u.initials,name:u.name,
-    role:(isAdmin?'👑 ':'🔧 ')+u.role,
+    role:(isAdmin?'<i class="fa-solid fa-crown"></i> ':'<i class="fa-solid fa-wrench"></i> ')+u.role,
     idCode:'ID: '+u.id.toUpperCase(),
     doc:u.docNumber||'—',phone:u.phone||'—',email:u.email||'—',
     spec:u.spec||'—',blood:u.bloodType||'—',
@@ -2709,12 +2835,12 @@ body{font-family:'Outfit',sans-serif;background:#f2f2f2;display:flex;align-items
   <div class="idcode">${d.idCode}</div>
   <div class="divider"></div>
   <div class="body">
-    <div class="row"><span class="cic">🪪</span><div><div class="lbl">Cédula</div><div class="val">${d.doc}</div></div></div>
-    <div class="row"><span class="cic">📞</span><div><div class="lbl">Teléfono</div><div class="val">${d.phone}</div></div></div>
-    <div class="row"><span class="cic">✉️</span><div><div class="lbl">Email</div><div class="val">${d.email}</div></div></div>
-    <div class="row"><span class="cic">🛠️</span><div><div class="lbl">Especialidad</div><div class="val">${d.spec}</div></div></div>
-    <div class="row"><span class="cic">📅</span><div><div class="lbl">Ingreso</div><div class="val">${d.join}</div></div></div>
-    <div class="row"><span class="cic">🩸</span><div><div class="lbl">Tipo de sangre</div></div><span class="blood">${d.blood}</span></div>
+    <div class="row"><span class="cic"><i class="fa-solid fa-id-card"></i></span><div><div class="lbl">Cédula</div><div class="val">${d.doc}</div></div></div>
+    <div class="row"><span class="cic"><i class="fa-solid fa-phone"></i></span><div><div class="lbl">Teléfono</div><div class="val">${d.phone}</div></div></div>
+    <div class="row"><span class="cic"><i class="fa-solid fa-envelope"></i></span><div><div class="lbl">Email</div><div class="val">${d.email}</div></div></div>
+    <div class="row"><span class="cic"><i class="fa-solid fa-screwdriver-wrench"></i></span><div><div class="lbl">Especialidad</div><div class="val">${d.spec}</div></div></div>
+    <div class="row"><span class="cic"><i class="fa-solid fa-calendar-days"></i></span><div><div class="lbl">Ingreso</div><div class="val">${d.join}</div></div></div>
+    <div class="row"><span class="cic"><i class="fa-solid fa-droplet"></i></span><div><div class="lbl">Tipo de sangre</div></div><span class="blood">${d.blood}</span></div>
   </div>
   <div class="ftr"><div class="barcode"></div><div class="valid">Válido mientras esté activo · CeluFénix ERP</div></div>
 </div>
@@ -2841,15 +2967,15 @@ function renderTechsTable(){
       </td>
       <td>
         ${t.active
-          ?'<span class="sbadge st-listo">✅ Activo</span>'
-          :'<span class="sbadge st-entregado">🔴 Inactivo</span>'}
+          ?'<span class="sbadge st-listo"><i class="fa-solid fa-circle-check"></i> Activo</span>'
+          :'<span class="sbadge st-entregado"><i class="fa-solid fa-circle"></i> Inactivo</span>'}
       </td>
       <td>
         <div class="action-btns">
-          <button class="abtn" title="Editar" onclick="openEditTechModal('${t.id}')">✏️</button>
-          <button class="abtn" title="Restablecer contraseña" onclick="openResetPass('${t.id}')">🔑</button>
-          <button class="abtn ${t.active?'danger':'success'}" title="${t.active?'Inactivar':'Activar'}" onclick="openToggleActive('${t.id}')">${t.active?'🔴':'✅'}</button>
-          <button class="abtn danger" title="Eliminar" onclick="openDeleteTech('${t.id}')">🗑</button>
+          <button class="abtn" title="Editar" onclick="openEditTechModal('${t.id}')"><i class="fa-solid fa-pen"></i></button>
+          <button class="abtn" title="Restablecer contraseña" onclick="openResetPass('${t.id}')"><i class="fa-solid fa-key"></i></button>
+          <button class="abtn ${t.active?'danger':'success'}" title="${t.active?'Inactivar':'Activar'}" onclick="openToggleActive('${t.id}')">${t.active?'<i class="fa-solid fa-circle"></i>':'<i class="fa-solid fa-circle-check"></i>'}</button>
+          <button class="abtn danger" title="Eliminar" onclick="openDeleteTech('${t.id}')"><i class="fa-solid fa-trash-can"></i></button>
         </div>
       </td>
     </tr>`;
@@ -2858,12 +2984,16 @@ function renderTechsTable(){
 
 function openNewTechModal(){
   editingTechId=null;
-  document.getElementById('techModalTitle').textContent='➕ Nuevo Técnico';
+  document.getElementById('techModalTitle').innerHTML='<i class="fa-solid fa-plus"></i> Nuevo Técnico';
   document.getElementById('techModalSub').textContent='Crear cuenta de técnico';
-  document.getElementById('techModalSaveBtn').textContent='✅ Crear Técnico';
-  ['tm_name','tm_email','tm_phone','tm_spec','tm_pass','tm_pass2'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('techModalSaveBtn').innerHTML='<i class="fa-solid fa-circle-check"></i> Crear Técnico';
+  ['tm_name','tm_email','tm_phone','tm_spec','tm_pass','tm_pass2','tm_doc'].forEach(id=>{document.getElementById(id).value='';});
   document.getElementById('tm_role').value='Técnico';
   document.getElementById('tm_active').value='true';
+  document.getElementById('tm_blood').value='';
+  refreshCustomSelect('tm_role');
+  refreshCustomSelect('tm_active');
+  refreshCustomSelect('tm_blood');
   document.getElementById('tm_passField').style.display='flex';
   document.getElementById('tm_pass2Field').style.display='flex';
   openModal('techModal');
@@ -2872,15 +3002,20 @@ function openNewTechModal(){
 function openEditTechModal(id){
   editingTechId=id;
   const t=TECHS.find(x=>x.id===id);if(!t)return;
-  document.getElementById('techModalTitle').textContent='✏️ Editar Técnico';
+  document.getElementById('techModalTitle').innerHTML='<i class="fa-solid fa-pen"></i> Editar Técnico';
   document.getElementById('techModalSub').textContent=t.name;
-  document.getElementById('techModalSaveBtn').textContent='💾 Guardar Cambios';
+  document.getElementById('techModalSaveBtn').innerHTML='<i class="fa-solid fa-floppy-disk"></i> Guardar Cambios';
   document.getElementById('tm_name').value=t.name;
   document.getElementById('tm_email').value=t.email;
   document.getElementById('tm_phone').value=t.phone;
   document.getElementById('tm_spec').value=t.spec;
+  document.getElementById('tm_doc').value=t.docNumber||'';
   document.getElementById('tm_role').value=t.role;
   document.getElementById('tm_active').value=String(t.active);
+  document.getElementById('tm_blood').value=t.bloodType||'';
+  refreshCustomSelect('tm_role');
+  refreshCustomSelect('tm_active');
+  refreshCustomSelect('tm_blood');
   // Hide password on edit
   document.getElementById('tm_passField').style.display='none';
   document.getElementById('tm_pass2Field').style.display='none';
@@ -2892,6 +3027,8 @@ function saveTech(){
   const email=document.getElementById('tm_email').value.trim().toLowerCase();
   const phone=document.getElementById('tm_phone').value.trim();
   const spec=document.getElementById('tm_spec').value.trim();
+  const docNumber=document.getElementById('tm_doc').value.trim();
+  const bloodType=document.getElementById('tm_blood').value;
   const role=document.getElementById('tm_role').value;
   const active=document.getElementById('tm_active').value==='true';
   if(!name||!email){showNotif('Nombre y email son obligatorios','warn');return;}
@@ -2903,7 +3040,7 @@ function saveTech(){
     // Check email not duplicated by another
     const dup=TECHS.find(x=>x.email===email&&x.id!==editingTechId);
     if(dup){showNotif('Ese email ya está en uso por otro usuario','err');return;}
-    t.name=name;t.email=email;t.phone=phone;t.spec=spec;t.role=role;t.active=active;
+    t.name=name;t.email=email;t.phone=phone;t.spec=spec;t.role=role;t.active=active;t.docNumber=docNumber;t.bloodType=bloodType;
     const parts=name.split(' ');
     t.initials=((parts[0]?.[0]||'')+(parts[1]?.[0]||'')).toUpperCase();
     // Update repairs techName
@@ -2920,7 +3057,7 @@ function saveTech(){
     const parts=name.split(' ');
     const initials=((parts[0]?.[0]||'')+(parts[1]?.[0]||'')).toUpperCase();
     const newId='tech'+Date.now();
-    TECHS.push({id:newId,name,initials,role,email,phone,spec,pass,active});
+    TECHS.push({id:newId,name,initials,role,email,phone,spec,pass,active,docNumber,bloodType,joinDate:new Date().toISOString().split('T')[0]});
     showNotif(`Técnico "${name}" creado exitosamente`,'success',email);
   }
   closeModal('techModal');
@@ -2957,7 +3094,7 @@ function openToggleActive(id){
   pendingTechActionId=id;
   const t=TECHS.find(x=>x.id===id);if(!t)return;
   const willDeactivate=t.active;
-  document.getElementById('taTitle').textContent=willDeactivate?'🔴 Inactivar Técnico':'✅ Activar Técnico';
+  document.getElementById('taTitle').innerHTML=willDeactivate?'<i class="fa-solid fa-circle"></i> Inactivar Técnico':'<i class="fa-solid fa-circle-check"></i> Activar Técnico';
   document.getElementById('taTechName').textContent=t.name;
   document.getElementById('taMsg').innerHTML=willDeactivate
     ?`¿Estás seguro de <strong>inactivar</strong> a <strong style="color:var(--y)">${t.name}</strong>?`
@@ -2966,7 +3103,7 @@ function openToggleActive(id){
     ?'Un técnico inactivo no podrá ingresar al sistema. Sus reparaciones asignadas se conservan.'
     :'El técnico podrá ingresar al sistema nuevamente con su contraseña actual.';
   const btn=document.getElementById('taConfirmBtn');
-  btn.textContent=willDeactivate?'🔴 Inactivar':'✅ Activar';
+  btn.innerHTML=willDeactivate?'<i class="fa-solid fa-circle"></i> Inactivar':'<i class="fa-solid fa-circle-check"></i> Activar';
   btn.className=willDeactivate?'btn-danger':'btn-primary';
   openModal('toggleActiveModal');
 }
@@ -3078,7 +3215,7 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:#000;font-size:13px}
     <div class="brand">
       <h1>CELU<em>FÉNIX</em></h1>
       <p>Servicio Técnico Autorizado · ERP</p>
-      <div class="contact">📞 +57 300 123 4567 · 📧 soporte@celufenix.com<br>📍 Cúcuta, Colombia · celufenix.com</div>
+      <div class="contact"><i class="fa-solid fa-phone"></i> +57 300 123 4567 · <i class="fa-solid fa-envelope"></i> soporte@celufenix.com<br><i class="fa-solid fa-location-dot"></i> Cúcuta, Colombia · celufenix.com</div>
     </div>
     <div class="ticket-info">
       <div class="ticket-num">${r.id}</div>
@@ -3089,20 +3226,20 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:#000;font-size:13px}
   </div>
   <div class="grid2">
     <div class="section">
-      <h3>👤 Datos del Cliente</h3>
+      <h3><i class="fa-solid fa-user"></i> Datos del Cliente</h3>
       <div class="row"><span class="key">Nombre</span><span class="val">${r.client}</span></div>
       <div class="row"><span class="key">Teléfono</span><span class="val">${r.clientPhone}</span></div>
       <div class="row"><span class="key">Email</span><span class="val">${r.clientEmail||'—'}</span></div>
     </div>
     <div class="section">
-      <h3>🔧 Técnico Asignado</h3>
+      <h3><i class="fa-solid fa-wrench"></i> Técnico Asignado</h3>
       <div class="row"><span class="key">Técnico</span><span class="val">${r.techName||'Sin asignar'}</span></div>
       <div class="row"><span class="key">Prioridad</span><span class="val">${r.priority}</span></div>
       <div class="row"><span class="key">Especialidad</span><span class="val">${TECHS.find(t=>t.id===r.techId)?.spec||'—'}</span></div>
     </div>
   </div>
   <div class="section">
-    <h3>📱 Información del Equipo</h3>
+    <h3><i class="fa-solid fa-mobile-screen"></i> Información del Equipo</h3>
     <div class="grid2">
       <div>
         <div class="row"><span class="key">Tipo</span><span class="val">${r.type}</span></div>
@@ -3119,12 +3256,12 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:#000;font-size:13px}
     </div>
   </div>
   <div class="section">
-    <h3>⚠️ Problema Reportado</h3>
+    <h3><i class="fa-solid fa-triangle-exclamation"></i> Problema Reportado</h3>
     <div class="problem-box">${r.problem}</div>
-    ${r.notes?`<div class="problem-box" style="margin-top:8px;border-left-color:#6366f1"><strong style="display:block;margin-bottom:4px;color:#6366f1">📝 Notas internas del técnico</strong>${r.notes}</div>`:''}
+    ${r.notes?`<div class="problem-box" style="margin-top:8px;border-left-color:#6366f1"><strong style="display:block;margin-bottom:4px;color:#6366f1"><i class="fa-solid fa-note-sticky"></i> Notas internas del técnico</strong>${r.notes}</div>`:''}
   </div>
   ${r.parts.length?`<div class="section">
-    <h3>🛒 Repuestos y Servicios Aplicados</h3>
+    <h3><i class="fa-solid fa-cart-shopping"></i> Repuestos y Servicios Aplicados</h3>
     <table class="tbl">
       <thead><tr><th>Descripción</th><th>Tipo</th><th style="text-align:center">Cant.</th><th style="text-align:right">P. Unit</th><th style="text-align:right">Total</th></tr></thead>
       <tbody>${partsRows}</tbody>
@@ -3136,7 +3273,7 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:#000;font-size:13px}
     </div>
   </div>`:''}
   <div class="section">
-    <h3>📅 Historial de Proceso</h3>
+    <h3><i class="fa-solid fa-calendar-days"></i> Historial de Proceso</h3>
     ${timelineRows}
   </div>
   <div class="signs">
