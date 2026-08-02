@@ -55,8 +55,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 ═══════════════════════════ */
 #loginScreen{
   position:fixed;inset:0;z-index:9999;
-  background:var(--bg);
-  display:flex;align-items:center;justify-content:center;
+  display:flex;background:var(--bg);
 }
 #loginScreen.hide{display:none}
 .login-wrap{width:100%;max-width:420px;padding:20px}
@@ -119,6 +118,22 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 .sb-bottom{padding:10px;border-top:1px solid var(--bdr2);flex-shrink:0}
 .sb-toggle{width:100%;padding:8px;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:8px;font-size:12px;font-weight:600;color:var(--muted);border:1px solid var(--bdr2);transition:var(--tr)}
 .sb-toggle:hover{background:var(--surf);color:var(--white)}
+
+/* ══ SIDEBAR COLLAPSED STATE ══ */
+.sidebar.collapsed .sb-top{justify-content:center;padding:18px 8px}
+.sidebar.collapsed .sb-brand{display:none}
+.sidebar.collapsed .sb-user{justify-content:center;padding:14px 8px}
+.sidebar.collapsed .sb-uinfo{display:none}
+.sidebar.collapsed .sb-nav{padding:8px 6px}
+.sidebar.collapsed .sb-nav-lbl{display:none}
+.sidebar.collapsed .sb-link{justify-content:center;padding:10px 0;gap:0}
+.sidebar.collapsed .sb-link .sl{display:none}
+.sidebar.collapsed .sb-link .sbdg{display:none}
+.sidebar.collapsed .sb-bottom{padding:10px 6px}
+.sidebar.collapsed .logout-txt{display:none}
+.sidebar.collapsed #logoutBtn{padding:8px 0;gap:0}
+.sidebar.collapsed .sb-toggle{padding:8px 0}
+.sidebar.collapsed .sb-toggle .stxt{display:none}
 
 /* ══ MAIN AREA ══ */
 .main-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
@@ -301,6 +316,138 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 .stock-item-price{font-size:13px;font-weight:800;color:var(--y);flex-shrink:0;font-family:'DM Mono',monospace}
 .stock-item-cat{font-size:9px;padding:2px 7px;background:var(--surf);border-radius:4px;color:var(--muted);font-family:'DM Mono',monospace;flex-shrink:0}
 
+/* ═══════════════════════════
+   LOGIN — SPLIT SCREEN REDESIGN
+═══════════════════════════ */
+.login-hero{
+  position:relative;flex:1.2;min-width:0;overflow:hidden;display:flex;align-items:flex-end;
+  background:
+    radial-gradient(circle at 75% 20%,rgba(244,245,0,.10),transparent 45%),
+    radial-gradient(circle at 20% 85%,rgba(99,102,241,.14),transparent 50%),
+    linear-gradient(150deg,#0a0a14 0%,#0f0d1c 55%,#141008 100%);
+  padding:64px 56px;
+}
+.login-hero::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(244,245,0,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(244,245,0,.04) 1px,transparent 1px);
+  background-size:46px 46px;
+  mask-image:radial-gradient(ellipse at 70% 30%,#000 0%,transparent 65%);
+}
+.hero-illustration{position:absolute;top:8%;right:-4%;width:56%;max-width:420px;opacity:.9}
+.hero-illustration svg{width:100%;height:auto;display:block}
+.login-hero-content{position:relative;z-index:1;max-width:480px}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;color:var(--y);background:rgba(244,245,0,.1);border:1px solid var(--bdr);padding:5px 12px;border-radius:20px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:22px}
+.hero-title{font-size:clamp(30px,4vw,46px);font-weight:900;line-height:1.08;color:#fff;letter-spacing:-.5px}
+.hero-title em{color:var(--y);font-style:normal;display:block}
+.hero-sub{margin-top:18px;color:var(--muted);font-size:14px;line-height:1.75;max-width:400px}
+.hero-stats{display:flex;gap:34px;margin-top:34px;padding-top:26px;border-top:1px solid var(--bdr2)}
+.hero-stat strong{display:block;font-size:24px;font-weight:900;color:var(--y);font-family:'DM Mono',monospace}
+.hero-stat span{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.login-form-side{
+  flex:1;min-width:340px;display:flex;align-items:center;justify-content:center;
+  padding:20px;position:relative;background:var(--bg);
+}
+.login-form-side::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(circle at 50% 0%,rgba(244,245,0,.05),transparent 55%);
+}
+.login-wrap{position:relative;z-index:1;animation:loginIn .5s cubic-bezier(.16,1,.3,1) both}
+@keyframes loginIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.login-logo{position:relative;box-shadow:0 0 0 6px rgba(244,245,0,.05),0 0 40px rgba(244,245,0,.25)}
+.login-logo::after{content:'';position:absolute;inset:-9px;border-radius:24px;border:1px solid rgba(244,245,0,.18);animation:loginPulse 2.6s ease-in-out infinite}
+@keyframes loginPulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.08);opacity:0}}
+.login-brand p{display:flex;align-items:center;justify-content:center;gap:8px}
+.login-brand p::before,.login-brand p::after{content:'';width:22px;height:1px;background:var(--bdr2)}
+.login-box{position:relative;backdrop-filter:blur(6px);border-color:var(--bdr)}
+.login-box::before{content:'';position:absolute;top:0;left:24px;right:24px;height:1px;background:linear-gradient(90deg,transparent,var(--y),transparent);opacity:.5}
+.login-box h2{display:flex;align-items:center;gap:8px}
+.fg-icon{position:relative}
+.fg-icon input{padding-left:38px}
+.fg-icon .fgi{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none;transition:var(--tr)}
+.fg-icon input:focus~.fgi,.fg-icon:focus-within .fgi{color:var(--y)}
+.pass-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;cursor:pointer;background:none;border:none;padding:4px}
+.pass-eye:hover{color:var(--y)}
+.login-submit{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 24px rgba(244,245,0,.18)}
+.login-submit:hover{box-shadow:0 8px 28px rgba(244,245,0,.28)}
+.login-foot{text-align:center;margin-top:20px;font-size:10px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.5px}
+.login-foot .dotc{width:5px;height:5px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399}
+.demo-box{background:var(--bg3);border:1px solid var(--bdr2);border-radius:10px;padding:11px 13px;font-size:11px;color:var(--muted)}
+.demo-box strong{color:var(--y);display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:11px}
+.demo-row{display:flex;justify-content:space-between;gap:8px;padding:3px 0}
+.demo-row span:first-child{color:var(--txt);font-weight:600}
+.demo-row span:last-child{font-family:'DM Mono',monospace;color:var(--muted)}
+@media(max-width:900px){
+  .login-hero{display:none}
+  .login-form-side{min-width:0}
+}
+
+/* ═══════════════════════════
+   PROFILE — REDESIGN
+═══════════════════════════ */
+.profile-hero{position:relative;border-radius:14px 14px 0 0;margin:-18px -18px 20px;height:74px;
+  background:linear-gradient(120deg,rgba(244,245,0,.16),rgba(99,102,241,.12));
+  border-bottom:1px solid var(--bdr2);overflow:hidden}
+.profile-hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.09) 1px,transparent 1px);background-size:16px 16px}
+.profile-head{display:flex;align-items:flex-end;gap:16px;margin:-40px 0 20px;position:relative;z-index:1}
+.profile-avatar-wrap{width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,var(--y),#6a6a00);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#000;flex-shrink:0;border:4px solid var(--card);box-shadow:var(--sh)}
+.profile-role-chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--y);background:rgba(244,245,0,.1);border:1px solid var(--bdr);padding:2px 10px 2px 8px;border-radius:20px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+.profile-name-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.profile-verified{color:#34d399;font-size:13px}
+.fg-note{font-size:11px;color:var(--muted);margin-top:-2px;margin-bottom:4px}
+
+/* ═══════════════════════════
+   NEW REPAIR — CLIENT MODE
+═══════════════════════════ */
+.mode-tabs{display:flex;background:var(--surf);border-radius:11px;padding:4px;gap:3px;margin-bottom:16px}
+.mode-tab{flex:1;padding:9px 10px;border-radius:8px;font-size:12.5px;font-weight:700;color:var(--muted);text-align:center;cursor:pointer;transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:6px}
+.mode-tab.on{background:var(--y);color:#000}
+.client-search-row{display:flex;gap:10px;align-items:flex-end}
+.client-search-row .fg{flex:1;margin-bottom:0}
+.btn-search-client{padding:10px 16px;border-radius:9px;background:var(--y);color:#000;font-size:13px;font-weight:800;white-space:nowrap;transition:var(--tr)}
+.btn-search-client:hover{background:var(--yd)}
+.client-found-card{margin-top:14px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.25);border-radius:11px;padding:13px 15px;display:none}
+.client-found-card.on{display:block;animation:fadeIn .25s ease}
+.cfc-title{font-size:11px;font-weight:800;color:#34d399;text-transform:uppercase;letter-spacing:1px;font-family:'DM Mono',monospace;display:flex;align-items:center;gap:6px;margin-bottom:9px}
+.cfc-row{display:flex;gap:10px;padding:3px 0;font-size:12.5px}
+.cfc-key{min-width:80px;color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;padding-top:2px}
+.cfc-val{font-weight:700;color:var(--white)}
+.client-err-card{margin-top:14px;background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.3);border-radius:11px;padding:12px 14px;font-size:12.5px;color:#fb7185;display:none;align-items:center;gap:8px}
+.client-err-card.on{display:flex;animation:fadeIn .25s ease}
+
+/* ═══════════════════════════
+   SECURITY SELECTOR
+═══════════════════════════ */
+.sec-type-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.sec-panel{background:var(--bg3);border:1px solid var(--bdr2);border-radius:12px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.sec-panel.none-panel{flex-direction:row;justify-content:center;padding:16px;color:var(--muted);font-size:12.5px}
+
+/* pattern lock */
+.pattern-svg{width:180px;height:180px;touch-action:none}
+.pdot{fill:var(--surf);stroke:var(--bdr2);stroke-width:2;cursor:pointer;transition:fill .15s,stroke .15s}
+.pdot:hover{stroke:var(--y)}
+.pdot.active{fill:var(--y);stroke:var(--y)}
+.pdot-num{font-family:'DM Mono',monospace;font-size:13px;font-weight:800;fill:var(--muted);text-anchor:middle;dominant-baseline:central;pointer-events:none;transition:fill .15s}
+.pdot-num.active{fill:#000}
+.pline{stroke:var(--y);stroke-width:5;stroke-linecap:round;fill:none;opacity:.85}
+.sec-readout{font-family:'DM Mono',monospace;font-size:13px;color:var(--y);font-weight:700;letter-spacing:2px;min-height:18px}
+.sec-actions{display:flex;gap:8px}
+.sec-mini-btn{padding:6px 14px;border-radius:8px;background:var(--surf);border:1px solid var(--bdr2);color:var(--muted);font-size:11.5px;font-weight:700}
+.sec-mini-btn:hover{color:var(--white);border-color:var(--y)}
+
+/* pin keypad */
+.pin-display{display:flex;gap:9px;justify-content:center;min-height:20px}
+.pin-dot{width:13px;height:13px;border-radius:50%;background:var(--surf);border:1.5px solid var(--bdr2);transition:var(--tr)}
+.pin-dot.filled{background:var(--y);border-color:var(--y)}
+.pin-keypad{display:grid;grid-template-columns:repeat(3,52px);gap:9px;justify-content:center}
+.pin-key{width:52px;height:52px;border-radius:50%;background:var(--surf);border:1.5px solid var(--bdr2);color:var(--txt);font-size:17px;font-weight:700;transition:var(--tr)}
+.pin-key:hover{border-color:var(--y);color:var(--y);background:rgba(244,245,0,.06)}
+.pin-key:active{transform:scale(.93)}
+.pin-key.fn{font-size:14px;color:var(--muted)}
+.pin-readout{font-family:'DM Mono',monospace;font-size:15px;color:var(--y);font-weight:800;letter-spacing:3px;min-height:20px}
+
+/* password panel */
+.pass-panel-inner{width:100%;max-width:280px}
+
 
 @media print{
   *{print-color-adjust:exact;-webkit-print-color-adjust:exact}
@@ -368,35 +515,91 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 
 <!-- ═══════════ LOGIN ═══════════ -->
 <div id="loginScreen">
-  <div class="login-wrap">
-    <div class="login-brand">
-      <div class="login-logo">CF</div>
-      <h1>CELU<em>FÉNIX</em></h1>
-      <p>ERP · Módulo de Servicio Técnico</p>
+  <div class="login-hero">
+    <div class="hero-illustration">
+      <svg viewBox="0 0 320 420" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="rgba(244,245,0,.28)" stroke-width="2" fill="none">
+          <path d="M20 40 L70 40 L70 90"/>
+          <path d="M300 60 L250 60 L250 20"/>
+          <path d="M10 300 L60 300 L60 350 L110 350"/>
+          <path d="M300 320 L260 320 L260 380"/>
+        </g>
+        <g fill="rgba(244,245,0,.5)">
+          <circle cx="20" cy="40" r="4"/><circle cx="70" cy="90" r="4"/>
+          <circle cx="300" cy="60" r="4"/><circle cx="250" cy="20" r="4"/>
+          <circle cx="10" cy="300" r="4"/><circle cx="110" cy="350" r="4"/>
+          <circle cx="300" cy="320" r="4"/><circle cx="260" cy="380" r="4"/>
+        </g>
+        <g transform="translate(52,372)" stroke="rgba(129,140,248,.45)" stroke-width="3" fill="none">
+          <circle r="26"/>
+          <circle r="8" fill="rgba(129,140,248,.28)" stroke="none"/>
+          <line x1="0" y1="-34" x2="0" y2="-26"/><line x1="0" y1="34" x2="0" y2="26"/>
+          <line x1="-34" y1="0" x2="-26" y2="0"/><line x1="34" y1="0" x2="26" y2="0"/>
+          <line x1="-24" y1="-24" x2="-18" y2="-18"/><line x1="24" y1="-24" x2="18" y2="-18"/>
+          <line x1="-24" y1="24" x2="-18" y2="18"/><line x1="24" y1="24" x2="18" y2="18"/>
+        </g>
+        <rect x="95" y="30" width="150" height="300" rx="28" fill="none" stroke="rgba(244,245,0,.4)" stroke-width="3"/>
+        <rect x="110" y="56" width="120" height="220" rx="6" fill="rgba(244,245,0,.06)" stroke="rgba(244,245,0,.15)" stroke-width="1"/>
+        <rect x="150" y="40" width="40" height="5" rx="2.5" fill="rgba(244,245,0,.3)"/>
+        <circle cx="170" cy="308" r="9" fill="none" stroke="rgba(244,245,0,.4)" stroke-width="2.5"/>
+        <g stroke="rgba(244,63,94,.55)" stroke-width="1.5" fill="none">
+          <path d="M170 100 L150 140 L165 160 L140 200"/>
+          <path d="M170 100 L195 130"/>
+          <path d="M165 160 L190 185"/>
+        </g>
+        <g transform="translate(232,252) rotate(35)" fill="rgba(129,140,248,.6)">
+          <rect x="-8" y="-72" width="16" height="112" rx="8"/>
+          <circle cx="0" cy="-80" r="21" fill="none" stroke="rgba(129,140,248,.6)" stroke-width="10"/>
+        </g>
+      </svg>
     </div>
-    <div class="login-box">
-      <h2>Bienvenido de nuevo</h2>
-      <p>Ingresa con tu cuenta de técnico o administrador</p>
-      <div class="login-rol-tabs">
-        <div class="lrt on" onclick="setLoginRole('tecnico',this)">🔧 Técnico</div>
-        <div class="lrt" onclick="setLoginRole('admin',this)">👑 Administrador</div>
+    <div class="login-hero-content">
+      <div class="hero-badge">🔧 ERP · Módulo de Servicio Técnico</div>
+      <h1 class="hero-title">INGRESO TÉCNICOS<br><em>CELUFÉNIX</em></h1>
+      <p class="hero-sub">Gestiona reparaciones, clientes y equipos técnicos desde una sola plataforma. Acceso exclusivo para personal autorizado.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><strong>+1.200</strong><span>Equipos reparados</span></div>
+        <div class="hero-stat"><strong>24/7</strong><span>Seguimiento en línea</span></div>
+        <div class="hero-stat"><strong>100%</strong><span>Trazabilidad</span></div>
       </div>
-      <div class="fg">
-        <label>Usuario / Email</label>
-        <input type="text" id="loginUser" placeholder="usuario@celufenix.com" value="luis.ramirez">
+    </div>
+  </div>
+  <div class="login-form-side">
+    <div class="login-wrap">
+      <div class="login-brand">
+        <div class="login-logo">CF</div>
+        <h1>CELU<em>FÉNIX</em></h1>
+        <p>ERP · Módulo de Servicio Técnico</p>
       </div>
-      <div class="fg">
+      <div class="login-box">
+        <h2>Bienvenido de nuevo</h2>
+        <p>Ingresa con tu cuenta de técnico o administrador</p>
+        <div class="login-rol-tabs">
+          <div class="lrt on" onclick="setLoginRole('tecnico',this)">🔧 Técnico</div>
+          <div class="lrt" onclick="setLoginRole('admin',this)">👑 Administrador</div>
+        </div>
+        <div class="fg fg-icon">
+          <label>Usuario / Email</label>
+          <input type="text" id="loginUser" placeholder="usuario@celufenix.com" value="luis.ramirez">
+        <span class="fgi">👤</span>
+      </div>
+      <div class="fg fg-icon">
         <label>Contraseña</label>
         <input type="password" id="loginPass" placeholder="••••••••" value="123456">
+        <span class="fgi">🔒</span>
+        <button type="button" class="pass-eye" onclick="toggleLoginPass(this)">👁️</button>
       </div>
       <div id="loginErr" class="login-err">Usuario o contraseña incorrectos</div>
-      <button class="login-submit" onclick="doLogin()">Ingresar al sistema</button>
-      <div style="margin-top:16px;padding:10px 12px;background:var(--bg3);border-radius:8px;font-size:11px;color:var(--muted)">
-        <strong style="color:var(--y);display:block;margin-bottom:4px">👤 Cuentas de prueba</strong>
-        Técnico: luis.ramirez / 123456 · patricia.gomez / 123456<br>
-        Admin: admin / admin123
+      <button class="login-submit" onclick="doLogin()">🔑 Ingresar al sistema</button>
+      <div class="demo-box" style="margin-top:16px">
+        <strong>👤 Cuentas de prueba</strong>
+        <div class="demo-row"><span>🔧 Luis Ramírez</span><span>luis.ramirez / 123456</span></div>
+        <div class="demo-row"><span>🔧 Patricia Gómez</span><span>patricia.gomez / 123456</span></div>
+        <div class="demo-row"><span>👑 Administrador</span><span>admin / admin123</span></div>
       </div>
+      <div class="login-foot"><span class="dotc"></span>Sistema operativo · Conexión segura</div>
     </div>
+  </div>
   </div>
 </div>
 
@@ -430,8 +633,8 @@ input,select,textarea{font-family:'Outfit',sans-serif}
       <div class="sb-link" onclick="goPage('profile',this)"><span class="si">👤</span><span class="sl">Mi Perfil</span></div>
     </div>
     <div class="sb-bottom">
-      <button class="tb-btn" onclick="doLogout()" style="width:100%;justify-content:center;margin-bottom:6px">🚪 Cerrar sesión</button>
-      <button class="sb-toggle" onclick="toggleSidebar()" id="sbToggleBtn">◀ Colapsar</button>
+      <button class="tb-btn" id="logoutBtn" onclick="doLogout()" style="width:100%;justify-content:center;margin-bottom:6px">🚪 <span class="logout-txt">Cerrar sesión</span></button>
+      <button class="sb-toggle" onclick="toggleSidebar()" id="sbToggleBtn"><span class="stog-icon">◀</span> <span class="stxt">Colapsar</span></button>
     </div>
   </nav>
 
@@ -444,7 +647,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
         <div class="topbar-sub" id="topbarSub">Bienvenido al sistema de gestión</div>
       </div>
       <div class="topbar-right">
-        <button class="tb-btn" onclick="openModal('newRepairModal')">➕ Nueva Reparación</button>
+        <button class="tb-btn" onclick="openNewRepairModal()">➕ Nueva Reparación</button>
         <button class="theme-btn" onclick="toggleTheme()">
           <span class="ico-sun">☀️</span><span class="ico-moon">🌙</span>
         </button>
@@ -489,7 +692,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
           <select class="flt-select" id="techFilter" onchange="filterRepairs()">
             <option value="all">Todos los técnicos</option>
           </select>
-          <button class="tb-btn primary" onclick="openModal('newRepairModal')">➕ Nueva</button>
+          <button class="tb-btn primary" onclick="openNewRepairModal()">➕ Nueva</button>
         </div>
         <div class="table-wrap">
           <div class="table-head">
@@ -581,7 +784,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
         <div class="table-wrap" style="margin-top:18px">
           <div class="table-head">
             <h3>📋 Todas las Reparaciones</h3>
-            <button class="tb-btn primary" onclick="openModal('newRepairModal')">➕ Nueva reparación</button>
+            <button class="tb-btn primary" onclick="openNewRepairModal()">➕ Nueva reparación</button>
           </div>
           <div style="overflow-x:auto">
             <table class="tbl">
@@ -600,25 +803,29 @@ input,select,textarea{font-family:'Outfit',sans-serif}
       <!-- ══ PROFILE PAGE ══ -->
       <div class="page" id="pageProfile">
         <div style="max-width:560px">
-          <div class="dash-card" style="margin-bottom:18px">
-            <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
-              <div style="width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--y),#6a6a00);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#000;flex-shrink:0" id="profileAv">LR</div>
-              <div>
-                <div style="font-size:20px;font-weight:800;color:var(--white)" id="profileName">Luis Ramírez</div>
-                <div style="font-size:12px;color:var(--y);font-family:'DM Mono',monospace;margin-top:2px" id="profileRole">Técnico Senior</div>
-                <div style="font-size:11px;color:var(--muted);margin-top:4px" id="profileEmail">—</div>
+          <div class="dash-card" style="margin-bottom:18px;overflow:hidden">
+            <div class="profile-hero"></div>
+            <div class="profile-head">
+              <div class="profile-avatar-wrap" id="profileAv">LR</div>
+              <div style="padding-bottom:2px">
+                <div class="profile-name-row">
+                  <div style="font-size:20px;font-weight:800;color:var(--white)" id="profileName">Luis Ramírez</div>
+                  <span class="profile-verified" title="Cuenta verificada">✔️</span>
+                </div>
+                <div id="profileEmail" style="font-size:11.5px;color:var(--muted);margin-top:2px">—</div>
+                <div class="profile-role-chip" id="profileRole">🔧 Técnico Senior</div>
               </div>
             </div>
-            <div class="sec-div">Información Personal</div>
-            <div class="fg"><label>Nombre completo</label><input type="text" id="pName"></div>
-            <div class="fg"><label>Email</label><input type="email" id="pEmail"></div>
-            <div class="fg"><label>Teléfono</label><input type="tel" id="pPhone"></div>
-            <div class="fg"><label>Especialidad</label><input type="text" id="pSpec"></div>
-            <button class="tb-btn primary" onclick="saveProfile()" style="margin-top:4px">💾 Guardar cambios</button>
+            <div class="sec-div">👤 Información Personal</div>
+            <div class="fg fg-icon"><label>Nombre completo</label><input type="text" id="pName"><span class="fgi">👤</span></div>
+            <div class="fg fg-icon"><label>Email</label><input type="email" id="pEmail"><span class="fgi">✉️</span></div>
+            <div class="fg fg-icon"><label>Teléfono</label><input type="tel" id="pPhone"><span class="fgi">📞</span></div>
+            <div class="fg fg-icon"><label>Especialidad</label><input type="text" id="pSpec"><span class="fgi">🛠️</span></div>
+            <button class="tb-btn primary" onclick="saveProfile()" style="margin-top:6px">💾 Guardar cambios</button>
           </div>
           <!-- Solo admin puede cambiar contraseña desde su perfil -->
           <div class="dash-card" id="passCard">
-            <h3 style="font-size:14px;font-weight:800;color:var(--white);margin-bottom:16px;display:flex;align-items:center;gap:8px">🔒 Cambiar Contraseña</h3>
+            <h3>🔒 Cambiar Contraseña</h3>
             <div id="passCardContent"></div>
           </div>
         </div>
@@ -684,11 +891,48 @@ input,select,textarea{font-family:'Outfit',sans-serif}
     </div>
     <div class="mbody">
       <div class="sec-div">Datos del Cliente</div>
-      <div class="form-grid">
+      <div class="mode-tabs">
+        <div class="mode-tab on" id="nrModeNewTab" onclick="setClientMode('new')">🆕 Cliente nuevo</div>
+        <div class="mode-tab" id="nrModeRegTab" onclick="setClientMode('reg')">🔎 Cliente ya registrado</div>
+      </div>
+
+      <!-- Panel: cliente nuevo -->
+      <div id="nrClientNewPanel" class="form-grid">
         <div class="fg"><label>Nombre del cliente *</label><input type="text" id="nr_client" placeholder="Ej: Carlos Mendoza"></div>
         <div class="fg"><label>Teléfono / WhatsApp *</label><input type="tel" id="nr_phone" placeholder="+57 300 123 4567"></div>
         <div class="fg full"><label>Email (opcional)</label><input type="email" id="nr_email" placeholder="cliente@email.com"></div>
       </div>
+
+      <!-- Panel: cliente ya registrado -->
+      <div id="nrClientRegPanel" style="display:none">
+        <div class="client-search-row">
+          <div class="fg" style="max-width:170px">
+            <label>Tipo de documento</label>
+            <select id="nr_doc_type">
+              <option value="CC">Cédula (CC)</option>
+              <option value="CE">Cédula Extranjería (CE)</option>
+              <option value="TI">Tarjeta de Identidad (TI)</option>
+              <option value="PAS">Pasaporte</option>
+              <option value="NIT">NIT</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Número de documento</label>
+            <input type="text" id="nr_doc_number" placeholder="Ej: 1091678234" oninput="clearClientLookup()">
+          </div>
+          <button type="button" class="btn-search-client" onclick="searchClient()">🔍 Buscar</button>
+        </div>
+        <div class="client-found-card" id="clientFoundCard">
+          <div class="cfc-title">✅ Cliente encontrado</div>
+          <div class="cfc-row"><span class="cfc-key">Nombre</span><span class="cfc-val" id="cfcName">—</span></div>
+          <div class="cfc-row"><span class="cfc-key">Teléfono</span><span class="cfc-val" id="cfcPhone">—</span></div>
+          <div class="cfc-row"><span class="cfc-key">Email</span><span class="cfc-val" id="cfcEmail">—</span></div>
+        </div>
+        <div class="client-err-card" id="clientErrCard">
+          ⚠️ No se encontró ningún cliente con ese documento. Verifica el número o regístralo como "Cliente nuevo".
+        </div>
+      </div>
+
       <div class="sec-div">Datos del Equipo</div>
       <div class="form-grid">
         <div class="fg"><label>Tipo de equipo *</label>
@@ -708,7 +952,6 @@ input,select,textarea{font-family:'Outfit',sans-serif}
         <div class="fg"><label>Modelo *</label><input type="text" id="nr_model" placeholder="Ej: iPhone 14 Pro Max"></div>
         <div class="fg"><label>IMEI / Serial</label><input type="text" id="nr_imei" placeholder="15 dígitos o S/N" maxlength="20"></div>
         <div class="fg"><label>Color del equipo</label><input type="text" id="nr_color" placeholder="Ej: Negro, Blanco..."></div>
-        <div class="fg"><label>Contraseña de desbloqueo</label><input type="text" id="nr_pin" placeholder="Solo si el cliente autoriza"></div>
         <div class="fg full"><label>Accesorios entregados</label>
           <input type="text" id="nr_acc" placeholder="Ej: Cargador, funda, audífonos..."></div>
         <div class="fg full"><label>Estado físico del equipo *</label>
@@ -725,6 +968,62 @@ input,select,textarea{font-family:'Outfit',sans-serif}
           <textarea id="nr_problem" placeholder="Descripción detallada del problema reportado por el cliente..."></textarea>
         </div>
       </div>
+
+      <div class="sec-div">🔐 Seguridad del Equipo</div>
+      <div class="sec-type-row">
+        <button type="button" class="part-type-btn on" id="stb_none" onclick="setSecurityType('none')">🚫 <span>Sin seguridad</span></button>
+        <button type="button" class="part-type-btn" id="stb_pattern" onclick="setSecurityType('pattern')">🔗 <span>Patrón</span></button>
+        <button type="button" class="part-type-btn" id="stb_pin" onclick="setSecurityType('pin')">🔢 <span>PIN</span></button>
+        <button type="button" class="part-type-btn" id="stb_password" onclick="setSecurityType('password')">🔑 <span>Contraseña</span></button>
+      </div>
+
+      <!-- Panel: sin seguridad -->
+      <div id="secPanel_none" class="sec-panel none-panel">
+        🔓 El equipo no tiene ningún bloqueo de seguridad.
+      </div>
+
+      <!-- Panel: patrón -->
+      <div id="secPanel_pattern" class="sec-panel" style="display:none">
+        <svg class="pattern-svg" viewBox="0 0 240 240" id="patternSvg">
+          <polyline id="patternPolyline" class="pline" points=""></polyline>
+          <g id="patternDots"></g>
+        </svg>
+        <div class="sec-readout" id="patternReadout">Toca los puntos en orden…</div>
+        <div class="sec-actions">
+          <button type="button" class="sec-mini-btn" onclick="clearPattern()">🔄 Reiniciar</button>
+        </div>
+      </div>
+
+      <!-- Panel: PIN -->
+      <div id="secPanel_pin" class="sec-panel" style="display:none">
+        <div class="pin-display" id="pinDisplay"></div>
+        <div class="pin-readout" id="pinReadout">&nbsp;</div>
+        <div class="pin-keypad">
+          <button type="button" class="pin-key" onclick="pinPress('1')">1</button>
+          <button type="button" class="pin-key" onclick="pinPress('2')">2</button>
+          <button type="button" class="pin-key" onclick="pinPress('3')">3</button>
+          <button type="button" class="pin-key" onclick="pinPress('4')">4</button>
+          <button type="button" class="pin-key" onclick="pinPress('5')">5</button>
+          <button type="button" class="pin-key" onclick="pinPress('6')">6</button>
+          <button type="button" class="pin-key" onclick="pinPress('7')">7</button>
+          <button type="button" class="pin-key" onclick="pinPress('8')">8</button>
+          <button type="button" class="pin-key" onclick="pinPress('9')">9</button>
+          <button type="button" class="pin-key fn" onclick="pinClear()">C</button>
+          <button type="button" class="pin-key" onclick="pinPress('0')">0</button>
+          <button type="button" class="pin-key fn" onclick="pinBackspace()">⌫</button>
+        </div>
+      </div>
+
+      <!-- Panel: contraseña -->
+      <div id="secPanel_password" class="sec-panel" style="display:none">
+        <div class="pass-panel-inner fg fg-icon" style="margin-bottom:0">
+          <label>Contraseña de desbloqueo</label>
+          <input type="password" id="nr_pass_value" placeholder="Solo si el cliente autoriza">
+          <span class="fgi">🔑</span>
+          <button type="button" class="pass-eye" onclick="toggleNrPass(this)">👁️</button>
+        </div>
+      </div>
+
       <div class="sec-div">Asignación</div>
       <div class="form-grid">
         <div class="fg"><label>Técnico asignado *</label>
@@ -1173,6 +1472,7 @@ let TECHS = [
 let REPAIRS = [
   {id:'REP-0001',client:'Carlos Mendoza',clientPhone:'+57 311 234 5678',clientEmail:'carlos.m@email.com',
    type:'Smartphone',brand:'Samsung',model:'Galaxy A54',imei:'357112345678901',color:'Negro',pin:'1234',
+   securityType:'pin',securityValue:'1234',
    accessories:'Cargador, funda',condition:'Regular - Golpes visibles',problem:'La pantalla no enciende, se cayó al agua.',
    techId:'tech1',techName:'Luis Ramírez',status:'Listo',priority:'Alta',
    received:'2025-04-20',estCost:185000,advance:90000,finalCost:185000,
@@ -1189,6 +1489,7 @@ let REPAIRS = [
    ]},
   {id:'REP-0002',client:'Andrea López',clientPhone:'+57 315 987 6543',clientEmail:'andrea.l@email.com',
    type:'Smartphone',brand:'Apple',model:'iPhone 14',imei:'359123456789012',color:'Morado',pin:'',
+   securityType:'pattern',securityValue:'1-2-3-6-9',
    accessories:'Solo el equipo',condition:'Bueno - Rayones leves',problem:'Batería dura muy poco, se apaga con el 20%.',
    techId:'tech1',techName:'Luis Ramírez',status:'Reparando',priority:'Normal',
    received:'2025-04-23',estCost:120000,advance:60000,finalCost:0,
@@ -1204,6 +1505,7 @@ let REPAIRS = [
    ]},
   {id:'REP-0003',client:'Miguel Torres',clientPhone:'+57 318 456 7890',clientEmail:'',
    type:'Smartphone',brand:'Xiaomi',model:'Redmi Note 12',imei:'358456789012345',color:'Azul',pin:'0000',
+   securityType:'pin',securityValue:'0000',
    accessories:'Cargador USB-C',condition:'Dañado - Pantalla rota',problem:'Pantalla rota luego de caída. Touch no responde.',
    techId:'tech2',techName:'Patricia Gómez',status:'Esperando',priority:'Urgente',
    received:'2025-04-24',estCost:95000,advance:50000,finalCost:0,
@@ -1216,6 +1518,7 @@ let REPAIRS = [
    ]},
   {id:'REP-0004',client:'Carlos Mendoza',clientPhone:'+57 311 234 5678',clientEmail:'carlos.m@email.com',
    type:'Tablet',brand:'Apple',model:'iPad Air 5',imei:'',color:'Plateado',pin:'',
+   securityType:'none',securityValue:'',
    accessories:'Cable Lightning, adaptador',condition:'Regular - Golpes visibles',problem:'No carga, conector dañado físicamente.',
    techId:'',techName:'Sin asignar',status:'Recibido',priority:'Normal',
    received:'2025-04-27',estCost:0,advance:0,finalCost:0,
@@ -1223,6 +1526,15 @@ let REPAIRS = [
    timeline:[
      {action:'Equipo recibido',date:'2025-04-27 09:00',note:'iPad ingresó sin asignar. Pendiente de diagnóstico.',status:'Recibido'},
    ]},
+];
+
+/* Base de clientes ya registrados — para búsqueda por documento */
+let CLIENTS = [
+  {docType:'CC',docNumber:'1091678234',name:'Carlos Mendoza',phone:'+57 311 234 5678',email:'carlos.m@email.com'},
+  {docType:'CC',docNumber:'1098765432',name:'Andrea López',phone:'+57 315 987 6543',email:'andrea.l@email.com'},
+  {docType:'CC',docNumber:'1005678901',name:'Miguel Torres',phone:'+57 318 456 7890',email:''},
+  {docType:'CE',docNumber:'800123456',name:'Rafael Suárez',phone:'+57 320 111 2233',email:'rafael.suarez@email.com'},
+  {docType:'CC',docNumber:'1013456789',name:'Valentina Rojas',phone:'+57 301 555 4488',email:'valen.rojas@email.com'},
 ];
 
 let currentUser = null;
@@ -1263,6 +1575,13 @@ function statusProgress(s){
   return Math.round((i/5)*100);
 }
 function partsTotal(parts){return parts.reduce((s,p)=>s+p.qty*p.price,0);}
+function securityLabel(r){
+  if(r.securityType==='pattern')return{icon:'🔗',label:'Patrón de desbloqueo',value:r.securityValue};
+  if(r.securityType==='pin')return{icon:'🔢',label:'PIN de desbloqueo',value:r.securityValue};
+  if(r.securityType==='password')return{icon:'🔑',label:'Contraseña de desbloqueo',value:r.securityValue};
+  if(r.pin)return{icon:'🔢',label:'PIN / Clave',value:r.pin};
+  return null;
+}
 
 /* ═══════════════════════
    NOTIFICATIONS
@@ -1294,6 +1613,12 @@ function setLoginRole(role,el){
   }
 }
 
+function toggleLoginPass(btn){
+  const inp=document.getElementById('loginPass');
+  const show=inp.type==='password';
+  inp.type=show?'text':'password';
+  btn.textContent=show?'🙈':'👁️';
+}
 function doLogin(){
   const u=document.getElementById('loginUser').value.trim().toLowerCase();
   const p=document.getElementById('loginPass').value;
@@ -1334,8 +1659,8 @@ function initApp(){
   // Profile
   document.getElementById('profileAv').textContent=currentUser.initials;
   document.getElementById('profileName').textContent=currentUser.name;
-  document.getElementById('profileRole').textContent=currentUser.role;
-  document.getElementById('profileEmail').textContent=currentUser.email;
+  document.getElementById('profileRole').textContent=(isAdmin?'👑 ':'🔧 ')+currentUser.role;
+  document.getElementById('profileEmail').textContent='✉️ '+currentUser.email;
   document.getElementById('pName').value=currentUser.name;
   document.getElementById('pEmail').value=currentUser.email;
   document.getElementById('pPhone').value=currentUser.phone;
@@ -1402,7 +1727,9 @@ function toggleSidebar(){
   const sb=document.getElementById('sidebar');
   const btn=document.getElementById('sbToggleBtn');
   sb.classList.toggle('collapsed');
-  btn.textContent=sb.classList.contains('collapsed')?'▶ Expandir':'◀ Colapsar';
+  const collapsed=sb.classList.contains('collapsed');
+  btn.querySelector('.stog-icon').textContent=collapsed?'▶':'◀';
+  btn.querySelector('.stxt').textContent=collapsed?'Expandir':'Colapsar';
 }
 
 /* ═══════════════════════
@@ -1647,7 +1974,7 @@ function openDetail(id){
         <div class="ds-row"><span class="ds-key">Color</span><span class="ds-val">${r.color||'—'}</span></div>
         <div class="ds-row"><span class="ds-key">Estado físico</span><span class="ds-val">${r.condition}</span></div>
         <div class="ds-row"><span class="ds-key">Accesorios</span><span class="ds-val">${r.accessories||'—'}</span></div>
-        ${r.pin?`<div class="ds-row"><span class="ds-key">PIN / Clave</span><span class="ds-val" style="font-family:'DM Mono',monospace">${r.pin}</span></div>`:''}
+        ${(()=>{const s=securityLabel(r);return s?`<div class="ds-row"><span class="ds-key">${s.icon} ${s.label}</span><span class="ds-val" style="font-family:'DM Mono',monospace">${s.value}</span></div>`:'';})()}
       </div>
       <!-- Assignment -->
       <div class="detail-section">
@@ -1998,6 +2325,155 @@ function saveEditRepair(){
 /* ═══════════════════════
    NEW REPAIR
 ═══════════════════════ */
+/* ═══════════════════════
+   NEW REPAIR — CLIENT MODE
+═══════════════════════ */
+let nrClientMode='new';
+function setClientMode(mode){
+  nrClientMode=mode;
+  document.getElementById('nrModeNewTab').classList.toggle('on',mode==='new');
+  document.getElementById('nrModeRegTab').classList.toggle('on',mode==='reg');
+  document.getElementById('nrClientNewPanel').style.display=mode==='new'?'':'none';
+  document.getElementById('nrClientRegPanel').style.display=mode==='reg'?'':'none';
+  document.getElementById('nr_client').value='';
+  document.getElementById('nr_phone').value='';
+  document.getElementById('nr_email').value='';
+  clearClientLookup();
+}
+function clearClientLookup(){
+  document.getElementById('clientFoundCard').classList.remove('on');
+  document.getElementById('clientErrCard').classList.remove('on');
+}
+function searchClient(){
+  const type=document.getElementById('nr_doc_type').value;
+  const num=document.getElementById('nr_doc_number').value.trim();
+  if(!num){showNotif('Ingresa un número de documento','warn');return;}
+  const found=CLIENTS.find(c=>c.docType===type && c.docNumber===num);
+  if(found){
+    document.getElementById('nr_client').value=found.name;
+    document.getElementById('nr_phone').value=found.phone;
+    document.getElementById('nr_email').value=found.email||'';
+    document.getElementById('cfcName').textContent=found.name;
+    document.getElementById('cfcPhone').textContent=found.phone;
+    document.getElementById('cfcEmail').textContent=found.email||'—';
+    document.getElementById('clientFoundCard').classList.add('on');
+    document.getElementById('clientErrCard').classList.remove('on');
+    showNotif('Cliente encontrado','success',found.name);
+  } else {
+    document.getElementById('nr_client').value='';
+    document.getElementById('nr_phone').value='';
+    document.getElementById('nr_email').value='';
+    document.getElementById('clientFoundCard').classList.remove('on');
+    document.getElementById('clientErrCard').classList.add('on');
+  }
+}
+
+/* ═══════════════════════
+   NEW REPAIR — SECURITY TYPE
+═══════════════════════ */
+const PATTERN_COORDS=[
+  {x:48,y:48},{x:120,y:48},{x:192,y:48},
+  {x:48,y:120},{x:120,y:120},{x:192,y:120},
+  {x:48,y:192},{x:120,y:192},{x:192,y:192},
+];
+/* Puntos intermedios que se marcan automáticamente al pasar en línea recta */
+const PATTERN_SKIP={'1-3':2,'1-7':4,'1-9':5,'2-8':5,'3-7':5,'3-9':6,'4-6':5,'7-9':8};
+function buildPatternDots(){
+  const g=document.getElementById('patternDots');
+  if(!g||g.children.length)return;
+  const svgNS='http://www.w3.org/2000/svg';
+  PATTERN_COORDS.forEach((c,i)=>{
+    const n=i+1;
+    const circle=document.createElementNS(svgNS,'circle');
+    circle.setAttribute('cx',c.x);circle.setAttribute('cy',c.y);circle.setAttribute('r',16);
+    circle.setAttribute('class','pdot');circle.setAttribute('data-i',n);
+    circle.addEventListener('click',()=>patternDotClick(n));
+    g.appendChild(circle);
+    const text=document.createElementNS(svgNS,'text');
+    text.setAttribute('x',c.x);text.setAttribute('y',c.y+1);
+    text.setAttribute('class','pdot-num');text.setAttribute('data-i',n);
+    text.textContent=n;
+    g.appendChild(text);
+  });
+}
+let nrPatternSeq=[];
+function patternDotClick(n){
+  if(nrPatternSeq.includes(n))return;
+  if(nrPatternSeq.length){
+    const prev=nrPatternSeq[nrPatternSeq.length-1];
+    const key=[prev,n].sort((a,b)=>a-b).join('-');
+    const mid=PATTERN_SKIP[key];
+    if(mid && !nrPatternSeq.includes(mid)) nrPatternSeq.push(mid);
+  }
+  nrPatternSeq.push(n);
+  redrawPattern();
+}
+function redrawPattern(){
+  document.querySelectorAll('#patternDots .pdot').forEach(d=>{
+    const i=parseInt(d.getAttribute('data-i'));
+    d.classList.toggle('active',nrPatternSeq.includes(i));
+  });
+  document.querySelectorAll('#patternDots .pdot-num').forEach(t=>{
+    const i=parseInt(t.getAttribute('data-i'));
+    t.classList.toggle('active',nrPatternSeq.includes(i));
+  });
+  const pts=nrPatternSeq.map(i=>{const c=PATTERN_COORDS[i-1];return c.x+','+c.y;}).join(' ');
+  document.getElementById('patternPolyline').setAttribute('points',pts);
+  document.getElementById('patternReadout').textContent=nrPatternSeq.length?'Patrón: '+nrPatternSeq.join('-'):'Toca los puntos en orden…';
+}
+function clearPattern(){nrPatternSeq=[];redrawPattern();}
+
+let nrPin='';
+function pinPress(d){
+  if(nrPin.length>=8)return;
+  nrPin+=d;
+  updatePinDisplay();
+}
+function pinBackspace(){nrPin=nrPin.slice(0,-1);updatePinDisplay();}
+function pinClear(){nrPin='';updatePinDisplay();}
+function updatePinDisplay(){
+  const disp=document.getElementById('pinDisplay');
+  disp.innerHTML='';
+  const n=Math.max(4,nrPin.length);
+  for(let i=0;i<n;i++){
+    const dot=document.createElement('span');
+    dot.className='pin-dot'+(i<nrPin.length?' filled':'');
+    disp.appendChild(dot);
+  }
+  document.getElementById('pinReadout').textContent=nrPin||'\u00a0';
+}
+
+function toggleNrPass(btn){
+  const inp=document.getElementById('nr_pass_value');
+  const show=inp.type==='password';
+  inp.type=show?'text':'password';
+  btn.textContent=show?'🙈':'👁️';
+}
+
+let nrSecurityType='none';
+function setSecurityType(type){
+  nrSecurityType=type;
+  ['none','pattern','pin','password'].forEach(t=>{
+    document.getElementById('stb_'+t).classList.toggle('on',t===type);
+    document.getElementById('secPanel_'+t).style.display=t===type?'':'none';
+  });
+}
+buildPatternDots();
+
+function openNewRepairModal(){
+  setClientMode('new');
+  document.getElementById('nr_doc_number').value='';
+  document.getElementById('nr_doc_type').value='CC';
+  setSecurityType('none');
+  clearPattern();
+  pinClear();
+  document.getElementById('nr_pass_value').value='';
+  openModal('newRepairModal');
+}
+
+/* ═══════════════════════
+   NEW REPAIR — SAVE
+═══════════════════════ */
 function saveNewRepair(){
   const get=id=>document.getElementById(id).value.trim();
   const client=get('nr_client'),phone=get('nr_phone'),type=get('nr_type'),brand=get('nr_brand'),model=get('nr_model'),problem=get('nr_problem'),condition=get('nr_condition');
@@ -2006,9 +2482,15 @@ function saveNewRepair(){
   }
   const techId=get('nr_tech');
   const tech=TECHS.find(t=>t.id===techId);
+  let securityValue='';
+  if(nrSecurityType==='pattern') securityValue=nrPatternSeq.join('-');
+  else if(nrSecurityType==='pin') securityValue=nrPin;
+  else if(nrSecurityType==='password') securityValue=get('nr_pass_value');
   const newRep={
     id:nextTicket(),client,clientPhone:phone,clientEmail:get('nr_email'),
-    type,brand,model,imei:get('nr_imei'),color:get('nr_color'),pin:get('nr_pin'),
+    type,brand,model,imei:get('nr_imei'),color:get('nr_color'),
+    securityType:nrSecurityType,securityValue,
+    pin:nrSecurityType==='pin'?securityValue:'',
     accessories:get('nr_acc'),condition,problem,
     techId:techId||'',techName:tech?tech.name:'Sin asignar',
     status:'Recibido',priority:get('nr_priority'),
@@ -2020,12 +2502,18 @@ function saveNewRepair(){
       note:`Registrado por ${currentUser?.name}. ${problem}`,status:'Recibido'}],
   };
   REPAIRS.unshift(newRep);
-  ['nr_client','nr_phone','nr_email','nr_imei','nr_color','nr_pin','nr_acc','nr_problem','nr_notes','nr_estCost','nr_advance'].forEach(id=>{document.getElementById(id).value='';});
+  ['nr_client','nr_phone','nr_email','nr_imei','nr_color','nr_acc','nr_problem','nr_notes','nr_estCost','nr_advance','nr_doc_number'].forEach(id=>{document.getElementById(id).value='';});
   ['nr_type','nr_brand','nr_condition'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('nr_pass_value').value='';
+  setClientMode('new');
+  setSecurityType('none');
+  clearPattern();
+  pinClear();
   closeModal('newRepairModal');
   renderAll();renderRepairsTable();renderMyRepairsTable();renderDashboard();
   showNotif('Reparación registrada exitosamente','success',newRep.id);
 }
+
 
 /* ═══════════════════════
    DELETE
@@ -2409,6 +2897,7 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:#000;font-size:13px}
         <div class="row"><span class="key">IMEI / Serial</span><span class="val" style="font-family:'DM Mono',monospace">${r.imei||'—'}</span></div>
         <div class="row"><span class="key">Estado físico</span><span class="val">${r.condition}</span></div>
         <div class="row"><span class="key">Accesorios</span><span class="val">${r.accessories||'—'}</span></div>
+        ${(()=>{const s=securityLabel(r);return s?`<div class="row"><span class="key">${s.label}</span><span class="val" style="font-family:'DM Mono',monospace">${s.value}</span></div>`:'';})()}
       </div>
     </div>
   </div>
