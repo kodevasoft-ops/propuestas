@@ -416,6 +416,36 @@ input,select,textarea{font-family:'Outfit',sans-serif}
 }
 
 /* ═══════════════════════════
+   CARNET — ID BADGE
+═══════════════════════════ */
+.carnet-card{width:320px;max-width:100%;border-radius:20px;overflow:hidden;background:var(--card);border:1px solid var(--bdr2);box-shadow:0 24px 55px rgba(0,0,0,.45);position:relative}
+.carnet-header{position:relative;height:100px;
+  background:linear-gradient(135deg,#151515 0%,#1c1a08 60%,#0f0f0f 100%);
+  display:flex;flex-direction:column;align-items:center;padding-top:10px;overflow:hidden}
+.carnet-header::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 85% 15%,rgba(244,245,0,.28),transparent 55%)}
+.carnet-header::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(244,245,0,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(244,245,0,.04) 1px,transparent 1px);background-size:14px 14px}
+.carnet-hole{width:46px;height:8px;border-radius:6px;background:rgba(0,0,0,.55);margin-bottom:8px;position:relative;z-index:1}
+.carnet-brand{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:var(--y);letter-spacing:1.5px;font-family:'DM Mono',monospace;text-transform:uppercase;position:relative;z-index:1}
+.carnet-brand .cbrand-logo{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--y);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:var(--y)}
+.carnet-photo-wrap{width:96px;height:96px;border-radius:50%;background:var(--card);padding:4px;margin:-48px auto 0;position:relative;z-index:1;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.carnet-photo{width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,var(--y),#6a6a00);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;color:#000}
+.carnet-name{text-align:center;font-size:18px;font-weight:900;color:var(--white);margin-top:12px;padding:0 16px}
+.carnet-role{text-align:center;margin-top:5px;margin-bottom:8px}
+.carnet-idcode{text-align:center;font-family:'DM Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:1.5px}
+.carnet-divider{margin:16px 20px 8px;border-top:1px dashed var(--bdr2)}
+.carnet-body{padding:6px 20px 4px}
+.carnet-row{display:flex;align-items:center;gap:11px;padding:8px 0;border-bottom:1px solid var(--bdr2)}
+.carnet-row:last-child{border-bottom:none}
+.carnet-row .cic{width:26px;text-align:center;font-size:14px;flex-shrink:0}
+.carnet-row .ctxt{overflow:hidden;min-width:0;flex:1}
+.carnet-row .clbl{font-size:8.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;font-family:'DM Mono',monospace}
+.carnet-row .cval{font-size:12.5px;font-weight:700;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.carnet-blood-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(244,63,94,.12);border:1px solid rgba(244,63,94,.35);color:#fb7185;padding:2px 10px;border-radius:20px;font-weight:900;font-size:12.5px;font-family:'DM Mono',monospace}
+.carnet-footer{padding:14px 20px 20px;text-align:center;border-top:1px solid var(--bdr2);margin-top:8px}
+.carnet-barcode{height:32px;background:repeating-linear-gradient(90deg,var(--txt) 0 2px,transparent 2px 4px,var(--txt) 4px 5px,transparent 5px 8px,var(--txt) 8px 9px,transparent 9px 11px);opacity:.6;border-radius:3px;margin-bottom:7px}
+.carnet-valid{font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:.6px;text-transform:uppercase}
+
+/* ═══════════════════════════
    NEW REPAIR — CLIENT MODE
 ═══════════════════════════ */
 .mode-tabs{display:flex;background:var(--surf);border-radius:11px;padding:4px;gap:3px;margin-bottom:16px}
@@ -668,6 +698,7 @@ input,select,textarea{font-family:'Outfit',sans-serif}
       </div>
       <div class="topbar-right">
         <button class="tb-btn" onclick="openNewRepairModal()">➕ Nueva Reparación</button>
+        <button class="tb-btn" onclick="openCarnet()">🪪 Mi Carnet</button>
         <button class="theme-btn" onclick="toggleTheme()">
           <span class="ico-sun">☀️</span><span class="ico-moon">🌙</span>
         </button>
@@ -1376,6 +1407,42 @@ input,select,textarea{font-family:'Outfit',sans-serif}
   </div>
 </div>
 
+<!-- CARNET MODAL -->
+<div class="modal-bg" id="carnetModal">
+  <div class="modal-box" style="max-width:380px">
+    <div class="mhdr">
+      <div><h2>🪪 Mi Carnet</h2><p>Identificación oficial del empleado</p></div>
+      <button class="mcl" onclick="closeModal('carnetModal')">✕</button>
+    </div>
+    <div class="mbody" style="display:flex;flex-direction:column;align-items:center">
+      <div class="carnet-card">
+        <div class="carnet-header">
+          <div class="carnet-hole"></div>
+          <div class="carnet-brand"><span class="cbrand-logo">CF</span> CeluFénix</div>
+        </div>
+        <div class="carnet-photo-wrap"><div class="carnet-photo" id="carnetPhoto">LR</div></div>
+        <div class="carnet-name" id="carnetName">Luis Ramírez</div>
+        <div class="carnet-role"><span class="profile-role-chip" id="carnetRole">🔧 Técnico Senior</span></div>
+        <div class="carnet-idcode" id="carnetIdCode">ID: TECH1</div>
+        <div class="carnet-divider"></div>
+        <div class="carnet-body">
+          <div class="carnet-row"><span class="cic">🪪</span><div class="ctxt"><div class="clbl">Cédula</div><div class="cval" id="carnetDoc">—</div></div></div>
+          <div class="carnet-row"><span class="cic">📞</span><div class="ctxt"><div class="clbl">Teléfono</div><div class="cval" id="carnetPhone">—</div></div></div>
+          <div class="carnet-row"><span class="cic">✉️</span><div class="ctxt"><div class="clbl">Email</div><div class="cval" id="carnetEmail">—</div></div></div>
+          <div class="carnet-row"><span class="cic">🛠️</span><div class="ctxt"><div class="clbl">Especialidad</div><div class="cval" id="carnetSpec">—</div></div></div>
+          <div class="carnet-row"><span class="cic">📅</span><div class="ctxt"><div class="clbl">Ingreso</div><div class="cval" id="carnetJoin">—</div></div></div>
+          <div class="carnet-row"><span class="cic">🩸</span><div class="ctxt"><div class="clbl">Tipo de sangre</div></div><span class="carnet-blood-badge" id="carnetBlood">O+</span></div>
+        </div>
+        <div class="carnet-footer">
+          <div class="carnet-barcode"></div>
+          <div class="carnet-valid" id="carnetValid">Válido mientras esté activo · CeluFénix ERP</div>
+        </div>
+      </div>
+      <button class="tb-btn primary" style="margin-top:18px;width:100%;justify-content:center" onclick="printCarnet()">🖨️ Imprimir / Descargar carnet</button>
+    </div>
+  </div>
+</div>
+
 <!-- NEW / EDIT TECH MODAL -->
 <div class="modal-bg" id="techModal">
   <div class="modal-box md">
@@ -1499,9 +1566,9 @@ input,select,textarea{font-family:'Outfit',sans-serif}
    DATA & STATE
 ═══════════════════════════════════════ */
 let TECHS = [
-  {id:'tech1',name:'Luis Ramírez',initials:'LR',role:'Técnico Senior',email:'luis.ramirez@celufenix.com',phone:'+57 310 456 7890',spec:'Smartphones Android · Apple iOS',pass:'123456',active:true},
-  {id:'tech2',name:'Patricia Gómez',initials:'PG',role:'Técnico Especialista',email:'patricia.gomez@celufenix.com',phone:'+57 315 678 9012',spec:'Pantallas · Soldadura SMD',pass:'123456',active:true},
-  {id:'admin1',name:'Administrador',initials:'AD',role:'Administrador',email:'admin@celufenix.com',phone:'+57 300 000 0001',spec:'Administración general',pass:'admin123',active:true},
+  {id:'tech1',name:'Luis Ramírez',initials:'LR',role:'Técnico Senior',email:'luis.ramirez@celufenix.com',phone:'+57 310 456 7890',spec:'Smartphones Android · Apple iOS',pass:'123456',active:true,bloodType:'O+',docNumber:'1098234567',joinDate:'2022-03-14'},
+  {id:'tech2',name:'Patricia Gómez',initials:'PG',role:'Técnico Especialista',email:'patricia.gomez@celufenix.com',phone:'+57 315 678 9012',spec:'Pantallas · Soldadura SMD',pass:'123456',active:true,bloodType:'A+',docNumber:'1091345678',joinDate:'2021-08-02'},
+  {id:'admin1',name:'Administrador',initials:'AD',role:'Administrador',email:'admin@celufenix.com',phone:'+57 300 000 0001',spec:'Administración general',pass:'admin123',active:true,bloodType:'B+',docNumber:'1005123456',joinDate:'2019-01-10'},
 ];
 
 let REPAIRS = [
@@ -2573,6 +2640,91 @@ function confirmDelete(){
 /* ═══════════════════════
    PROFILE
 ═══════════════════════ */
+function renderCarnetData(u){
+  const isAdmin=u.role==='Administrador';
+  return{
+    photo:u.initials,name:u.name,
+    role:(isAdmin?'👑 ':'🔧 ')+u.role,
+    idCode:'ID: '+u.id.toUpperCase(),
+    doc:u.docNumber||'—',phone:u.phone||'—',email:u.email||'—',
+    spec:u.spec||'—',blood:u.bloodType||'—',
+    join:u.joinDate?fmtDate(u.joinDate):'—',
+  };
+}
+function openCarnet(){
+  if(!currentUser)return;
+  const d=renderCarnetData(currentUser);
+  document.getElementById('carnetPhoto').textContent=d.photo;
+  document.getElementById('carnetName').textContent=d.name;
+  document.getElementById('carnetRole').textContent=d.role;
+  document.getElementById('carnetIdCode').textContent=d.idCode;
+  document.getElementById('carnetDoc').textContent=d.doc;
+  document.getElementById('carnetPhone').textContent=d.phone;
+  document.getElementById('carnetEmail').textContent=d.email;
+  document.getElementById('carnetSpec').textContent=d.spec;
+  document.getElementById('carnetJoin').textContent=d.join;
+  document.getElementById('carnetBlood').textContent=d.blood;
+  openModal('carnetModal');
+}
+function printCarnet(){
+  if(!currentUser)return;
+  const d=renderCarnetData(currentUser);
+  const html=`<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=DM+Mono:wght@400;700&display=swap" rel="stylesheet">
+<title>Carnet ${currentUser.name} - CeluFénix</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:#f2f2f2;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:40px}
+@media print{body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+.card{width:340px;border-radius:22px;overflow:hidden;background:#111;border:1px solid #2a2a2a;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.hdr{position:relative;height:104px;background:linear-gradient(135deg,#151515 0%,#241f08 60%,#0f0f0f 100%);display:flex;flex-direction:column;align-items:center;padding-top:12px}
+.hole{width:48px;height:8px;border-radius:6px;background:rgba(0,0,0,.6);margin-bottom:8px}
+.brand{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:#f4f500;letter-spacing:1.5px;font-family:'DM Mono',monospace;text-transform:uppercase}
+.blogo{width:20px;height:20px;border-radius:5px;border:1.5px solid #f4f500;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#f4f500}
+.photo-wrap{width:100px;height:100px;border-radius:50%;background:#111;padding:4px;margin:-50px auto 0;position:relative;z-index:1;box-shadow:0 6px 20px rgba(0,0,0,.5)}
+.photo{width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#f4f500,#6a6a00);display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:900;color:#000}
+.name{text-align:center;font-size:19px;font-weight:900;color:#fff;margin-top:12px;padding:0 16px}
+.role{text-align:center;margin-top:6px;margin-bottom:8px}
+.role span{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#f4f500;background:rgba(244,245,0,.1);border:1px solid rgba(244,245,0,.3);padding:3px 12px;border-radius:20px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px}
+.idcode{text-align:center;font-family:'DM Mono',monospace;font-size:10.5px;color:#888;letter-spacing:1.5px}
+.divider{margin:16px 22px 8px;border-top:1px dashed #333}
+.body{padding:6px 22px 4px}
+.row{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid #262626}
+.row:last-child{border-bottom:none}
+.cic{width:26px;text-align:center;font-size:14px}
+.lbl{font-size:8.5px;color:#888;text-transform:uppercase;letter-spacing:.7px;font-family:'DM Mono',monospace}
+.val{font-size:13px;font-weight:700;color:#fff}
+.blood{display:inline-flex;align-items:center;gap:4px;background:rgba(244,63,94,.15);border:1px solid rgba(244,63,94,.4);color:#fb7185;padding:2px 11px;border-radius:20px;font-weight:900;font-size:13px;font-family:'DM Mono',monospace;margin-left:auto}
+.ftr{padding:16px 22px 22px;text-align:center;border-top:1px solid #262626;margin-top:8px}
+.barcode{height:34px;background:repeating-linear-gradient(90deg,#fff 0 2px,transparent 2px 4px,#fff 4px 5px,transparent 5px 8px,#fff 8px 9px,transparent 9px 11px);opacity:.65;border-radius:3px;margin-bottom:8px}
+.valid{font-size:9px;color:#888;font-family:'DM Mono',monospace;letter-spacing:.6px;text-transform:uppercase}
+</style></head>
+<body>
+<div class="card">
+  <div class="hdr"><div class="hole"></div><div class="brand"><span class="blogo">CF</span> CeluFénix</div></div>
+  <div class="photo-wrap"><div class="photo">${d.photo}</div></div>
+  <div class="name">${d.name}</div>
+  <div class="role"><span>${d.role}</span></div>
+  <div class="idcode">${d.idCode}</div>
+  <div class="divider"></div>
+  <div class="body">
+    <div class="row"><span class="cic">🪪</span><div><div class="lbl">Cédula</div><div class="val">${d.doc}</div></div></div>
+    <div class="row"><span class="cic">📞</span><div><div class="lbl">Teléfono</div><div class="val">${d.phone}</div></div></div>
+    <div class="row"><span class="cic">✉️</span><div><div class="lbl">Email</div><div class="val">${d.email}</div></div></div>
+    <div class="row"><span class="cic">🛠️</span><div><div class="lbl">Especialidad</div><div class="val">${d.spec}</div></div></div>
+    <div class="row"><span class="cic">📅</span><div><div class="lbl">Ingreso</div><div class="val">${d.join}</div></div></div>
+    <div class="row"><span class="cic">🩸</span><div><div class="lbl">Tipo de sangre</div></div><span class="blood">${d.blood}</span></div>
+  </div>
+  <div class="ftr"><div class="barcode"></div><div class="valid">Válido mientras esté activo · CeluFénix ERP</div></div>
+</div>
+<script>window.onload=function(){window.print();}<\/script>
+</body></html>`;
+  const w=window.open('','_blank','width=460,height=760');
+  w.document.write(html);
+  w.document.close();
+  showNotif('Carnet generado correctamente','success','Ventana de impresión abierta');
+}
 function updateProfileStats(){
   if(!currentUser)return;
   const isAdmin=currentUser.role==='Administrador';
