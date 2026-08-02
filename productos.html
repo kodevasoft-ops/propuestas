@@ -322,9 +322,9 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 .popup-bg.on .popup-box{transform:translateY(0) scale(1)}
 .pp-close{position:absolute;top:14px;right:14px;width:34px;height:34px;background:var(--surf);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;transition:var(--tr);z-index:2;cursor:pointer}
 .pp-close:hover{background:var(--y);color:#000}
-.pp-inner{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.pp-inner{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;padding:26px 22px 22px}
 /* Image gallery side */
-.pp-gallery{padding:24px;background:var(--bg3);border-radius:22px 0 0 22px;display:flex;flex-direction:column;gap:12px}
+.pp-gallery{padding:20px;background:var(--bg3);border-radius:18px;display:flex;flex-direction:column;gap:12px;position:sticky;top:26px;border:1px solid var(--bdr2);box-shadow:0 10px 30px rgba(0,0,0,.22)}
 .pp-main-img{width:100%;aspect-ratio:1;border-radius:14px;overflow:hidden;position:relative}
 .pp-main-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;display:block}
 .pp-main-img:hover img{transform:scale(1.12)}
@@ -334,7 +334,7 @@ button{cursor:pointer;border:none;background:none;font-family:inherit}
 .pp-thumb:hover,.pp-thumb.active{border-color:var(--y)}
 .pp-thumb img{width:100%;height:100%;object-fit:cover}
 /* Info side */
-.pp-info{padding:28px 24px 24px}
+.pp-info{padding:0}
 .pp-cat{font-size:10px;color:var(--y);font-weight:700;text-transform:uppercase;letter-spacing:2px;font-family:'DM Mono',monospace;margin-bottom:8px}
 .pp-name{font-size:20px;font-weight:900;color:var(--white);line-height:1.25;margin-bottom:10px}
 .pp-ref-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
@@ -421,8 +421,9 @@ footer{background:var(--footer-bg);border-top:1px solid var(--bdr)}
   .bnav{display:block}
   body{padding-bottom:68px}
   .pgrid.grid3,.pgrid.grid4{grid-template-columns:repeat(2,1fr)}
-  .pp-inner{grid-template-columns:1fr}
-  .pp-gallery{border-radius:22px 22px 0 0}
+  .pp-inner{grid-template-columns:1fr;gap:0;padding:0}
+  .pp-gallery{border-radius:0;position:static;padding:20px}
+  .pp-info{padding:20px}
   .side-panel{width:100vw;max-width:100vw}
   .toast{max-width:calc(100vw - 30px)}
 }
@@ -433,6 +434,36 @@ footer{background:var(--footer-bg);border-top:1px solid var(--bdr)}
 @media(max-width:400px){
   .pgrid.grid3,.pgrid.grid4{grid-template-columns:repeat(2,1fr)}
 }
+
+/* ══ ICON COLORS ══ */
+.cat-pill-l svg,.subcat-pill svg,.bc-item svg,.pp-cat svg,.pc-cat svg{color:var(--y)}
+.cat-pill.active .cat-pill-l svg,.subcat-pill.active svg{color:#000}
+#dealsOnlyChk+span svg,#dealsOnlyChkM+span svg{color:#22c55e}
+.badgeChk[value="hot"]+span svg{color:#f59e0b}
+.badgeChk[value="new"]+span svg{color:#22c55e}
+.badgeChk[value="sale"]+span svg{color:var(--y)}
+.price-custom-toggle svg{color:var(--y)}
+.sb-reset svg,#priceCustomToggle svg,#priceCustomToggleM svg{color:var(--muted)}
+.chk-btn svg{color:#000}
+.cont-shop svg{color:var(--muted)}
+.panel-hdr h2 svg{color:var(--y)}
+.qi svg{color:#ef4444}
+.pca svg{color:var(--muted)}
+.pca:hover svg{color:var(--y)}
+.srch-btn svg{color:#000}
+.ico-sun svg{color:#f59e0b}
+.ico-moon svg{color:#818cf8}
+.pc-badge.hot svg{color:#fff}
+.pc-badge svg{color:#000}
+.pp-spec-val.highlight svg{color:#22c55e}
+.pc-stars-row svg[fill="currentColor"],.pp-stars-row .pp-stars svg[fill="currentColor"],.star-flt svg[fill="currentColor"]{color:#f59e0b}
+.pc-add-btn svg{color:var(--y)}
+.mob-filter-btn svg{color:var(--y)}
+.view-btn svg{color:var(--muted)}
+.view-btn.on svg{color:#000}
+.sb-chevron svg{color:var(--muted)}
+.hticker svg{color:var(--y)}
+.e-icon svg{color:var(--bdr2)}
 </style>
 </head>
 <body>
@@ -614,7 +645,7 @@ footer{background:var(--footer-bg);border-top:1px solid var(--bdr)}
       <div class="sb-section">
         <button type="button" class="sb-head sb-head-toggle" onclick="toggleFilterSection('price','')">
           <span>Filtrar por precio</span>
-          <span class="sb-chevron" id="priceChevron">▾</span>
+          <span class="sb-chevron" id="priceChevron"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
         </button>
         <div class="sb-body acc-collapse" id="priceBody">
           <div class="price-presets" id="pricePresets"></div>
@@ -633,7 +664,7 @@ footer{background:var(--footer-bg);border-top:1px solid var(--bdr)}
       <div class="sb-section">
         <button type="button" class="sb-head sb-head-toggle" onclick="toggleFilterSection('brand','')">
           <span>Filtrar por marca</span>
-          <span class="sb-chevron" id="brandChevron">▾</span>
+          <span class="sb-chevron" id="brandChevron"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
         </button>
         <div class="sb-body acc-collapse" id="brandBody">
           <div class="brand-checks" id="brandChecks"></div>
@@ -643,7 +674,7 @@ footer{background:var(--footer-bg);border-top:1px solid var(--bdr)}
       <div class="sb-section">
         <button type="button" class="sb-head sb-head-toggle" onclick="toggleFilterSection('stars','')">
           <span>Filtrar por valoración</span>
-          <span class="sb-chevron" id="starsChevron">▾</span>
+          <span class="sb-chevron" id="starsChevron"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
         </button>
         <div class="sb-body acc-collapse" id="starsBody">
           <div class="star-filters" id="starFilters">
@@ -658,7 +689,7 @@ footer{background:var(--footer-bg);border-top:1px solid var(--bdr)}
       <div class="sb-section">
         <button type="button" class="sb-head sb-head-toggle" onclick="toggleFilterSection('guar','')">
           <span>Filtrar por garantía</span>
-          <span class="sb-chevron" id="guarChevron">▾</span>
+          <span class="sb-chevron" id="guarChevron"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
         </button>
         <div class="sb-body acc-collapse" id="guarBody">
           <div class="guar-options">
@@ -696,8 +727,8 @@ footer{background:var(--footer-bg);border-top:1px solid var(--bdr)}
             <option value="discount">Mayor descuento</option>
           </select>
           <div class="view-btns">
-            <button class="view-btn on" id="vGrid3" onclick="setView('grid3')" title="3 columnas">⊞</button>
-            <button class="view-btn" id="vGrid4" onclick="setView('grid4')" title="4 columnas">⊟</button>
+            <button class="view-btn on" id="vGrid3" onclick="setView('grid3')" title="3 columnas"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="9.5" y="3" width="6" height="6" rx="1"/><rect x="16" y="3" width="5" height="6" rx="1"/><rect x="3" y="10.5" width="6" height="6" rx="1"/><rect x="9.5" y="10.5" width="6" height="6" rx="1"/><rect x="16" y="10.5" width="5" height="6" rx="1"/></svg></button>
+            <button class="view-btn" id="vGrid4" onclick="setView('grid4')" title="4 columnas"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><rect x="3" y="3" width="4.5" height="4.5" rx="1"/><rect x="9.75" y="3" width="4.5" height="4.5" rx="1"/><rect x="16.5" y="3" width="4.5" height="4.5" rx="1"/><rect x="3" y="9.75" width="4.5" height="4.5" rx="1"/><rect x="9.75" y="9.75" width="4.5" height="4.5" rx="1"/><rect x="16.5" y="9.75" width="4.5" height="4.5" rx="1"/><rect x="3" y="16.5" width="4.5" height="4.5" rx="1"/><rect x="9.75" y="16.5" width="4.5" height="4.5" rx="1"/><rect x="16.5" y="16.5" width="4.5" height="4.5" rx="1"/></svg></button>
             <button class="view-btn" id="vList" onclick="setView('list')" title="Lista"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
           </div>
         </div>
@@ -1900,7 +1931,7 @@ function buildFilterDrawer(){
   html+=`<div style="margin-bottom:20px">
     <button type="button" class="sb-head sb-head-toggle" onclick="toggleFilterSection('price','M')">
       <span>Filtrar por precio</span>
-      <span class="sb-chevron" id="priceChevronM">▾</span>
+      <span class="sb-chevron" id="priceChevronM"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
     </button>
     <div class="acc-collapse" id="priceBodyM">
       <div class="price-presets" id="pricePresetsM"></div>
@@ -1918,7 +1949,7 @@ function buildFilterDrawer(){
   html+=`<div style="margin-bottom:20px">
     <button type="button" class="sb-head sb-head-toggle" onclick="toggleFilterSection('brand','M')">
       <span>Filtrar por marca</span>
-      <span class="sb-chevron" id="brandChevronM">▾</span>
+      <span class="sb-chevron" id="brandChevronM"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
     </button>
     <div class="acc-collapse" id="brandBodyM">
       <div class="brand-checks" id="brandChecksM"></div>
@@ -1927,7 +1958,7 @@ function buildFilterDrawer(){
   html+=`<div style="margin-bottom:20px">
     <button type="button" class="sb-head sb-head-toggle" onclick="toggleFilterSection('stars','M')">
       <span>Filtrar por valoración</span>
-      <span class="sb-chevron" id="starsChevronM">▾</span>
+      <span class="sb-chevron" id="starsChevronM"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
     </button>
     <div class="acc-collapse" id="starsBodyM">
       <div class="star-filters">
@@ -1941,7 +1972,7 @@ function buildFilterDrawer(){
   html+=`<div style="margin-bottom:20px">
     <button type="button" class="sb-head sb-head-toggle" onclick="toggleFilterSection('guar','M')">
       <span>Filtrar por garantía</span>
-      <span class="sb-chevron" id="guarChevronM">▾</span>
+      <span class="sb-chevron" id="guarChevronM"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
     </button>
     <div class="acc-collapse" id="guarBodyM">
       <div class="guar-options">
